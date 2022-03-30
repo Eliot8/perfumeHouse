@@ -1,0 +1,13 @@
+{
+    "name": "Delegate",
+    "alias": "delegate",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Delegate\\Providers\\DelegateServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

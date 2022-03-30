@@ -97,6 +97,9 @@ class ZonesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Zone::findOrFail($id)->delete();
+
+        flash(translate('Zone has been deleted successfully'))->success();
+        return back();
     }
 }

@@ -61,10 +61,10 @@
                             <label class="col-md-3 col-from-label">{{ translate('Zone') }}</label>
                             <div class="col-md-8" id="zones_select">
                                 <select class="form-control aiz-selectpicker" name="zones[]" id="zone_id" data-live-search="true" multiple>
-                                    <option value="" disabled>{{ translate('Select Zone') }}</option>
+                                    {{-- <option value="" disabled>{{ translate('Select Zone') }}</option>
                                     @foreach (\DB::table('zones')->get() as $zone)
                                     <option value="{{ $zone->id }}">{{ $zone->name }}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             </div>
                         </div>
@@ -144,44 +144,18 @@
         $('.la-eye').show();
         $('#delegate_password').attr('type', 'text');
     });
-    // ********** GET ZONES USING AJAX *******************
-    // $('#province_id').on('change', function() {
-    //     $.ajax({
-    //         url: `/admin/province/${$(this).val()}/zone`,
-    //         type: "GET",
-    //         // dataType: "HTML",
-    //         success: function(response) {
-    //             $('#zone_id').empty().append(response.options);
-    //             $('#bs-select-2').find('.dropdown-menu').empty().append(response.items);
-    //         }
-    //     });
-    // });
-
-    // on loadpage
-    // $.ajax({
-    //     url: `/admin/province/${$('#province_id').val()}/zone`,
-    //     type: "GET",
-    //     success: function(response) {
-    //         $('#zone_id').empty().append(response.options);
-    //         $('#bs-select-2').find('.dropdown-menu').empty().append(response.items);
-    //     }
-    // });
-    // console.log($('#province_id').val());
-
-    // EXTRA DOM 
-    // $('#bs-select-2').find('.dropdown-menu li').on('click', function() {
-
-    //     $('#bs-select-2').find('.dropdown-menu li').each(function(item) {
-    //         console.log(item);
-    //         if(item.hasClass('selected active')){
-    //             item.removeClass('selected active');
-    //             itme.find('.dropdown-item').removeClass('active selected').removeAttr('aria-selected');
-    //         }
-    //     });
-    //     $(this).addClass('selected active').find('.dropdown-item').addClass('active selected').attr('aria-selected', true);
-    //     alert($(this).find('.dropdown-item span').text());
-    // });
-
+    
+    /********** GET ZONES USING AJAX *******************/
+    $('#province_id').on('change', function() {
+        $.ajax({
+            url: `/admin/province/${$(this).val()}/zone`,
+            type: "GET",
+            // dataType: "HTML",
+            success: function(response) {
+                $('#zone_id').empty().append(response.options).selectpicker('refresh');
+            }
+        });
+    });
 </script>
 
 @endsection

@@ -445,6 +445,11 @@
                                 </a>
                             </li>
                             <li class="aiz-side-nav-item">
+                                <a href="{{ route('delegates.index') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">Stock Management</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
                                 <a href="{{ route('provinces.index') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">Provinces</span>
                                 </a>

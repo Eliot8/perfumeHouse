@@ -133,22 +133,13 @@ class DelegatesController extends Controller
         if(request()->ajax()){
             $zones = \DB::table('zones')->where('province_id', $id)->pluck('name', 'id');
             $html = '';
-            $dropdown = '';
             $i = 0;
             foreach($zones as $key => $value) {
                 $html .= '<option value="' . $key . '">' . $value . '</option>';
-                $dropdown .= '<li class="">
-                                <a role="option" class="dropdown-item" id="bs-select-2-' . $i++ . '" tabindex="0" aria-setsize="19" aria-posinset="' . $i . '">
-                                    <span class="text">' . $value . '</span>
-                                </a>
-                            </li>';
             }
             $data = [
                 'options' => $html,
-                'items' => $dropdown,
             ];
-            
-
             return $data;
         } else 
             return false;

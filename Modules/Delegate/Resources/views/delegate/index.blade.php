@@ -30,7 +30,7 @@
             <table class="table aiz-table mb-0">
                 <thead>
                     <tr>
-                        <th>
+                        {{-- <th>
                             <div class="form-group">
                                 <div class="aiz-checkbox-inline">
                                     <label class="aiz-checkbox">
@@ -39,8 +39,8 @@
                                     </label>
                                 </div>
                             </div>
-                        </th>
-                        {{-- <th data-breakpoints="lg">#</th> --}}
+                        </th> --}}
+                        <th data-breakpoints="lg">#</th>
                         <th>{{ translate('Name') }}</th>
                         <th data-breakpoints="sm">{{ translate('Phone') }}</th>
                         <th data-breakpoints="md">{{ translate('Email') }}</th>
@@ -52,15 +52,15 @@
                 <tbody>
                     @foreach($delegates as $key => $delegate)
                     <tr>
-                        <td>
+                        {{-- <td>
                             <div class="form-group d-inline-block">
                                 <label class="aiz-checkbox">
                                     <input type="checkbox" class="check-one" name="id[]" value="{{$delegate->id}}">
                                     <span class="aiz-square-check"></span>
                                 </label>
                             </div>
-                        </td>
-                        {{-- <td>{{ ($key+1) + ($delegates->currentPage() - 1)*$delegates->perPage() }}</td> --}}
+                        </td> --}}
+                        <td>{{ ($key+1) + ($delegates->currentPage() - 1)*$delegates->perPage() }}</td>
                         <td>
                             <div class="row gutters-5 w-100px w-md-100px mw-100">
                                 <div class="col">

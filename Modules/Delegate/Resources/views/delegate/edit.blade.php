@@ -53,7 +53,7 @@
                                     <option value="{{ $province->id }}" @if($delegate->province_id == $province->id) selected @endif>{{ $province->name }}</option>
                                     @endforeach
                                 </select>
-                                  @error('province_id')
+                                @error('province_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -62,8 +62,7 @@
                             <label class="col-md-3 col-from-label">{{ translate('Zone') }}</label>
                             <div class="col-md-8" id="zones_select">
                                 <select class="form-control aiz-selectpicker" name="zones[]" id="zones" data-live-search="true" multiple>
-                                    <option value="" disabled>{{ translate('Select Zone') }}</option>
-                                    @foreach (\DB::table('zones')->get() as $zone)
+                                    @foreach (\DB::table('zones')->where('province_id', $delegate->province_id)->get() as $zone)
                                     <option value="{{ $zone->id }}" @if(in_array($zone->id, json_decode($delegate->zones))) selected @endif>{{ $zone->name }}</option>
                                     @endforeach
                                 </select>
@@ -166,6 +165,18 @@
         $('.password-fields').hide();
         $('.reset-password').show();
         $('#password_state').val(false);
+    });
+
+    /********** GET ZONES USING AJAX *******************/
+    $('#province_id').on('change', function() {
+        $.ajax({
+            url: `/admin/province/${$(this).val()}/zone`,
+            type: "GET",
+            // dataType: "HTML",
+            success: function(response) {
+                $('#zones').empty().append(response.options).selectpicker('refresh');
+            }
+        });
     });
 
 </script>

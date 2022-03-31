@@ -430,33 +430,33 @@
                     <li class="aiz-side-nav-item">
                         <a href="#" class="aiz-side-nav-link">
                             <i class="las la-user aiz-side-nav-icon"></i>
-                            <span class="aiz-side-nav-text">Deliveries</span>
+                            <span class="aiz-side-nav-text">@lang('delegate::delivery.deliveries')</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('delegates.create') }}" class="aiz-side-nav-link">
-                                    <span class="aiz-side-nav-text">Add new delivery man</span>
+                                    <span class="aiz-side-nav-text">@lang('delegate::delivery.add_new_delegate')</span>
                                 </a>
                             </li>
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('delegates.index') }}" class="aiz-side-nav-link">
-                                    <span class="aiz-side-nav-text">Delivery men</span>
+                                    <span class="aiz-side-nav-text">@lang('delegate::delivery.delegates')</span>
                                 </a>
                             </li>
                             <li class="aiz-side-nav-item">
-                                <a href="{{ route('delegates.index') }}" class="aiz-side-nav-link">
-                                    <span class="aiz-side-nav-text">Stock Management</span>
+                                <a href="{{ route('stock.index') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">@lang('delegate::delivery.stock_management')</span>
                                 </a>
                             </li>
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('provinces.index') }}" class="aiz-side-nav-link">
-                                    <span class="aiz-side-nav-text">Provinces</span>
+                                    <span class="aiz-side-nav-text">@lang('delegate::delivery.provinces')</span>
                                 </a>
                             </li>
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('zones.index') }}" class="aiz-side-nav-link">
-                                    <span class="aiz-side-nav-text">Zones</span>
+                                    <span class="aiz-side-nav-text">@lang('delegate::delivery.zones')</span>
                                 </a>
                             </li>
                         </ul>

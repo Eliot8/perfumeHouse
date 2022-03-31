@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDelegateStockTable extends Migration
+class CreateDelegateProductTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDelegateStockTable extends Migration
      */
     public function up()
     {
-        Schema::create('delegate_stock', function (Blueprint $table) {
+        Schema::create('delegate_product', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('stock')->default(0);
             $table->integer('delegate_id')->unsigned();
@@ -31,6 +31,6 @@ class CreateDelegateStockTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('delegate_stock');
+        Schema::dropIfExists('delegate_product');
     }
 }

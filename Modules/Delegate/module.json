@@ -8,6 +8,6 @@
         "Modules\\Delegate\\Providers\\DelegateServiceProvider"
     ],
     "aliases": {},
-    "files": [],
+    "files": ["Http/Helper.php"],
     "requires": []
 }

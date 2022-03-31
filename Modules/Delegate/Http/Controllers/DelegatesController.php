@@ -41,7 +41,7 @@ class DelegatesController extends Controller
     public function store(StoreDelegateRequest $request)
     {
         $request->validated();
-        
+        // dd($request->request);
         $delegate = new Delegate();
         $delegate->full_name = $request->input('name');
         $delegate->province_id = $request->input('province_id');
@@ -51,6 +51,7 @@ class DelegatesController extends Controller
         $request->filled('phone_number') ? $delegate->phone_number = $request->input('phone_number') : null;
         $request->filled('address') ? $delegate->address = $request->input('address') : null;
         $request->filled('zones') ? $delegate->zones = json_encode($request->input('zones')) : null;
+        
         $delegate->save();
 
         flash(translate('Delivery man has been created successfully'))->success();
@@ -133,7 +134,6 @@ class DelegatesController extends Controller
         if(request()->ajax()){
             $zones = \DB::table('zones')->where('province_id', $id)->pluck('name', 'id');
             $html = '';
-            $i = 0;
             foreach($zones as $key => $value) {
                 $html .= '<option value="' . $key . '">' . $value . '</option>';
             }

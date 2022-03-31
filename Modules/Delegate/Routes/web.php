@@ -11,17 +11,19 @@
 |
 */
 
-use Modules\Delegate\Entities\Province;
-use Modules\Delegate\Entities\Zone;
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
     Route::resource('delegates', 'DelegatesController')->except(['destroy']);
     Route::resource('provinces', 'ProvinceController')->except(['destroy']);
     Route::resource('zones', 'ZonesController')->except(['destroy']);
+    Route::resource('stock', 'StockController')->except(['destroy']);
     
     Route::get('/delegate/{id}/delete', 'DelegatesController@destroy')->name('delegates.destroy');
     Route::get('/province/{id}/delete', 'ProvinceController@destroy')->name('provinces.destroy');
     Route::get('/zones/{id}/delete', 'ZonesController@destroy')->name('zones.destroy');
+    Route::get('/stock/{id}/delete', 'StockController@destroy')->name('stock.destroy');
+
+    Route::get('/delegate-stock/{delegate_id}/manage', 'StockController@manage')->name('stock.manage');
 
 
 
@@ -32,7 +34,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
 
     Route::get('/test', function() {
-        
+        dd(app()->getLocale());
     });
 
 });

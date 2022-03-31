@@ -19,7 +19,7 @@
                                 <textarea class="form-control mb-3" placeholder="{{ translate('Your Address')}}" rows="2" name="address" required></textarea>
                             </div>
                         </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-2">
                                 <label>{{ translate('Country')}}</label>
                             </div>
@@ -33,9 +33,9 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-2">
                                 <label>{{ translate('State')}}</label>
                             </div>
@@ -55,9 +55,33 @@
 
                                 </select>
                             </div>
+                        </div> --}}
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label>{{ translate('Province') }}</label>
+                            </div>
+                            <div class="col-md-10">
+                                <select class="form-control mb-3 aiz-selectpicker" data-live-search="true" data-placeholder="{{ translate('Select your province') }}" name="province_id" required>
+                                    <option value="">{{ translate('Select your province') }}</option>
+                                    @foreach (\Modules\Delegate\Entities\Province::all() as $key => $province)
+                                        <option value="{{ $province->id }}">{{ $province->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
 
-                        @if (get_setting('google_map') == 1)
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label>{{ translate('Zone')}}</label>
+                            </div>
+                            <div class="col-md-10">
+                                <select class="form-control mb-3 aiz-selectpicker" data-live-search="true" name="zone_id" required>
+                                    
+                                </select>
+                            </div>
+                        </div>
+
+                        {{-- @if (get_setting('google_map') == 1)
                             <div class="row">
                                 <input id="searchInput" class="controls" type="text" placeholder="{{translate('Enter a location')}}">
                                 <div id="map"></div>
@@ -86,22 +110,22 @@
                                     <input type="text" class="form-control mb-3" id="latitude" name="latitude" readonly="">
                                 </div>
                             </div>
-                        @endif
+                        @endif --}}
                         
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-2">
                                 <label>{{ translate('Postal code')}}</label>
                             </div>
                             <div class="col-md-10">
                                 <input type="text" class="form-control mb-3" placeholder="{{ translate('Your Postal Code')}}" name="postal_code" value="" required>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="row">
                             <div class="col-md-2">
                                 <label>{{ translate('Phone')}}</label>
                             </div>
                             <div class="col-md-10">
-                                <input type="text" class="form-control mb-3" placeholder="{{ translate('+880')}}" name="phone" value="" required>
+                                <input type="text" class="form-control mb-3" placeholder="{{ translate('+249')}}" name="phone" value="" required>
                             </div>
                         </div>
                         <div class="form-group text-right">

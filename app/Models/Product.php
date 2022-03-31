@@ -81,4 +81,7 @@ class Product extends Model
     {
         return $query->where('digital', 0);
     }
+
+
+    // public function delegate
 }

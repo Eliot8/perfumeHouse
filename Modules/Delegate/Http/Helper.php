@@ -8,7 +8,7 @@ function getStockLevel($delegate_id){
     foreach($delegate_products as $product) {
         $stock += $product->stock; 
     }
-    if($stock == 0) return 'Empty'; 
-    if($stock <= 10) return 'Low'; 
-    return 'High';
+    if($stock == 0) return 'empty'; 
+    if($stock <= 10) return 'low'; 
+    return 'high';
 }

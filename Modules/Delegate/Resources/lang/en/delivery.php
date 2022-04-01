@@ -18,8 +18,45 @@ return [
     'select_province' => 'Select Province',
     'delegate_account' => 'Delegate Account',
     'password_confirmation' => 'Password Confirmation',
+    'reset_password' => 'Reset password',
+    'edit_delegate' => 'Edit Delegate',
+    'edit_stock' => 'Edit Stock',
+    'empty' => 'Empty',
+    'low' => 'Low',
+    'high' => 'High',
+    'manage' => 'Manage',
+    'back' => 'back',
+    'add' => 'Add',
+    'product_stock' => 'Product + Stock',
+    'select_product' => 'Select Product',
+    'add_stock' => 'Add Stock',
+
+    'stock_added' => 'Stock has been added successfully',
+    'stock_updated' => 'Stock has been updated successfully',
+    'stock_deleted' => 'Stock has been deleted successfully',
+    'stock_exist' => 'Stock already exist',
+
+    'delegate_added' => 'Delivery man has been added successfully',
+    'delegate_updated' => 'Delivery man has been updated successfully',
+    'delegate_deleted' => 'Delivery man has been deleted successfully',
+
+    'province_added' => 'Province has been added successfully',
+    'province_updated' => 'Province has been updated successfully',
+    'province_deleted' => 'Province has been deleted successfully',
+
+    'zone_added' => 'Zone has been added successfully',
+    'zone_updated' => 'Zone has been updated successfully',
+    'zone_deleted' => 'Zone has been deleted successfully',
+
+    'add_province' => 'Add province',
+    'province_empty' => 'Empty',
+    'delivery_man' => 'Delivery man',
+    'province_name' => 'Province name',
+    'new_province' => 'New Province',
     
-    'delegate_info' => 'Delegate Information',
-    'delegate_info' => 'Delegate Information',
-    'delegate_info' => 'Delegate Information',
+    'new_zone' => 'New Zone',
+    'add_zone' => 'Add Zone',
+    'edit_zone' => 'Edit Zone',
+    'zone_name' => 'Zone name',
+
 ];

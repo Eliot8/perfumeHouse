@@ -5,12 +5,12 @@
 <div class="aiz-titlebar text-left mt-2 mb-3">
     <div class="row align-items-center">
         <div class="col-auto">
-            <h1 class="h3">{{ translate('All Provinces') }}</h1>
+            <h1 class="h3">@lang('delegate::delivery.provinces')</h1>
         </div>
         @if(Auth::user()->user_type != 'Seller')
         <div class="col text-right">
             <button type="button" class="btn btn-circle btn-info" data-toggle="modal" data-target="#create-modal">
-                <span>{{ translate('Add New Province') }}</span>
+                <span>@lang('delegate::delivery.add_province')</span>
             </button>
             @include('delegate::provinces.create')
         </div>
@@ -23,7 +23,7 @@
     <form class="" id="sort_products" action="" method="GET">
         <div class="card-header row gutters-5">
             <div class="col">
-                <h5 class="mb-md-0 h6">{{ translate('All Provinces') }}</h5>
+                <h5 class="mb-md-0 h6">@lang('delegate::delivery.provinces')</h5>
             </div>
         </div>
     
@@ -33,7 +33,7 @@
                     <tr>
                         <th data-breakpoints="sm">#</th>
                         <th>{{ translate('Name') }}</th>
-                        <th data-breakpoints="sm">{{ translate('Delivery man') }}</th>
+                        <th data-breakpoints="sm">@lang('delegate::delivery.delivery_man')</th>
                         <th data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
                     </tr>
                 </thead>
@@ -54,7 +54,7 @@
                             <span class="btn-soft-success btn-circle btn-sm" style="transition: all 0.3s ease;">{{ $delegate->full_name }}</span>
                             @endforeach
                             @else
-                            <span class="btn-soft-danger btn-circle btn-sm" style="transition: all 0.3s ease;">{{ translate('Empty') }}</span>
+                            <span class="btn-soft-danger btn-circle btn-sm" style="transition: all 0.3s ease;">@lang('delegate::delivery.province_empty')</span>
                             @endif
                         </td>
                         <td class="text-right">

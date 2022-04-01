@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 use Modules\Delegate\Entities\Province;
 use Validator;
 
@@ -50,7 +51,7 @@ class ProvinceController extends Controller
         $province->name = $request->input('name');
         $province->save();
 
-        flash(translate('Province has been created successfully'))->success();
+        flash(Lang::get('delegate::delivery.province_added'))->success();
         return back();
     }
 
@@ -95,7 +96,7 @@ class ProvinceController extends Controller
         $province->name = $request->input('name');
         $province->save();
 
-        flash(translate('Province has been updated successfully'))->success();
+        flash(Lang::get('delegate::delivery.province_updated'))->success();
         return back();
     }
 
@@ -106,9 +107,10 @@ class ProvinceController extends Controller
      */
     public function destroy($id)
     {
-        Province::findOrFail($id)->delete();
+        $province = Province::findOrFail($id);
+        $province->zones->
 
-        flash(translate('Province has been deleted successfully'))->success();
+        flash(Lang::get('delegate::delivery.province_deleted'))->success();
         return back();
     }
 }

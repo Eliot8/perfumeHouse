@@ -5,6 +5,7 @@ namespace Modules\Delegate\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Lang;
 use Modules\Delegate\Entities\Zone;
 use Validator;
 
@@ -43,7 +44,7 @@ class ZonesController extends Controller
         $zone->province_id = $request->input('province_id');
         $zone->save();
 
-        flash('Zone has been created successfully')->success();
+        flash(Lang::get('delegate::delivery.zone_added'))->success();
         return back();
     }
 
@@ -86,7 +87,7 @@ class ZonesController extends Controller
         $zone->province_id = $request->input('province_id');
         $zone->save();
 
-        flash('Zone has been updated successfully')->success();
+        flash(Lang::get('delegate::delivery.zone_added'))->success();
         return redirect()->route('zones.index');
     }
 
@@ -99,7 +100,7 @@ class ZonesController extends Controller
     {
         Zone::findOrFail($id)->delete();
 
-        flash(translate('Zone has been deleted successfully'))->success();
+        flash(Lang::get('delegate::delivery.zone_added'))->success();
         return back();
     }
 }

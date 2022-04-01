@@ -5,6 +5,7 @@ namespace Modules\Delegate\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Lang;
 use Modules\Delegate\Entities\Delegate;
 use Modules\Delegate\Entities\Stock;
 
@@ -17,17 +18,7 @@ class StockController extends Controller
     public function index()
     {
         $delegates = Delegate::paginate(8);
-        // dd($stocks);
         return view('delegate::stock.index', compact('delegates'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('delegate::stock.create');
     }
     
     /**
@@ -45,7 +36,7 @@ class StockController extends Controller
         
         $already_exist = Stock::where(['delegate_id' => $request->input('delegate'), 'product_id' => $request->input('product')])->first();
         if($already_exist){
-            flash('Product already in Stock')->error();
+            flash(Lang::get('delegate::delivery.stock_exist'))->error();
             return back();
         }
 
@@ -55,7 +46,7 @@ class StockController extends Controller
         $stock->stock = $request->input('quantity');
         $stock->save();
 
-        flash('Stock has been added successfully')->success();
+        flash(Lang::get('delegate::delivery.stock_added'))->success();
         return back();
     }
     /**
@@ -74,7 +65,7 @@ class StockController extends Controller
         $stock->stock = $request->input('quantity');
         $stock->save();
 
-        flash('Stock has been updated successfully')->success();
+        flash(Lang::get('delegate::delivery.stock_updated'))->success();
         return back();
     }
 
@@ -87,7 +78,7 @@ class StockController extends Controller
     {
         Stock::findOrFail($id)->delete();
 
-        flash(translate('Stock has been deleted successfully'))->success();
+        flash(Lang::get('delegate::delivery.stock_deleted'))->success();
         return back();
     }
 

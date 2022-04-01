@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title h6">{{ translate('New Province') }}</h4>
+                <h4 class="modal-title h6">@lang('delegate::delivery.new_province')</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
             </div>
             <div class="modal-body text-center">
@@ -11,7 +11,7 @@
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label">{{ translate('Name') }} <span class="text-danger">*</span></label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="name" value="" placeholder="{{ translate('Province Name') }}" required>
+                            <input type="text" class="form-control" name="name" value="" placeholder="@lang('delegate::delivery.province_name')" required>
                         </div>
                     </div>
                     <button type="button" class="btn btn-link mt-2" data-dismiss="modal">{{ translate('Cancel') }}</button>

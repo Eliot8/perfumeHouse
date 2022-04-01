@@ -5,12 +5,12 @@
 <div class="aiz-titlebar text-left mt-2 mb-3">
     <div class="row align-items-center">
         <div class="col-auto">
-            <h1 class="h3">{{ translate('All Delivery men') }}</h1>
+            <h1 class="h3">@lang('delegate::delivery.delegates')</h1>
         </div>
         @if(Auth::user()->user_type != 'Seller')
         <div class="col text-right">
             <a href="{{ route('delegates.create') }}" class="btn btn-circle btn-info">
-                <span>{{ translate('Add New Delivery man') }}</span>
+                <span>@lang('delegate::delivery.add_new_delegate')</span>
             </a>
         </div>
         @endif
@@ -22,7 +22,7 @@
     <form class="" id="sort_products" action="" method="GET">
         <div class="card-header row gutters-5">
             <div class="col">
-                <h5 class="mb-md-0 h6">{{ translate('All Delivery men') }}</h5>
+                <h5 class="mb-md-0 h6">@lang('delegate::delivery.delegates')</h5>
             </div>
         </div>
     
@@ -30,36 +30,17 @@
             <table class="table aiz-table mb-0">
                 <thead>
                     <tr>
-                        {{-- <th>
-                            <div class="form-group">
-                                <div class="aiz-checkbox-inline">
-                                    <label class="aiz-checkbox">
-                                        <input type="checkbox" class="check-all">
-                                        <span class="aiz-square-check"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </th> --}}
                         <th data-breakpoints="lg">#</th>
                         <th>{{ translate('Name') }}</th>
                         <th data-breakpoints="sm">{{ translate('Phone') }}</th>
                         <th data-breakpoints="md">{{ translate('Email') }}</th>
-                        <th data-breakpoints="md">{{ translate('Province') }}</th>
-                        {{-- <th data-breakpoints="lg">{{ translate('Stock') }}</th> --}}
+                        <th data-breakpoints="md">@lang('delegate::delivery.province')</th>
                         <th data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($delegates as $key => $delegate)
                     <tr>
-                        {{-- <td>
-                            <div class="form-group d-inline-block">
-                                <label class="aiz-checkbox">
-                                    <input type="checkbox" class="check-one" name="id[]" value="{{$delegate->id}}">
-                                    <span class="aiz-square-check"></span>
-                                </label>
-                            </div>
-                        </td> --}}
                         <td>{{ ($key+1) + ($delegates->currentPage() - 1)*$delegates->perPage() }}</td>
                         <td>
                             <div class="row gutters-5 w-100px w-md-100px mw-100">
@@ -73,15 +54,10 @@
                         <td>
                             <strong class="btn-soft-info btn-circle btn-sm" style="transition: all 0.3s ease;">{{ \DB::table('provinces')->where('id', $delegate->province_id)->first()->name }}</strong>
                         </td>
-                        {{-- <td>
-                            <a class="btn btn-soft-success btn-icon btn-circle btn-sm"  href="" target="_blank" title="{{ translate('View') }}">
-                                <i class="las la-eye"></i>
-                            </a>
-                        </td> --}}
                         <td class="text-right">
-                            <a class="btn btn-soft-success btn-icon btn-circle btn-sm"  href="" target="_blank" title="{{ translate('View') }}">
+                            {{-- <a class="btn btn-soft-success btn-icon btn-circle btn-sm"  href="" target="_blank" title="{{ translate('View') }}">
                                 <i class="las la-eye"></i>
-                            </a>
+                            </a> --}}
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('delegates.edit', $delegate->id) }}" title="{{ translate('Edit') }}">
                                 <i class="las la-edit"></i>
                             </a>

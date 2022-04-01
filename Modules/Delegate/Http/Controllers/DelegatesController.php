@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use Modules\Delegate\Entities\Delegate;
 use Modules\Delegate\Http\Requests\StoreDelegateRequest;
@@ -41,7 +42,7 @@ class DelegatesController extends Controller
     public function store(StoreDelegateRequest $request)
     {
         $request->validated();
-        // dd($request->request);
+        
         $delegate = new Delegate();
         $delegate->full_name = $request->input('name');
         $delegate->province_id = $request->input('province_id');
@@ -54,7 +55,7 @@ class DelegatesController extends Controller
         
         $delegate->save();
 
-        flash(translate('Delivery man has been created successfully'))->success();
+        flash(Lang::get('delegate::delivery.delegate_added'))->success();
         return redirect()->route('delegates.index');
     }
 
@@ -106,7 +107,7 @@ class DelegatesController extends Controller
         $request->filled('zones') ? $delegate->zones = json_encode($request->input('zones')) : null;
         $delegate->save();
 
-        flash(translate('Delivery man has been updated successfully'))->success();
+        flash(Lang::get('delegate::delivery.delegate_updated'))->success();
         return redirect()->route('delegates.index');
     }
 
@@ -119,7 +120,7 @@ class DelegatesController extends Controller
     {
         Delegate::findOrFail($id)->delete();
 
-        flash(translate('Delivery man has been deleted successfully'))->success();
+        flash(Lang::get('delegate::delivery.delegate_deleted'))->success();
         return redirect()->route('delegates.index');
     }
 

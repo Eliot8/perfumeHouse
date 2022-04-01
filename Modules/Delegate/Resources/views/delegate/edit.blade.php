@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="aiz-titlebar text-left mt-2 mb-3">
-    <h5 class="mb-0 h6">{{translate('Edit Delivery man')}}</h5>
+    <h5 class="mb-0 h6">@lang('delegate::delivery.edit_delegate')</h5>
 </div>
 <div class="">
     <form class="form form-horizontal mar-top" action="{{route('delegates.update', $delegate->id)}}" method="POST" id="choice_form">
@@ -13,22 +13,22 @@
                 <input type="hidden" name="added_by" value="admin">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0 h6">{{ translate('Delegate Information') }}</h5>
+                        <h5 class="mb-0 h6">@lang('delegate::delivery.delegate_info')</h5>
                     </div>
                     <div class="card-body">
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Delegate Name') }} <span class="text-danger">*</span></label>
+                            <label class="col-md-3 col-from-label">@lang('delegate::delivery.delegate_name') <span class="text-danger">*</span></label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $delegate->full_name }}" placeholder="{{ translate('Delegate Name') }}" required>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $delegate->full_name }}" placeholder="@lang('delegate::delivery.delegate_name')" required>
                                 @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Phone number') }}</label>
+                            <label class="col-md-3 col-from-label">{{ translate('Phone') }}</label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="phone_number" value="{{ $delegate->phone_number }}" placeholder="{{ translate('Phone number') }}">
+                                <input type="text" class="form-control" name="phone_number" value="{{ $delegate->phone_number }}" placeholder="{{ translate('Phone') }}">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -41,14 +41,14 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0 h6">{{translate('Delivery Information')}}</h5>
+                        <h5 class="mb-0 h6">@lang('delegate::delivery.delivery_info')</h5>
                     </div>
                     <div class="card-body">
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Province') }} <span class="text-danger">*</span></label>
+                            <label class="col-md-3 col-from-label">@lang('delegate::delivery.province') <span class="text-danger">*</span></label>
                             <div class="col-md-8">
                                 <select class="form-control aiz-selectpicker" name="province_id" id="province_id" data-live-search="true">
-                                    <option value="">{{ translate('Select Province') }}</option>
+                                    <option value="">@lang('delegate::delivery.select_province')</option>
                                     @foreach (\DB::table('provinces')->select('id', 'name')->get() as $province)
                                     <option value="{{ $province->id }}" @if($delegate->province_id == $province->id) selected @endif>{{ $province->name }}</option>
                                     @endforeach
@@ -59,7 +59,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Zone') }}</label>
+                            <label class="col-md-3 col-from-label">@lang('delegate::delivery.zones')</label>
                             <div class="col-md-8" id="zones_select">
                                 <select class="form-control aiz-selectpicker" name="zones[]" id="zones" data-live-search="true" multiple>
                                     @foreach (\DB::table('zones')->where('province_id', $delegate->province_id)->get() as $zone)
@@ -75,7 +75,7 @@
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0 h6">{{ translate('Delegate Account')}}</h5>
+                        <h5 class="mb-0 h6">@lang('delegate::delivery.delegate_account')</h5>
                     </div>
                     <div class="card-body">
                         <div class="form-group mb-3">
@@ -99,20 +99,20 @@
                                 </div>
                             </div>
                             <div class="form-group mb-3">
-                                <label for="password_confirmation">{{ translate('Password Confirmation') }} <span class="text-danger">*</span></label>
+                                <label for="password_confirmation">@lang('delegate::delivery.password_confirmation') <span class="text-danger">*</span></label>
                                 <input type="password" name="password_confirmation" class="form-control">
                             </div>
-                            <a href="#" class="text-info cancel-reset" style="float:right;">Cancel</a>
+                            <a href="#" class="text-info cancel-reset" style="float:right;">{{ translate('Cancel') }}</a>
                         </div>
                         <input type="hidden" name="reset_password" id="password_state" value="false">
-                        <a href="#" class="text-info reset-password">Reset password</a>
+                        <a href="#" class="text-info reset-password">@lang('delegate::delivery.reset_password')</a>
                     </div>
                 </div>
             </div>
             <div class="col-12">
                 <div class="btn-toolbar float-right mb-3" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group" role="group" aria-label="Second group">
-                        <button type="submit" name="button" value="create" class="btn btn-primary action-btn">{{ translate('Update Delivery man') }}</button>
+                        <button type="submit" name="button" value="create" class="btn btn-primary action-btn">{{ translate('Update') }}</button>
                     </div>
                 </div>
             </div>

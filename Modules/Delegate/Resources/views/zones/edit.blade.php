@@ -1,8 +1,8 @@
-{{-- <div id="edit-modal{{$zone->id}}" class="modal fade" >
+<div id="edit-modal{{$zone->id}}" class="modal fade" >
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title h6">{{ translate('Edit Zone') }}</h4>
+                <h4 class="modal-title h6">@lang('delegate::delivery.edit_zone')</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
             </div>
             <div class="modal-body text-center" style="overflow-y: unset !important;">
@@ -12,14 +12,14 @@
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label">{{ translate('Name') }} <span class="text-danger">*</span></label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="name" value="{{ $zone->name }}" placeholder="{{ translate('Zone Name') }}" required>
+                            <input type="text" class="form-control" name="name" value="{{ $zone->name }}" placeholder="@lang('delegate::delivery.zone_name')" required>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label">{{ translate('Province') }} <span class="text-danger">*</span></label>
                         <div class="col-md-8 province-select">
                             <select class="form-control aiz-selectpicker" name="province_id" id="province_id" data-live-search="true">
-                                <option value="">{{ translate('Select Province') }}</option>
+                                <option value="" disabled selected>@lang('delegate::delivery.select_province')</option>
                                 @foreach (\DB::table('provinces')->select('id', 'name')->get() as $province)
                                 <option value="{{ $province->id }}" @if($province->id == $zone->province_id) selected @endif>{{ $province->name }}</option>
                                 @endforeach
@@ -32,10 +32,10 @@
             </div>
         </div>
     </div>
-</div> --}}
+</div>
 
 
-@extends('backend.layouts.app')
+{{-- @extends('backend.layouts.app')
 
 @section('content')
 <div class="aiz-titlebar text-left mt-2 mb-3">
@@ -81,12 +81,9 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="col-12">
-               
-            </div> --}}
         </div>
     </form>
 </div>
 
-@endsection
+@endsection --}}
 

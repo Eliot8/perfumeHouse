@@ -5,12 +5,12 @@
 <div class="aiz-titlebar text-left mt-2 mb-3">
     <div class="row align-items-center">
         <div class="col-auto">
-            <h1 class="h3">{{ translate('All Zones') }}</h1>
+            <h1 class="h3">@lang('delegate::delivery.zones')</h1>
         </div>
         @if(Auth::user()->user_type != 'Seller')
         <div class="col text-right">
             <button type="button" class="btn btn-circle btn-info" data-toggle="modal" data-target="#create-modal">
-                <span>{{ translate('Add New Zone') }}</span>
+                <span>@lang('delegate::delivery.add_zone')</span>
             </button>
             @include('delegate::zones.create')
         </div>
@@ -23,7 +23,7 @@
     <form class="" id="sort_products" action="" method="GET">
         <div class="card-header row gutters-5">
             <div class="col">
-                <h5 class="mb-md-0 h6">{{ translate('All Zones') }}</h5>
+                <h5 class="mb-md-0 h6">@lang('delegate::delivery.zones')</h5>
             </div>
         </div>
     
@@ -33,7 +33,7 @@
                     <tr>
                         <th data-breakpoints="sm">#</th>
                         <th>{{ translate('Name') }}</th>
-                        <th data-breakpoints="sm">{{ translate('Province') }}</th>
+                        <th data-breakpoints="sm">@lang('delegate::delivery.province')</th>
                         <th data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
                     </tr>
                 </thead>
@@ -48,18 +48,18 @@
                                 </div>
                             </div>
                         </td>
-                        <td><strong class="btn-soft-info btn-circle btn-sm" style="transition: all 0.3s ease;">{{ $zone->province->name }}</strong></td>
+                        <td><strong class="btn-soft-info btn-circle btn-sm" style="transition: all 0.3s ease;">{{ $zone->province ? $zone->province->name : '' }}</strong></td>
                         <td class="text-right">
-                            {{-- <button type="button" class="btn btn-soft-primary btn-icon btn-circle btn-sm" data-toggle="modal" data-target="#edit-modal{{ $zone->id }}" title="{{ translate('Edit') }}">
-                                  <i class="las la-edit"></i>
-                            </button> --}}
-                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('zones.edit', $zone->id) }}" title="{{ translate('Edit') }}">
+                            {{-- <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('zones.edit', $zone->id) }}" title="{{ translate('Edit') }}">
                                 <i class="las la-edit"></i>
-                            </a>
+                            </a> --}}
+                            <button type="button" class="btn btn-soft-primary btn-icon btn-circle btn-sm" data-toggle="modal" data-target="#edit-modal{{ $zone->id }}" title="{{ translate('Edit') }}">
+                                <i class="las la-edit"></i>
+                            </button>
+                            @include('delegate::zones.edit')
                             <button type="button" class="btn btn-soft-danger btn-icon btn-circle btn-sm" data-toggle="modal" data-target="#delete-modal{{ $zone->id }}" title="{{ translate('Delete') }}">
                                 <i class="las la-trash"></i>
                             </button>
-                            {{-- @include('delegate::zones.edit') --}}
                             @component('delegate::components.delete', ['name' => 'zones', 'id' => $zone->id])@endcomponent
                         </td>
                     </tr>
@@ -76,11 +76,13 @@
 
 @section('script')
 <script>
-    setTimeout(() => {
-        $('.province-select').children(':first').children().eq(1).remove();
-        $('.province-select').children(':first').children().eq(2).remove();
+    setInterval(() => {
+        $('.province-select').each(function(i, element) {
+            $(element).children(':first').children().eq(1).remove();
+            $(element).children(':first').children().eq(2).remove();
+        })
         
-    }, 3000);
+    }, 2000);
 </script>
 @endsection
 

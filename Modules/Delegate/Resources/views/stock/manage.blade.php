@@ -14,7 +14,7 @@
                     <h5 class="mb-0 h6">@lang('delegate::delivery.product_stock')</h5>
                 </div>
                 <div class="card-body">
-                        <table class="table aiz-table mb-0">
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th data-breakpoints="lg">#</th>
@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="col-lg-4">
-                <div class="card">
+            <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0 h6">@lang('delegate::delivery.add_stock')</h5>
                 </div>

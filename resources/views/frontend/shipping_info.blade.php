@@ -66,6 +66,14 @@
                                                         <span class="fw-600 ml-2">{{ $address->address }}</span>
                                                     </div>
                                                     <div>
+                                                        <span class="opacity-60">@lang('delegate::delivery.province'):</span>
+                                                        <span class="fw-600 ml-2">{{ Modules\Delegate\Entities\Province::find($address->province_id)->name  }}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="opacity-60">@lang('delegate::delivery.zone'):</span>
+                                                        <span class="fw-600 ml-2">{{ Modules\Delegate\Entities\Neighborhood::find($address->zone_id)->name ?? Modules\Delegate\Entities\Province::find($address->province_id)->name  }}</span>
+                                                    </div>
+                                                    {{-- <div>
                                                         <span class="opacity-60">{{ translate('Postal Code') }}:</span>
                                                         <span class="fw-600 ml-2">{{ $address->postal_code }}</span>
                                                     </div>
@@ -80,7 +88,7 @@
                                                     <div>
                                                         <span class="opacity-60">{{ translate('Country') }}:</span>
                                                         <span class="fw-600 ml-2">{{ optional($address->country)->name }}</span>
-                                                    </div>
+                                                    </div> --}}
                                                     <div>
                                                         <span class="opacity-60">{{ translate('Phone') }}:</span>
                                                         <span class="fw-600 ml-2">{{ $address->phone }}</span>

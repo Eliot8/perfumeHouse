@@ -58,14 +58,17 @@
                             @endif
                         </td>
                         <td class="text-right">
-                            <button type="button" class="btn btn-soft-primary btn-icon btn-circle btn-sm" data-toggle="modal" data-target="#edit-modal{{ $province->id }}" title="{{ translate('Edit') }}">
+                            {{-- <button type="button" class="btn btn-soft-primary btn-icon btn-circle btn-sm" data-toggle="modal" data-target="#edit-modal{{ $province->id }}" title="{{ translate('Edit') }}">
                                   <i class="las la-edit"></i>
-                            </button>
+                            </button> --}}
+                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('provinces.edit', $province->id) }}" title="{{ translate('Edit') }}">
+                                <i class="las la-edit"></i>
+                            </a>
                             <button type="button" class="btn btn-soft-danger btn-icon btn-circle btn-sm" data-toggle="modal" data-target="#delete-modal{{ $province->id }}" title="{{ translate('Delete') }}">
                                 <i class="las la-trash"></i>
                             </button>
-                            @include('delegate::provinces.edit')
-                            @component('delegate::components.delete', ['name' => 'provinces', 'id' => $province->id])@endcomponent
+                            {{-- @include('delegate::provinces.edit') --}}
+                             @component('delegate::components.delete', ['name' => 'provinces', 'id' => $province->id])@endcomponent
                         </td>
                     </tr>
                     @endforeach

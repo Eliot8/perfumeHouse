@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Lang;
+use Modules\Delegate\Entities\Neighborhood;
 use Modules\Delegate\Entities\Zone;
 use Validator;
 
@@ -67,16 +68,6 @@ class ZonesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'name' => ['required', 'min:3', 'max:50'],
-        //     'province_id' => 'required',
-        // ]);
-
-        // if ($validator->fails()) {
-        //     flash($validator->errors()->first())->error();
-        //     return back();
-        // }
-
         $request->validate([
             'name' => ['required', 'min:3', 'max:50'],
             'province_id' => 'required',
@@ -101,6 +92,30 @@ class ZonesController extends Controller
         Zone::findOrFail($id)->delete();
 
         flash(Lang::get('delegate::delivery.zone_added'))->success();
+        return back();
+    }
+
+
+    public function storeNeighborhood(Request $request) {
+        
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'min:3', 'max:50'],
+            'zone' => ['required', 'numeric'],
+        ]);
+
+        if($validator->fails()){
+            flash($validator->errors()->first())->error();
+            return back();
+        }
+
+        Neighborhood::create(['name' => $request->input('name'), 'zone_id' => $request->input('zone')]);
+        flash(Lang::get('delegate::delivery.neighborhood_added'))->success();
+        return back();
+    }
+
+    public function destroyNeighborhood($id){
+        Neighborhood::findOrFail($id)->delete();
+        flash(Lang::get('delegate::delivery.neighborhood_deleted'))->success();
         return back();
     }
 }

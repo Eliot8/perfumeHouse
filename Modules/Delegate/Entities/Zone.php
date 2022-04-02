@@ -15,4 +15,8 @@ class Zone extends Model
     public function province() {
         return $this->belongsTo(Province::class);
     }
+
+    public function neighborhoods() {
+        return $this->hasMany(Neighborhood::class);
+    }
 }

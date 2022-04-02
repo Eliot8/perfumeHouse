@@ -48,6 +48,9 @@ return [
     'zone_updated' => 'تم تحديث المنطقة بنجاح',
     'zone_deleted' => 'تم حذف المنطقة بنجاح',
 
+    'neighborhood_added' => 'تم إضافة الحي بنجاح',
+    'neighborhood_deleted' => 'تم حذف الحي بنجاح',
+
     'add_province' => 'إضافة ولاية',
     'edit_province' => 'تعديل ولاية',
     'province_empty' => 'لا يوجد',
@@ -59,4 +62,10 @@ return [
     'add_zone' => 'إضافة منطقة',
     'edit_zone' => 'تعديل المنطقة',
     'zone_name' => 'اسم المنطقة',
+    'select_zone' => 'حدد المنطقة',
+
+    'add_neighborhood' => 'إضافة حي',
+    'new_neighborhood' => 'حي جديد',
+    'neighborhood_name' => 'إسم الحي',
+    'view_neighborhood' => 'الاحياء',
 ];

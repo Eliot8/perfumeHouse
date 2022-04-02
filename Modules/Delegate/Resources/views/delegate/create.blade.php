@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="aiz-titlebar text-left mt-2 mb-3">
-    <h5 class="mb-0 h6">@lang('delegate::delivery.add_new_delegate')</h5>
+    <h1 class="mb-0 h6"><a href="{{ route('stock.index') }}" class="text-dark"><i class="las la-arrow-left"></i> @lang('delegate::delivery.back')</a></h1>
 </div>
 <div class="">
     <form class="form form-horizontal mar-top" action="{{route('delegates.store')}}" method="POST" id="choice_form">
@@ -145,7 +145,7 @@
     
     $('#province_id').on('change', function() {
         $.ajax({
-            url: `/admin/province/${$(this).val()}/zone`,
+            url: `/province/${$(this).val()}/zone`,
             type: "GET",
             success: function(response) {
                 $('#zone_id').empty().append(response.options).selectpicker('refresh');

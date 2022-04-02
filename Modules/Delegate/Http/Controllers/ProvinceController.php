@@ -72,7 +72,8 @@ class ProvinceController extends Controller
      */
     public function edit($id)
     {
-        return view('delegate::edit');
+        $province = Province::findOrFail($id);
+        return view('delegate::provinces.edit', compact('province'));
     }
 
     /**
@@ -97,7 +98,7 @@ class ProvinceController extends Controller
         $province->save();
 
         flash(Lang::get('delegate::delivery.province_updated'))->success();
-        return back();
+        return redirect()->route('provinces.index');
     }
 
     /**
@@ -108,7 +109,8 @@ class ProvinceController extends Controller
     public function destroy($id)
     {
         $province = Province::findOrFail($id);
-        $province->zones->
+        $province->zones()->delete();
+        $province->delete();
 
         flash(Lang::get('delegate::delivery.province_deleted'))->success();
         return back();

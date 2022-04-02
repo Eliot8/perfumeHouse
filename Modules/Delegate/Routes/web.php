@@ -25,19 +25,24 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
     Route::get('/delegate-stock/{delegate_id}/manage', 'StockController@manage')->name('stock.manage');
 
+    // NIEGHBORHOOD
+    Route::post('/neighborhood/create', 'ZonesController@storeNeighborhood')->name('neighborhood.store');
+    Route::get('/neighborhood/{id}/delete', 'ZonesController@destroyNeighborhood')->name('neighborhood.destroy');
+
 
 
     // AJAX
-    Route::get('/province/{id}/zone', 'DelegatesController@getZone');
+    // Route::get('/province/{id}/zone', 'DelegatesController@getZone');
     Route::post('/delegate/deleteModal', 'DelegatesController@getModalDeleteByAjax');
-
-
-
+    
+    
+    
     Route::get('/test', function() {
         dd(app()->getLocale());
     });
-
+    
 });
+Route::get('/province/{id}/zone', 'DelegatesController@getZone');
 
 
 Route::get('/route/list', function () {

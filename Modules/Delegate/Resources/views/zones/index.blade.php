@@ -12,7 +12,11 @@
             <button type="button" class="btn btn-circle btn-info" data-toggle="modal" data-target="#create-modal">
                 <span>@lang('delegate::delivery.add_zone')</span>
             </button>
+            <button type="button" class="btn btn-circle btn-success" data-toggle="modal" data-target="#create-neighborhood-modal">
+                <span>@lang('delegate::delivery.add_neighborhood')</span>
+            </button>
             @include('delegate::zones.create')
+            @include('delegate::components.create_neighborhood')
         </div>
         @endif
     </div>
@@ -50,16 +54,16 @@
                         </td>
                         <td><strong class="btn-soft-info btn-circle btn-sm" style="transition: all 0.3s ease;">{{ $zone->province ? $zone->province->name : '' }}</strong></td>
                         <td class="text-right">
-                            {{-- <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('zones.edit', $zone->id) }}" title="{{ translate('Edit') }}">
-                                <i class="las la-edit"></i>
-                            </a> --}}
-                            <button type="button" class="btn btn-soft-primary btn-icon btn-circle btn-sm" data-toggle="modal" data-target="#edit-modal{{ $zone->id }}" title="{{ translate('Edit') }}">
-                                <i class="las la-edit"></i>
+                            <button type="button" class="btn btn-soft-success btn-icon btn-circle btn-sm" data-toggle="modal" data-target="#view-neighborhoods-modal{{ $zone->id }}" title="@lang('delegate::delivery.view_neighborhood')">
+                                <i class="las la-list"></i>
                             </button>
-                            @include('delegate::zones.edit')
+                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('zones.edit', $zone->id) }}" title="{{ translate('Edit') }}">
+                                <i class="las la-edit"></i>
+                            </a>
                             <button type="button" class="btn btn-soft-danger btn-icon btn-circle btn-sm" data-toggle="modal" data-target="#delete-modal{{ $zone->id }}" title="{{ translate('Delete') }}">
                                 <i class="las la-trash"></i>
                             </button>
+                            @component('delegate::components.neighborhoods', ['zone' => $zone])@endcomponent
                             @component('delegate::components.delete', ['name' => 'zones', 'id' => $zone->id])@endcomponent
                         </td>
                     </tr>

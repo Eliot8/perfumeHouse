@@ -58,11 +58,11 @@
                         </div> --}}
                         <div class="row">
                             <div class="col-md-2">
-                                <label>{{ translate('Province') }}</label>
+                                <label>@lang('delegate::delivery.province')</label>
                             </div>
                             <div class="col-md-10">
-                                <select class="form-control mb-3 aiz-selectpicker" data-live-search="true" data-placeholder="{{ translate('Select your province') }}" name="province_id" required>
-                                    <option value="">{{ translate('Select your province') }}</option>
+                                <select class="form-control mb-3 aiz-selectpicker" data-live-search="true" data-placeholder="@lang('delegate::delivery.select_province')" name="province" id="province" required>
+                                    <option value="">@lang('delegate::delivery.select_province')</option>
                                     @foreach (\Modules\Delegate\Entities\Province::all() as $key => $province)
                                         <option value="{{ $province->id }}">{{ $province->name }}</option>
                                     @endforeach
@@ -72,10 +72,10 @@
 
                         <div class="row">
                             <div class="col-md-2">
-                                <label>{{ translate('Zone')}}</label>
+                                <label>@lang('delegate::delivery.zone')</label>
                             </div>
                             <div class="col-md-10">
-                                <select class="form-control mb-3 aiz-selectpicker" data-live-search="true" name="zone_id" required>
+                                <select class="form-control mb-3 aiz-selectpicker" data-live-search="true" name="zone" id="zone">
                                     
                                 </select>
                             </div>
@@ -242,6 +242,26 @@
                 }
             });
         }
+        function get_zones(select){
+             $.ajax({
+                url: `/province/${select.value}/zone`,
+                type: "GET",
+                success: function(response) {
+                    $('#zone_id').empty().append(response.options).selectpicker('refresh');
+                }
+            });
+        }
+
+        //
+        $('#province').on('change', function() {
+            $.ajax({
+                url: `/province/${$(this).val()}/zone`,
+                type: "GET",
+                success: function(response) {
+                    $('#zone').empty().append(response.options).selectpicker('refresh');
+                }
+            });
+        });
     </script>
 
     

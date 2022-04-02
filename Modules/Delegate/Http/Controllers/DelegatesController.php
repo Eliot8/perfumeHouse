@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use Modules\Delegate\Entities\Delegate;
+use Modules\Delegate\Entities\Zone;
 use Modules\Delegate\Http\Requests\StoreDelegateRequest;
 use Modules\Delegate\Http\Requests\UpdateDelegateRequest;
 
@@ -41,6 +42,7 @@ class DelegatesController extends Controller
      */
     public function store(StoreDelegateRequest $request)
     {
+        // dd($request->request);
         $request->validated();
         
         $delegate = new Delegate();
@@ -88,6 +90,7 @@ class DelegatesController extends Controller
      */
     public function update(UpdateDelegateRequest $request, $id)
     {
+        // dd(json_encode($request->input('zones')));
         $request->validated();
 
         if($request->input('reset_password') === 'true'){
@@ -101,10 +104,11 @@ class DelegatesController extends Controller
         $delegate->province_id = $request->input('province_id');
         $delegate->email = $request->input('email');
         $delegate->password = Hash::make($request->input('password'));
+        $delegate->zones = $request->filled('zones') ?  json_encode($request->input('zones')) : null;
 
         $request->filled('phone_number') ? $delegate->phone_number = $request->input('phone_number') : null;
         $request->filled('address') ? $delegate->address = $request->input('address') : null;
-        $request->filled('zones') ? $delegate->zones = json_encode($request->input('zones')) : null;
+
         $delegate->save();
 
         flash(Lang::get('delegate::delivery.delegate_updated'))->success();
@@ -131,12 +135,20 @@ class DelegatesController extends Controller
             return false;
     }
     
-    public function getZone($id){
+    public function getZone($province_id){
         if(request()->ajax()){
-            $zones = \DB::table('zones')->where('province_id', $id)->pluck('name', 'id');
+            $zones = Zone::where('province_id', $province_id)->get();
             $html = '';
-            foreach($zones as $key => $value) {
-                $html .= '<option value="' . $key . '">' . $value . '</option>';
+            foreach($zones as $zone) {
+                $html .= '<optgroup label="' . $zone->name .'">';
+                if($zone->neighborhoods->count() > 0){
+                    foreach($zone->neighborhoods as $item) {
+                        $html .= '<option value="' . $item->id . '">' . $item->name . '</option>';
+                    }
+                } else {
+                    $html .= '<option value="' . $zone->id . '">' . $zone->name . '</option>';
+                }
+                $html .= '</optgroup>';
             }
             $data = [
                 'options' => $html,

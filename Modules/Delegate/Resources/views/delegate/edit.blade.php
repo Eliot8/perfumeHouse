@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="aiz-titlebar text-left mt-2 mb-3">
-    <h5 class="mb-0 h6">@lang('delegate::delivery.edit_delegate')</h5>
+    <h1 class="mb-0 h6"><a href="{{ route('delegates.index') }}" class="text-dark"><i class="las la-arrow-left"></i> @lang('delegate::delivery.back')</a></h1>
 </div>
 <div class="">
     <form class="form form-horizontal mar-top" action="{{route('delegates.update', $delegate->id)}}" method="POST" id="choice_form">
@@ -62,8 +62,14 @@
                             <label class="col-md-3 col-from-label">@lang('delegate::delivery.zones')</label>
                             <div class="col-md-8" id="zones_select">
                                 <select class="form-control aiz-selectpicker" name="zones[]" id="zones" data-live-search="true" multiple>
-                                    @foreach (\DB::table('zones')->where('province_id', $delegate->province_id)->get() as $zone)
-                                    <option value="{{ $zone->id }}" @if(in_array($zone->id, json_decode($delegate->zones))) selected @endif>{{ $zone->name }}</option>
+                                    @foreach (Modules\Delegate\Entities\Zone::where('province_id', $delegate->province_id)->get() as $zone)
+                                    <optgroup label="{{ $zone->name }}">
+                                        @forelse($zone->neighborhoods as $item)
+                                        <option value="{{ $item->id }}" @if(in_array($item->id, json_decode($delegate->zones))) selected @endif>{{ $item->name }}</option>
+                                        @empty
+                                        <option value="{{ $zone->id }}" @if(in_array($zone->id, json_decode($delegate->zones))) selected @endif>{{ $zone->name }}</option>
+                                        @endforelse
+                                    </optgroup>
                                     @endforeach
                                 </select>
                             </div>
@@ -170,7 +176,7 @@
     /********** GET ZONES USING AJAX *******************/
     $('#province_id').on('change', function() {
         $.ajax({
-            url: `/admin/province/${$(this).val()}/zone`,
+            url: `/province/${$(this).val()}/zone`,
             type: "GET",
             // dataType: "HTML",
             success: function(response) {

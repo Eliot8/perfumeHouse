@@ -48,6 +48,9 @@ return [
     'zone_updated' => 'Zone has been updated successfully',
     'zone_deleted' => 'Zone has been deleted successfully',
 
+    'neighborhood_added' => 'Meighborhood has been added successfully',
+    'neighborhood_deleted' => 'Meighborhood has been deleted successfully',
+
     'add_province' => 'Add province',
     'province_empty' => 'Empty',
     'delivery_man' => 'Delivery man',
@@ -58,5 +61,10 @@ return [
     'add_zone' => 'Add Zone',
     'edit_zone' => 'Edit Zone',
     'zone_name' => 'Zone name',
+    'select_zone' => 'Select Zone',
 
+    'add_neighborhood' => 'Add Neighboerhood',
+    'new_neighborhood' => 'New Neighborhood',
+    'neighborhood_name' => 'Neiborhood Name',
+    'view_neighborhood' => 'View Neighborhood',
 ];

@@ -9,7 +9,7 @@
                 <textarea class="form-control mb-3" placeholder="{{ translate('Your Address')}}" rows="2" name="address" required>{{ $address_data->address }}</textarea>
             </div>
         </div>
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-md-2">
                 <label>{{ translate('Country')}}</label>
             </div>
@@ -55,6 +55,38 @@
                     @endforeach
                 </select>
             </div>
+        </div> --}}
+        <div class="row">
+            <div class="col-md-2">
+                <label>@lang('delegate::delivery.province')</label>
+            </div>
+            <div class="col-md-10">
+                <select class="form-control mb-3 aiz-selectpicker" data-live-search="true" data-placeholder="@lang('delegate::delivery.select_province')" name="province" id="province_id" onchange="get_zones(this);" required>
+                    <option value="">@lang('delegate::delivery.select_province')</option>
+                    @foreach (\Modules\Delegate\Entities\Province::all() as $key => $province)
+                        <option value="{{ $province->id }}" @if($address_data->province_id == $province->id) selected @endif>{{ $province->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                <label>@lang('delegate::delivery.zone')</label>
+            </div>
+            <div class="col-md-10">
+                <select class="form-control mb-3 aiz-selectpicker" data-live-search="true" name="zone" id="zone_id">
+                    @foreach (Modules\Delegate\Entities\Zone::where('province_id', $address_data->province_id)->get() as $zone)
+                    <optgroup label="{{ $zone->name }}">
+                        @forelse($zone->neighborhoods as $item)
+                        <option value="{{ $item->id }}" @if($address_data->zone_id == $item->id) selected @endif>{{ $item->name }}</option>
+                        @empty
+                        <option value="{{ $zone->id }}" @if($address_data->zone_id == $zone->id) selected @endif>{{ $zone->name }}</option>
+                        @endforelse
+                    </optgroup>
+                    @endforeach
+                </select>
+            </div>
         </div>
         
         @if (get_setting('google_map') == 1)
@@ -88,14 +120,14 @@
             </div>
         @endif
         
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-md-2">
                 <label>{{ translate('Postal code')}}</label>
             </div>
             <div class="col-md-10">
                 <input type="text" class="form-control mb-3" placeholder="{{ translate('Your Postal Code')}}" value="{{ $address_data->postal_code }}" name="postal_code" value="" required>
             </div>
-        </div>
+        </div> --}}
         <div class="row">
             <div class="col-md-2">
                 <label>{{ translate('Phone')}}</label>
@@ -109,3 +141,17 @@
         </div>
     </div>
 </form>
+
+{{-- @section('script')
+<script type="text/javascript">
+    $('#province_id').on('change', function() {
+        $.ajax({
+            url: `/province/${$(this).val()}/zone`,
+            type: "GET",
+            success: function(response) {
+                $('#zone_id').empty().append(response.options).selectpicker('refresh');
+            }
+        });
+    });
+</script>
+@endsection --}}

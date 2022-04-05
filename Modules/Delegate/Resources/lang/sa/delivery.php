@@ -4,6 +4,7 @@ return [
     'deliveries' => 'عمليات التسليم',
     'add_new_delegate' => 'اضافة مندوب جديد',
     'delegates' => 'المندوبين',
+    'delegate' => 'المندوب',
     'stock_management' => 'إدارة المخزون',
     'provinces' => 'ولايات',
     'province' => 'ولاية',

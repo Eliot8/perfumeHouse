@@ -4,6 +4,7 @@ return [
     'deliveries' => 'Deliveries',
     'add_new_delegate' => 'Add new delivery man',
     'delegates' => 'Delivery men',
+    'delegates' => 'Delivery man',
     'stock_management' => 'Stock Management',
     'provinces' => 'Provinces',
     'province' => 'Province',

@@ -30,6 +30,7 @@ use App\Utility\NotificationUtility;
 use CoreComponentRepository;
 use App\Utility\SmsUtility;
 use Modules\Delegate\Entities\Delegate;
+use Modules\Delegate\Entities\Stock;
 
 class OrderController extends Controller
 {
@@ -526,33 +527,42 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($request->order_id);
 
-        
-        // dd(json_decode($order->shipping_address));
-
+        if ($request->status == 'delivered') {
+            $delegate_id = Delegate::where('user_id', $order->assign_delivery_boy)->first()->id;
+            foreach ($order->orderDetails as $orderDetail) {
+                // dd($orderDetail->product_id);
+                $product_id = $orderDetail->product_id;
+                $stock = Stock::where('delegate_id', $delegate_id)->where('product_id', $product_id)->first();
+                if($stock->stock - $orderDetail->quantity < 0){
+                    $stock->stock = 0;
+                } else {
+                    $stock->stock = $stock->stock - $orderDetail->quantity;
+                }
+                $stock->save();
+            }
+        }
+        // dd('stop');
 
         $order->delivery_viewed = '0';
         $order->delivery_status = $request->status;
-        
+        // **********************
         if($request->status == 'confirmed'){
             $delegates = Delegate::where('province_id', $order->province_id)->get();
             foreach ($delegates as $delegate) {
                 if ($delegate->zones == null) {
-                    // dd('null');
                     $order->assign_delivery_boy = $delegate->user_id;
                 } else {
-                    // dd('not null');
                     if (in_array($order->zone_id, json_decode($delegate->zones))) {
                         $order->assign_delivery_boy = $delegate->user_id;
                     }
                 }
-                // dd('stop');
-
-                // if($delegate->zones == null || ($delegate->zones != null && in_array($address->zone_id, json_decode($delegate->zones)))){
-                //     $order->assign_delivery_boy = $delegate->user_id;
-                // }
             }
+
         }
         $order->save();
+
+        
+        
         
         if ($request->status == 'cancelled' && $order->payment_type == 'wallet') {
             $user = User::where('id', $order->user_id)->first();

@@ -104,6 +104,7 @@
                         @if (addon_is_activated('refund_request'))
                         <th>{{ translate('Refund') }}</th>
                         @endif
+                        <th>{{translate('Cancel Request')}}</th>
                         <th class="text-right" width="15%">{{translate('options')}}</th>
                     </tr>
                 </thead>
@@ -165,6 +166,13 @@
                             @endif
                         </td>
                         @endif
+                        <td>
+                            @if ($order->cancel_request == 1)
+                             <span class="badge badge-inline badge-warning">{{  $order->cancel_request_at }}</span>
+                             @else
+                             <span class="badge badge-inline badge-success">{{  translate('No cancel request') }}</span>
+                            @endif
+                        </td>
                         <td class="text-right">
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('all_orders.show', encrypt($order->id))}}" title="{{ translate('View') }}">
                                 <i class="las la-eye"></i>

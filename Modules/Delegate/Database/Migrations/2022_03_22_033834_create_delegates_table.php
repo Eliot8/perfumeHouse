@@ -23,6 +23,8 @@ class CreateDelegatesTable extends Migration
             $table->string('photo')->nullable();
             $table->integer('province_id')->unsigned();
             $table->foreign('province_id')->references('id')->on('provinces')->onUpdate('cascade')->onDelete('cascade');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->json('zones');
             $table->timestamps();
         });

@@ -52,12 +52,9 @@
                         <td>{{ $delegate->phone_number }}</td>
                         <td>{{ $delegate->email }}</td>
                         <td>
-                            <strong class="btn-soft-info btn-circle btn-sm" style="transition: all 0.3s ease;">{{ \DB::table('provinces')->where('id', $delegate->province_id)->first()->name }}</strong>
+                            <strong class="badge badge-inline badge-info" style="transition: all 0.3s ease;">{{ \DB::table('provinces')->where('id', $delegate->province_id)->first()->name }}</strong>
                         </td>
                         <td class="text-right">
-                            {{-- <a class="btn btn-soft-success btn-icon btn-circle btn-sm"  href="" target="_blank" title="{{ translate('View') }}">
-                                <i class="las la-eye"></i>
-                            </a> --}}
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('delegates.edit', $delegate->id) }}" title="{{ translate('Edit') }}">
                                 <i class="las la-edit"></i>
                             </a>

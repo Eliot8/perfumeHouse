@@ -20,10 +20,6 @@ Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin']], function()
     Route::get('/delivery-boy-configuration', 'DeliveryBoyController@delivery_boy_configure')->name('delivery-boy-configuration');
     Route::post('/delivery-boy/order-collection', 'DeliveryBoyController@order_collection_form')->name('delivery-boy.order-collection');
     Route::post('/collection-from-delivery-boy', 'DeliveryBoyController@collection_from_delivery_boy')->name('collection-from-delivery-boy');
-    Route::post('/delivery-boy/delivery-earning', 'DeliveryBoyController@delivery_earning_form')->name('delivery-boy.delivery-earning');
-    Route::post('/paid-to-delivery-boy', 'DeliveryBoyController@paid_to_delivery_boy')->name('paid-to-delivery-boy');
-    Route::get('/delivery-boys-payment-histories', 'DeliveryBoyController@delivery_boys_payment_histories')->name('delivery-boys-payment-histories');
-    Route::get('/delivery-boys-collection-histories', 'DeliveryBoyController@delivery_boys_collection_histories')->name('delivery-boys-collection-histories');
     Route::get('/delivery-boy/cancel-request', 'DeliveryBoyController@cancel_request_list')->name('delivery-boy.cancel-request');
     
 });
@@ -39,4 +35,8 @@ Route::group(['middleware' => ['user', 'verified', 'unbanned']], function() {
     Route::get('/total-earnings', 'DeliveryBoyController@total_earning')->name('total-earnings');
     Route::get('/cancel-request/{id}', 'DeliveryBoyController@cancel_request')->name('cancel-request');
     Route::get('/cancel-request-list', 'DeliveryBoyController@cancel_request_list')->name('cancel-request-list');
+
+    Route::post('/profile/update', 'DeliveryBoyController@profileUpdate')->name('delivery_boy.profile.update');
+
+
 });

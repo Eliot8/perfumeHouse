@@ -11,6 +11,7 @@
 |
 */
 
+use App\Models\DeliveryBoy;
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
     Route::resource('delegates', 'DelegatesController')->except(['destroy']);
@@ -37,9 +38,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     
     
     
-    Route::get('/test', function() {
-        dd(app()->getLocale());
-    });
+    
     
 });
 Route::get('/province/{id}/zone', 'DelegatesController@getZone');
@@ -54,6 +53,10 @@ Route::get('/route/list', function () {
     }
 
     dd($routes);
+});
+
+Route::get('/delivery_boy/test', function () {
+    dd(DeliveryBoy::where('user_id', Auth::user()->id)->first());
 });
 
 

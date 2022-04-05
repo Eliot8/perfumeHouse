@@ -127,7 +127,7 @@
                             </div>
                         </td>
                         @if($type == 'Seller' || $type == 'All')
-                            <td>{{ $product->user->name }}</td>
+                            <td>{{ $product->user->name ?? ''}}</td>
                         @endif
                         <td>
                             <strong>{{translate('Num of Sale')}}:</strong> {{ $product->num_of_sale }} {{translate('times')}} </br>

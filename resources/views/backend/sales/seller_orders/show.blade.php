@@ -20,8 +20,9 @@
                         <strong class="text-main">{{ json_decode($order->shipping_address)->name }}</strong><br>
                          {{ json_decode($order->shipping_address)->email }}<br>
                          {{ json_decode($order->shipping_address)->phone }}<br>
-                         {{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->city }}, {{ json_decode($order->shipping_address)->postal_code }}<br>
-                         {{ json_decode($order->shipping_address)->country }}
+                         {{-- {{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->city }}, {{ json_decode($order->shipping_address)->postal_code }}<br> --}}
+                         {{-- {{ json_decode($order->shipping_address)->country }} --}}
+                         {{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->zone }}, {{ json_decode($order->shipping_address)->province}}<br>
                     </address>
                     @if ($order->manual_payment && is_array(json_decode($order->manual_payment_data, true)))
                         <br>

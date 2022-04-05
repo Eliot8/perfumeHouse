@@ -3,6 +3,7 @@
 namespace Modules\Delegate\Entities;
 
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Delegate extends Model
@@ -15,8 +16,8 @@ class Delegate extends Model
         return $this->belongsTo(Province::class, 'province_id');
     }
 
-    // public function products(){
-    //     return $this->belongsToMany(Product::class, 'delegate_product', 'delegate_id');
-    // }
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
     
 }

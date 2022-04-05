@@ -2,6 +2,8 @@
 
 namespace Modules\Delegate\Http\Controllers;
 
+use App\Models\User;
+use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -42,7 +44,6 @@ class DelegatesController extends Controller
      */
     public function store(StoreDelegateRequest $request)
     {
-        // dd($request->request);
         $request->validated();
         
         $delegate = new Delegate();
@@ -55,8 +56,17 @@ class DelegatesController extends Controller
         $request->filled('address') ? $delegate->address = $request->input('address') : null;
         $request->filled('zones') ? $delegate->zones = json_encode($request->input('zones')) : null;
         
+        // CREATE USER
+        $user = new User();
+        $user->user_type = 'delivery_boy';
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = Hash::make($request->input('password'));
+        $request->filled('address') ? $user->address = $request->input('address') : null;
+        $user->save();
+        
+        $delegate->user_id = $user->id;
         $delegate->save();
-
         flash(Lang::get('delegate::delivery.delegate_added'))->success();
         return redirect()->route('delegates.index');
     }
@@ -90,7 +100,6 @@ class DelegatesController extends Controller
      */
     public function update(UpdateDelegateRequest $request, $id)
     {
-        // dd(json_encode($request->input('zones')));
         $request->validated();
 
         if($request->input('reset_password') === 'true'){
@@ -98,21 +107,36 @@ class DelegatesController extends Controller
                 'password' => ['required', 'confirmed', 'min:4'],
             ]);
         }
-
-        $delegate =Delegate::findOrFail($id);
-        $delegate->full_name = $request->input('name');
-        $delegate->province_id = $request->input('province_id');
-        $delegate->email = $request->input('email');
-        $delegate->password = Hash::make($request->input('password'));
-        $delegate->zones = $request->filled('zones') ?  json_encode($request->input('zones')) : null;
-
-        $request->filled('phone_number') ? $delegate->phone_number = $request->input('phone_number') : null;
-        $request->filled('address') ? $delegate->address = $request->input('address') : null;
-
-        $delegate->save();
-
-        flash(Lang::get('delegate::delivery.delegate_updated'))->success();
-        return redirect()->route('delegates.index');
+        try{
+            $delegate =Delegate::findOrFail($id);
+            $delegate->full_name = $request->input('name');
+            $delegate->province_id = $request->input('province_id');
+    
+            if($request->input('email')){
+                $delegate->email = $request->input('email');
+                $user = User::findOrFail($delegate->user_id);
+                $user->email = $request->input('email');
+                $user->save();
+            }
+    
+            if($request->input('reset_password') === 'true'){
+                $delegate->password = Hash::make($request->input('password'));
+                $user = User::findOrFail($delegate->user_id);
+                $user->password = $request->input('password');
+                $user->save();
+            }
+    
+            $delegate->zones = $request->filled('zones') ?  json_encode($request->input('zones')) : null;
+            $request->filled('phone_number') ? $delegate->phone_number = $request->input('phone_number') : null;
+            $request->filled('address') ? $delegate->address = $request->input('address') : null;
+    
+            $delegate->save();
+            flash(Lang::get('delegate::delivery.delegate_updated'))->success();
+            return redirect()->route('delegates.index');
+        } catch(Exception $e){
+            flash($e->getMessage())->error();
+            return back();
+        }
     }
 
     /**
@@ -122,7 +146,9 @@ class DelegatesController extends Controller
      */
     public function destroy($id)
     {
-        Delegate::findOrFail($id)->delete();
+        $delegate = Delegate::findOrFail($id);
+        $delegate->user()->delete();
+        $delegate->delete();
 
         flash(Lang::get('delegate::delivery.delegate_deleted'))->success();
         return redirect()->route('delegates.index');

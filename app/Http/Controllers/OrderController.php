@@ -528,11 +528,15 @@ class OrderController extends Controller
         $order = Order::findOrFail($request->order_id);
 
         if ($request->status == 'delivered') {
-            $delegate_id = Delegate::where('user_id', $order->assign_delivery_boy)->first()->id;
+            $delegate = Delegate::select('id', 'percentage')->where('user_id', $order->assign_delivery_boy)->first();
+            $earnings = 0;
             foreach ($order->orderDetails as $orderDetail) {
-                // dd($orderDetail->product_id);
+                // EARNINGS
+                $earnings += $orderDetail->price;
+
+                // MANAGE STOCK
                 $product_id = $orderDetail->product_id;
-                $stock = Stock::where('delegate_id', $delegate_id)->where('product_id', $product_id)->first();
+                $stock = Stock::where('delegate_id', $delegate->id)->where('product_id', $product_id)->first();
                 if($stock->stock - $orderDetail->quantity < 0){
                     $stock->stock = 0;
                 } else {
@@ -540,8 +544,11 @@ class OrderController extends Controller
                 }
                 $stock->save();
             }
+            ;
+            // PERCENTAGE EARNING
+            $order->percentage_earnings = $earnings * ($delegate->percentage / 100);
+            
         }
-        // dd('stop');
 
         $order->delivery_viewed = '0';
         $order->delivery_status = $request->status;
@@ -560,9 +567,6 @@ class OrderController extends Controller
 
         }
         $order->save();
-
-        
-        
         
         if ($request->status == 'cancelled' && $order->payment_type == 'wallet') {
             $user = User::where('id', $order->user_id)->first();

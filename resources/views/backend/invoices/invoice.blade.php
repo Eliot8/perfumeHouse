@@ -97,7 +97,8 @@
 				@endphp
 				<tr><td class="strong small gry-color">{{ translate('Bill to') }}:</td></tr>
 				<tr><td class="strong">{{ $shipping_address->name }}</td></tr>
-				<tr><td class="gry-color small">{{ $shipping_address->address }}, {{ $shipping_address->city }}, {{ $shipping_address->postal_code }}, {{ $shipping_address->country }}</td></tr>
+				{{-- <tr><td class="gry-color small">{{ $shipping_address->address }}, {{ $shipping_address->city }}, {{ $shipping_address->postal_code }}, {{ $shipping_address->country }}</td></tr> --}}
+				<tr><td class="gry-color small">{{ $shipping_address->address }}, {{ $shipping_address->zone }}, {{ $shipping_address->province }}</td></tr>
 				<tr><td class="gry-color small">{{ translate('Email') }}: {{ $shipping_address->email }}</td></tr>
 				<tr><td class="gry-color small">{{ translate('Phone') }}: {{ $shipping_address->phone }}</td></tr>
 			</table>

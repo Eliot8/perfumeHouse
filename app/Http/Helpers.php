@@ -670,7 +670,7 @@ if (!function_exists('get_setting')) {
     {
         $settings = Cache::remember('business_settings', 86400, function () {
             return BusinessSetting::all();
-        });
+        }); 
 
         if ($lang == false) {
             $setting = $settings->where('type', $key)->first();

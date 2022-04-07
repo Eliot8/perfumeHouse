@@ -171,7 +171,8 @@
                             @if ($order->cancel_request == 1)
                             <span class="badge badge-inline badge-warning">{{  $order->cancel_request_at }}</span>
                             @else
-                            <span class="badge badge-inline badge-success">{{  translate('No cancel request') }}</span>
+                            {{-- <span class="badge badge-inline badge-success">{{  translate('No cancel request') }}</span> --}}
+                            <span class="badge badge-inline badge-success"><i class="las la-clipboard-check" style="font-size: 18px;"></i></span>
                             @endif
                         </td>
                         <td>

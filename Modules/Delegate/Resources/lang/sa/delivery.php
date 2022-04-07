@@ -69,4 +69,8 @@ return [
     'new_neighborhood' => 'حي جديد',
     'neighborhood_name' => 'إسم الحي',
     'view_neighborhood' => 'الاحياء',
+
+    'percentage' => 'النسبة المئوية',
+    'percentage_earnings' => 'نسبة الأرباح',
+
 ];

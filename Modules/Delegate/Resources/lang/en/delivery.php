@@ -68,4 +68,7 @@ return [
     'new_neighborhood' => 'New Neighborhood',
     'neighborhood_name' => 'Neiborhood Name',
     'view_neighborhood' => 'View Neighborhood',
+
+    'percentage' => 'Percentage',
+    'percentage_earnings' => 'Percentage Earnings',
 ];

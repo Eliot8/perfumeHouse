@@ -89,12 +89,9 @@ $delivery_boy_info = \App\Models\DeliveryBoy::where('user_id', Auth::user()->id)
                     {{ get_setting('delivery_boy_salary') }} / {{ translate('mo') }}
                 </div>
                 @endif
-                
             </div>
-            
         </div>
     </div>
-    
 </div>
 
 

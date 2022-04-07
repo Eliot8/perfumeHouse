@@ -55,6 +55,7 @@ class DelegatesController extends Controller
         $request->filled('phone_number') ? $delegate->phone_number = $request->input('phone_number') : null;
         $request->filled('address') ? $delegate->address = $request->input('address') : null;
         $request->filled('zones') ? $delegate->zones = json_encode($request->input('zones')) : null;
+        $request->filled('percentage') ? $delegate->percentage = $request->input('percentage') : null;
         
         // CREATE USER
         $user = new User();
@@ -129,6 +130,7 @@ class DelegatesController extends Controller
             $delegate->zones = $request->filled('zones') ?  json_encode($request->input('zones')) : null;
             $request->filled('phone_number') ? $delegate->phone_number = $request->input('phone_number') : null;
             $request->filled('address') ? $delegate->address = $request->input('address') : null;
+            $request->filled('percentage') ? $delegate->percentage = $request->input('percentage') : null;
     
             $delegate->save();
             flash(Lang::get('delegate::delivery.delegate_updated'))->success();

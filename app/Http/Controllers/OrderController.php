@@ -29,6 +29,7 @@ use App\Mail\InvoiceEmailManager;
 use App\Utility\NotificationUtility;
 use CoreComponentRepository;
 use App\Utility\SmsUtility;
+use Modules\Delegate\Entities\Province;
 use Modules\Delegate\Entities\Delegate;
 use Modules\Delegate\Entities\Stock;
 
@@ -373,10 +374,11 @@ class OrderController extends Controller
                     flash(translate('The requested quantity is not available for ') . $product->getTranslation('name'))->warning();
                     $order->delete();
                     return redirect()->route('cart')->send();
-                } elseif ($product->digital != 1) {
-                    $product_stock->qty -= $cartItem['quantity'];
-                    $product_stock->save();
-                }
+                } 
+                // elseif ($product->digital != 1) {
+                //     $product_stock->qty -= $cartItem['quantity'];
+                //     $product_stock->save();
+                // }
 
                 $order_detail = new OrderDetail;
                 $order_detail->order_id = $order->id;
@@ -483,17 +485,17 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
         if ($order != null) {
             foreach ($order->orderDetails as $key => $orderDetail) {
-                try {
+                // try {
 
-                    $product_stock = ProductStock::where('product_id', $orderDetail->product_id)->where('variant', $orderDetail->variation)->first();
-                    if ($product_stock != null) {
-                        $product_stock->qty += $orderDetail->quantity;
-                        $product_stock->save();
-                    }
+                //     $product_stock = ProductStock::where('product_id', $orderDetail->product_id)->where('variant', $orderDetail->variation)->first();
+                //     if ($product_stock != null) {
+                //         $product_stock->qty += $orderDetail->quantity;
+                //         $product_stock->save();
+                //     }
 
-                } catch (\Exception $e) {
+                // } catch (\Exception $e) {
 
-                }
+                // }
 
                 $orderDetail->delete();
             }
@@ -529,14 +531,16 @@ class OrderController extends Controller
 
         if ($request->status == 'delivered') {
             $delegate = Delegate::select('id', 'percentage')->where('user_id', $order->assign_delivery_boy)->first();
-            $earnings = 0;
+            $province = Province::findOrFail($order->province_id);
+            // $earnings = 0;
             foreach ($order->orderDetails as $orderDetail) {
                 // EARNINGS
-                $earnings += $orderDetail->price;
+                // $earnings += $orderDetail->price;
 
                 // MANAGE STOCK
                 $product_id = $orderDetail->product_id;
                 $stock = Stock::where('delegate_id', $delegate->id)->where('product_id', $product_id)->first();
+                
                 if($stock->stock - $orderDetail->quantity < 0){
                     $stock->stock = 0;
                 } else {
@@ -544,9 +548,10 @@ class OrderController extends Controller
                 }
                 $stock->save();
             }
-            ;
             // PERCENTAGE EARNING
-            $order->percentage_earnings = $earnings * ($delegate->percentage / 100);
+            // $order->earnings = $earnings * ($delegate->percentage / 100);
+
+            $order->delegate_earnings = $province->profit_ratio;
             
         }
 
@@ -585,14 +590,14 @@ class OrderController extends Controller
                         $variant = '';
                     }
 
-                    $product_stock = ProductStock::where('product_id', $orderDetail->product_id)
-                        ->where('variant', $variant)
-                        ->first();
+                    // $product_stock = ProductStock::where('product_id', $orderDetail->product_id)
+                    //     ->where('variant', $variant)
+                    //     ->first();
 
-                    if ($product_stock != null) {
-                        $product_stock->qty += $orderDetail->quantity;
-                        $product_stock->save();
-                    }
+                    // if ($product_stock != null) {
+                    //     $product_stock->qty += $orderDetail->quantity;
+                    //     $product_stock->save();
+                    // }
                 }
             }
         } else {
@@ -602,19 +607,19 @@ class OrderController extends Controller
                 $orderDetail->save();
 
                 if ($request->status == 'cancelled') {
-                    $variant = $orderDetail->variation;
-                    if ($orderDetail->variation == null) {
-                        $variant = '';
-                    }
+                    // $variant = $orderDetail->variation;
+                    // if ($orderDetail->variation == null) {
+                    //     $variant = '';
+                    // }
 
-                    $product_stock = ProductStock::where('product_id', $orderDetail->product_id)
-                        ->where('variant', $variant)
-                        ->first();
+                    // $product_stock = ProductStock::where('product_id', $orderDetail->product_id)
+                    //     ->where('variant', $variant)
+                    //     ->first();
 
-                    if ($product_stock != null) {
-                        $product_stock->qty += $orderDetail->quantity;
-                        $product_stock->save();
-                    }
+                    // if ($product_stock != null) {
+                    //     $product_stock->qty += $orderDetail->quantity;
+                    //     $product_stock->save();
+                    // }
                 }
 
                 if (addon_is_activated('affiliate_system')) {

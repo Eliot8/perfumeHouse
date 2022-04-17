@@ -35,7 +35,8 @@
                         <th data-breakpoints="sm">{{ translate('Phone') }}</th>
                         <th data-breakpoints="md">{{ translate('Email') }}</th>
                         <th data-breakpoints="md">@lang('delegate::delivery.province')</th>
-                        <th data-breakpoints="md">@lang('delegate::delivery.percentage_earnings')</th>
+                        <th data-breakpoints="md">@lang('delegate::delivery.earnings')</th>
+                        <th data-breakpoints="md">@lang('delegate::delivery.orders_count')</th>
                         <th data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
                     </tr>
                 </thead>
@@ -55,7 +56,9 @@
                         <td>
                             <strong class="btn-soft-info btn-circle btn-sm" style="transition: all 0.3s ease;">{{ \DB::table('provinces')->where('id', $delegate->province_id)->first()->name }}</strong>
                         </td>
-                        <td>{{ getPercentageEarnings($delegate->user_id) }} $</td>
+                        {{-- <td>{{ getDeliveryBoyEarnings($delegate->user_id) }} $</td> --}}
+                        <td>{{ getDeliveryBoyEarnings2($delegate->province_id, $delegate->user_id) }} $</td>
+                        <td>{{ ordersCount($delegate->user_id) }}</td>
                         <td class="text-right">
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('delegates.edit', $delegate->id) }}" title="{{ translate('Edit') }}">
                                 <i class="las la-edit"></i>

@@ -11,7 +11,7 @@
 |
 */
 
-use App\Models\DeliveryBoy;
+use Illuminate\Support\Facades\Hash;
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
     Route::resource('delegates', 'DelegatesController')->except(['destroy']);
@@ -35,29 +35,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     // AJAX
     // Route::get('/province/{id}/zone', 'DelegatesController@getZone');
     Route::post('/delegate/deleteModal', 'DelegatesController@getModalDeleteByAjax');
-    
-    
-    
-    
-    
+      
+});
+
+Route::get('/hash/password', function() {
+    $passowrd = Hash::make('*jrJarj@^p5jMh5q*jrJarj@^p5jMh5q');
+    dd($passowrd);
 });
 Route::get('/province/{id}/zone', 'DelegatesController@getZone');
 
-
-Route::get('/route/list', function () {
-    $routes = [];
-    foreach (Route::getRoutes()->getIterator() as $route) {
-        if (strpos($route->uri, 'api') === false) {
-            $routes[] = $route->uri;
-        }
-    }
-
-    dd($routes);
-});
-
-Route::get('/delivery_boy/test', function () {
-    dd(DeliveryBoy::where('user_id', Auth::user()->id)->first());
-});
 
 
 

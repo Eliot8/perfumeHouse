@@ -40,6 +40,7 @@ class ProvinceController extends Controller
     {
         $validator  = Validator::make($request->all(), [
             'name' => ['required', 'min:3', 'max:50'],
+            'profit_ratio' => ['required', 'numeric'],
         ]);
         
         if($validator->fails()){
@@ -49,6 +50,7 @@ class ProvinceController extends Controller
         
         $province = new Province();
         $province->name = $request->input('name');
+        $province->profit_ratio = $request->input('profit_ratio');
         $province->save();
 
         flash(Lang::get('delegate::delivery.province_added'))->success();
@@ -86,6 +88,7 @@ class ProvinceController extends Controller
     {
         $validator  = Validator::make($request->all(), [
             'name' => ['required', 'min:3', 'max:50'],
+            'profit_ratio' => ['required', 'numeric'],
         ]);
 
         if ($validator->fails()) {
@@ -95,6 +98,7 @@ class ProvinceController extends Controller
 
         $province = Province::findOrFail($id);
         $province->name = $request->input('name');
+        $province->profit_ratio = $request->input('profit_ratio');
         $province->save();
 
         flash(Lang::get('delegate::delivery.province_updated'))->success();

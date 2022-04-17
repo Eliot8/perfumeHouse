@@ -14,6 +14,12 @@
                             <input type="text" class="form-control" name="name" value="" placeholder="@lang('delegate::delivery.province_name')" required>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">@lang('delegate::delivery.profit_ratio') <span class="text-danger">*</span></label>
+                        <div class="col-md-8">
+                            <input type="number" class="form-control" name="profit_ratio" value="" placeholder="@lang('delegate::delivery.profit_ratio')" required>
+                        </div>
+                    </div>
                     <button type="button" class="btn btn-link mt-2" data-dismiss="modal">{{ translate('Cancel') }}</button>
                     <button type="submit" class="btn btn-info mt-2">{{ translate('Save') }}</button>
                 </form>

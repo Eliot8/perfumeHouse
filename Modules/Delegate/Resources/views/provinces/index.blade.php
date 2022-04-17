@@ -34,6 +34,7 @@
                         <th data-breakpoints="sm">#</th>
                         <th>{{ translate('Name') }}</th>
                         <th data-breakpoints="sm">@lang('delegate::delivery.delivery_man')</th>
+                        <th data-breakpoints="sm">@lang('delegate::delivery.profit_ratio')</th>
                         <th data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
                     </tr>
                 </thead>
@@ -57,17 +58,16 @@
                             <span class="btn-soft-danger btn-circle btn-sm" style="transition: all 0.3s ease;">@lang('delegate::delivery.province_empty')</span>
                             @endif
                         </td>
+                        <td>
+                            {{ $province->profit_ratio ?? '0'}} $
+                        </td>
                         <td class="text-right">
-                            {{-- <button type="button" class="btn btn-soft-primary btn-icon btn-circle btn-sm" data-toggle="modal" data-target="#edit-modal{{ $province->id }}" title="{{ translate('Edit') }}">
-                                  <i class="las la-edit"></i>
-                            </button> --}}
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('provinces.edit', $province->id) }}" title="{{ translate('Edit') }}">
                                 <i class="las la-edit"></i>
                             </a>
                             <button type="button" class="btn btn-soft-danger btn-icon btn-circle btn-sm" data-toggle="modal" data-target="#delete-modal{{ $province->id }}" title="{{ translate('Delete') }}">
                                 <i class="las la-trash"></i>
                             </button>
-                            {{-- @include('delegate::provinces.edit') --}}
                              @component('delegate::components.delete', ['name' => 'provinces', 'id' => $province->id])@endcomponent
                         </td>
                     </tr>

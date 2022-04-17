@@ -70,5 +70,8 @@ return [
     'view_neighborhood' => 'View Neighborhood',
 
     'percentage' => 'Percentage',
-    'percentage_earnings' => 'Percentage Earnings',
+    'earnings' => 'Delivery dues',
+    'profit_ratio' => 'Profit Ratio',
+    'orders_count' => 'Orders Count',
+
 ];

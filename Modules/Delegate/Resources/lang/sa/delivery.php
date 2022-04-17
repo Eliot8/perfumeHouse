@@ -71,6 +71,8 @@ return [
     'view_neighborhood' => 'الاحياء',
 
     'percentage' => 'النسبة المئوية',
-    'percentage_earnings' => 'نسبة الأرباح',
+    'earnings' => 'مستحقات التوصيل',
+    'profit_ratio' => 'مستحق التوصيل',
+    'orders_count' => 'عدد الطلبات التي تم تسليمها',
 
 ];

@@ -34,7 +34,8 @@
                         <th data-breakpoints="sm">#</th>
                         <th>{{ translate('Name') }}</th>
                         <th data-breakpoints="sm">@lang('delegate::delivery.delivery_man')</th>
-                        <th data-breakpoints="sm">@lang('delegate::delivery.profit_ratio')</th>
+                        <th data-breakpoints="sm">@lang('delegate::delivery.delegate_cost')</th>
+                        <th data-breakpoints="sm">@lang('delegate::delivery.shipping_cost')</th>
                         <th data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
                     </tr>
                 </thead>
@@ -59,7 +60,14 @@
                             @endif
                         </td>
                         <td>
-                            {{ $province->profit_ratio ?? '0'}} $
+                            {{ $province->delegate_cost ?? '0'}} $
+                        </td>
+                        <td>
+                            @if(!$province->free_shipping)
+                            @lang('delegate::delivery.free_shipping')
+                            @else 
+                            {{ $province->shipping_cost }} $
+                            @endif
                         </td>
                         <td class="text-right">
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('provinces.edit', $province->id) }}" title="{{ translate('Edit') }}">
@@ -82,6 +90,7 @@
 </div>
 @endsection
 
+@section('')
 
 
 

@@ -70,8 +70,9 @@ return [
     'view_neighborhood' => 'View Neighborhood',
 
     'percentage' => 'Percentage',
-    'earnings' => 'Delivery dues',
-    'profit_ratio' => 'Profit Ratio',
+    'free_shipping' => 'Free',
+    'shipping_cost' => 'Delivery Cost',
+    'delegate_cost' => 'Profit Ratio',
     'orders_count' => 'Orders Count',
 
 ];

@@ -71,8 +71,9 @@ return [
     'view_neighborhood' => 'الاحياء',
 
     'percentage' => 'النسبة المئوية',
-    'earnings' => 'مستحقات التوصيل',
-    'profit_ratio' => 'مستحق التوصيل',
+    'free_shipping' => 'مجاني',
+    'shipping_cost' => 'مصاريف الشحن',
+    'delegate_cost' => 'مصاريف المندوب',
     'orders_count' => 'عدد الطلبات التي تم تسليمها',
 
 ];

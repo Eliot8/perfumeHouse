@@ -20,9 +20,9 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-3 col-from-label">@lang('delegate::delivery.profit_ratio') <span class="text-danger">*</span></label>
+                            <label class="col-md-3 col-from-label">@lang('delegate::delivery.delegate_cost') <span class="text-danger">*</span></label>
                             <div class="col-md-8">
-                                <input type="number" class="form-control" name="profit_ratio" value="{{ $province->profit_ratio }}" placeholder="@lang('delegate::delivery.profit_ratio')" required>
+                                <input type="number" class="form-control" name="delegate_cost" value="{{ $province->delegate_cost }}" placeholder="@lang('delegate::delivery.delegate_cost')" required>
                             </div>
                         </div>
                         <div class="btn-toolbar float-right mb-3" role="toolbar" aria-label="Toolbar with button groups">

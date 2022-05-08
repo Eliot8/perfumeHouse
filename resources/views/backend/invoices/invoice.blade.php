@@ -1,20 +1,22 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{  translate('INVOICE') }}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta charset="UTF-8">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>{{  translate('INVOICE') }}</title>
 	<style media="all">
         @page {
 			margin: 0;
 			padding:0;
 		}
+		
 		body{
 			font-size: 0.875rem;
             font-family: '<?php echo  $font_family ?>';
             font-weight: normal;
-            direction: <?php echo  $direction ?>;
-            text-align: <?php echo  $text_align ?>;
+            direction: '<?php echo  $direction ?>';
+            text-align: '<?php echo  $text_align ?>';
 			padding:0;
 			margin:0; 
 		}
@@ -51,20 +53,19 @@
 </head>
 <body>
 	<div>
-
 		@php
 			$logo = get_setting('header_logo');
 		@endphp
-
 		<div style="background: #eceff4;padding: 1rem;">
 			<table>
 				<tr>
 					<td>
-						@if($logo != null)
+						{{-- @if($logo != null)
 							<img src="{{ uploaded_asset($logo) }}" height="30" style="display:inline-block;">
-						@else
-							<img src="{{ asset('assets/img/logo.png') }}" height="30" style="display:inline-block;">
-						@endif
+						@else --}}
+							{{-- <img src="{{ asset('assets/img/logo.png') }}" height="30" style="display:inline-block;"> --}}
+							<img src="assets/img/logo.png" height="30" style="display:inline-block;">
+						{{-- @endif --}}
 					</td>
 					<td style="font-size: 1.5rem;" class="text-right strong">{{  translate('INVOICE') }}</td>
 				</tr>
@@ -87,7 +88,6 @@
 					<td class="text-right small"><span class="gry-color small">{{  translate('Order Date') }}:</span> <span class=" strong">{{ date('d-m-Y', $order->date) }}</span></td>
 				</tr>
 			</table>
-
 		</div>
 
 		<div style="padding: 1rem;padding-bottom: 0">
@@ -97,7 +97,6 @@
 				@endphp
 				<tr><td class="strong small gry-color">{{ translate('Bill to') }}:</td></tr>
 				<tr><td class="strong">{{ $shipping_address->name }}</td></tr>
-				{{-- <tr><td class="gry-color small">{{ $shipping_address->address }}, {{ $shipping_address->city }}, {{ $shipping_address->postal_code }}, {{ $shipping_address->country }}</td></tr> --}}
 				<tr><td class="gry-color small">{{ $shipping_address->address }}, {{ $shipping_address->zone }}, {{ $shipping_address->province }}</td></tr>
 				<tr><td class="gry-color small">{{ translate('Email') }}: {{ $shipping_address->email }}</td></tr>
 				<tr><td class="gry-color small">{{ translate('Phone') }}: {{ $shipping_address->phone }}</td></tr>
@@ -157,6 +156,7 @@
                             @endphp
                             {!! str_replace($removedXML,"", QrCode::size(100)->generate($order->code)) !!}
 			            </td>
+						
 			            <td>
 					        <table class="text-right sm-padding small strong">
 						        <tbody>
@@ -178,7 +178,7 @@
 							        </tr>
 							        <tr>
 							            <th class="text-left strong">{{ translate('Grand Total') }}</th>
-							            <td class="currency">{{ single_price($order->grand_total) }}</td>
+							            <td class="currency">{{ single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('shipping_cost')) }}</td>
 							        </tr>
 						        </tbody>
 						    </table>
@@ -187,7 +187,8 @@
 		        </tbody>
 		    </table>
 	    </div>
-
 	</div>
 </body>
 </html>
+
+

@@ -15,6 +15,7 @@ return
                 'R'  => 'Roboto-Regular.ttf',    // regular font
                 'useOTL' => 0xFF,    // required for complicated langs like Persian, Arabic and Chinese
                 'useKashida' => 75,  // required for complicated langs like Persian, Arabic and Chinese
+                
             ],
             'hindsiliguri' => [
                 'R'  => 'HindSiliguri-Regular.ttf',    // regular font
@@ -40,4 +41,9 @@ return
                 'R'  => 'Kanit-Regular.ttf',    // regular font
             ],
         ]
+    // 'useOTL' => 0xFF,
+    // 'useKashida' => 75,
+
+
+   
     ];

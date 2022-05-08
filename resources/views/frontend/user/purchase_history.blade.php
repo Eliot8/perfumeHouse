@@ -27,7 +27,8 @@
                                     </td>
                                     <td>{{ date('d-m-Y', $order->date) }}</td>
                                     <td>
-                                        {{ single_price($order->grand_total) }}
+                                        {{-- {{ single_price($order->grand_total) }} --}}
+                                        {{single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('shipping_cost'))}}
                                     </td>
                                     <td>
                                         {{ translate(ucfirst(str_replace('_', ' ', $order->delivery_status))) }}
@@ -46,11 +47,25 @@
                                         @endif
                                     </td>
                                     <td class="text-right">
+                                        @php
+                                            $comments_not_viewed = \Modules\Delegate\Entities\Comment::where('order_id', $order->id)->where('user_id', '!=', Auth::user()->id)->get();
+                                            $count = 0;
+                                            foreach($comments_not_viewed as $comment) {
+                                                if($comment->viewed == 0) $count ++;
+                                            }
+                                            $locale = app()->getLocale();
+                                        @endphp
                                         @if ($order->orderDetails->first()->delivery_status == 'pending' && $order->payment_status == 'unpaid')
                                             <a href="javascript:void(0)" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('orders.destroy', $order->id)}}" title="{{ translate('Cancel') }}">
-                                               <i class="las la-trash"></i>
+                                                <i class="las la-trash"></i>
                                            </a>
                                         @endif
+                                        <a href="javascript:void(0)" class="btn btn-soft-primary btn-icon btn-circle btn-sm position-relative" onclick="show_comments({{ $order->id }})" title="{{ translate('Order Comments') }}">
+                                            <i class="las la-comments"></i>
+                                            @if($count > 0)
+                                            <span class="badge badge-pill badge-primary position-absolute" style="top: -5px; @if($locale == 'sa') right: -8px; @else left: -8px; @endif">{{ $count }}</span>
+                                            @endif
+                                        </a>
                                         <a href="javascript:void(0)" class="btn btn-soft-info btn-icon btn-circle btn-sm" onclick="show_purchase_history_details({{ $order->id }})" title="{{ translate('Order Details') }}">
                                             <i class="las la-eye"></i>
                                         </a>
@@ -73,6 +88,16 @@
 
 @section('modal')
     @include('modals.delete_modal')
+
+    <div class="modal fade" id="order_comments" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div id="order-comments-modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" id="order_details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
@@ -101,7 +126,10 @@
     <script type="text/javascript">
         $('#order_details').on('hidden.bs.modal', function () {
             location.reload();
-        })
+        });
+        $('#order_comments').on('hidden.bs.modal', function () {
+            location.reload();
+        });
     </script>
 
 @endsection

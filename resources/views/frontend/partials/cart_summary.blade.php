@@ -54,6 +54,9 @@
                         if ($cartItem['variant'] != null) {
                             $product_name_with_choice = $product->getTranslation('name').' - '.$cartItem['variant'];
                         }
+                        $shipping = \App\Models\Address::find($cartItem->address_id)->province->shipping_cost;
+                        $cartItem['shipping_cost'] = $shipping ?? '0';
+                        // dd($cartItem['shipping_cost']);
                     @endphp
                     <tr class="cart_item">
                         <td class="product-name">

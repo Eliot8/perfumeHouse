@@ -46,7 +46,8 @@
             <div class="row">
                 <div class="col-xl-8 mx-auto">
                     @php
-                        $first_order = $combined_order->orders->first()
+                        $first_order = $combined_order->orders->first();
+                        // dd($combined_order);
                     @endphp
                     <div class="text-center py-4 mb-4">
                         <i class="la la-check-circle la-3x text-success mb-3"></i>

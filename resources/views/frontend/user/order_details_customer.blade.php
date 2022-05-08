@@ -8,7 +8,7 @@
 @endphp
 
 <div class="modal-body gry-bg px-3 pt-3">
-    {{-- <div class="py-4">
+    <div class="py-4">
         <div class="row gutters-5 text-center aiz-steps">
             <div class="col @if($status == 'pending') active @else done @endif">
                 <div class="icon">
@@ -35,7 +35,7 @@
                 <div class="title fs-12">{{ translate('Delivered')}}</div>
             </div>
         </div>
-    </div> --}}
+    </div>
     <div class="card mt-4">
         <div class="card-header">
           <b class="fs-15">{{ translate('Order Summary') }}</b>
@@ -217,7 +217,7 @@
                             <tr>
                                 <td class="w-50 fw-600">{{ translate('Total')}}</td>
                                 <td class="text-right">
-                                    <strong><span>{{ single_price($order->grand_total) }}</span></strong>
+                                    <strong><span>{{ single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('shipping_cost')) }}</span></strong>
                                 </td>
                             </tr>
                         </tbody>
@@ -228,7 +228,7 @@
                 <button onclick="show_make_payment_modal({{ $order->id }})" class="btn btn-block btn-primary">{{ translate('Make Payment')}}</button>
             @endif
         </div>
-    </div>
+    </div>v>
 </div>
 
 <script type="text/javascript">

@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Currency;
 use App\Models\Language;
 use App\Models\Order;
-use Session;
 use PDF;
+use Session;
 use Config;
 
 class InvoiceController extends Controller
@@ -14,6 +14,7 @@ class InvoiceController extends Controller
     //download invoice
     public function invoice_download($id)
     {
+        
         if(Session::has('currency_code')){
             $currency_code = Session::get('currency_code');
         }
@@ -61,9 +62,9 @@ class InvoiceController extends Controller
         // mpdf config will be used in 4th params of loadview
 
         $config = [];
-
         $order = Order::findOrFail($id);
-        return PDF::loadView('backend.invoices.invoice',[
+
+        return PDF::loadView('backend.invoices.invoice', [
             'order' => $order,
             'font_family' => $font_family,
             'direction' => $direction,

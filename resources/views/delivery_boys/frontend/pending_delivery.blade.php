@@ -15,7 +15,6 @@
                             <th>{{ translate('Amount')}}</th>
                             <th data-breakpoints="lg">{{ translate('Delivery Status')}}</th>
                             <th data-breakpoints="lg">{{ translate('Payment Status')}}</th>
-                            <th data-breakpoints="lg">{{ translate('Mark As On The Way')}}</th>
                             <th class="text-right">{{ translate('Options')}}</th>
                         </tr>
                     </thead>
@@ -45,12 +44,6 @@
                                         @if($order->payment_status_viewed == 0)
                                             <span class="ml-2" style="color:green"><strong>*</strong></span>
                                         @endif
-                                    </td>
-                                     <td>
-                                        <label class="aiz-switch aiz-switch-success mb-0">
-                                            <input onchange="update_status(this)" value="{{ $order->id }}" type="checkbox" @if($order->delivery_status == 'on_the_way') checked @endif>
-                                            <span class="slider round"></span>
-                                        </label>
                                     </td>
                                     <td class="text-right">
                                         <a href="javascript:void(0)" class="btn btn-soft-danger btn-icon btn-circle btn-sm" onclick="confirm_cancel_request('{{route('cancel-request', $order->id)}}')" title="{{ translate('Cancel') }}">

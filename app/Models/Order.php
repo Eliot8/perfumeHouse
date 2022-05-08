@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Modules\Delegate\Entities\Province;
 class Order extends Model
 {
     public function orderDetails()
@@ -49,5 +49,10 @@ class Order extends Model
     public function proxy_cart_reference_id()
     {
         return $this->hasMany(ProxyPayment::class)->select('reference_id');
+    }
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class, 'province_id');
     }
 }

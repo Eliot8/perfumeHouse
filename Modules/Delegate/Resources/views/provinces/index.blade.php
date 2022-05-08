@@ -63,10 +63,10 @@
                             {{ $province->delegate_cost ?? '0'}} $
                         </td>
                         <td>
-                            @if(!$province->free_shipping)
-                            @lang('delegate::delivery.free_shipping')
+                            @if($province->free_shipping)
+                            <span class="badge badge-info badge-inline px-2">@lang('delegate::delivery.free_shipping')</span>
                             @else 
-                            {{ $province->shipping_cost }} $
+                             {{ $province->shipping_cost ?? '0' }} $
                             @endif
                         </td>
                         <td class="text-right">
@@ -90,7 +90,18 @@
 </div>
 @endsection
 
-@section('')
+@section('script')
+    <script type="text/javascript">
+        $("[name=shipping_type]").on("change", function (){
+        $(".flat_rate_shipping_div").hide();
+
+        if($(this).val() == 'cost'){
+            $(".flat_rate_shipping_div").show();
+        }
+
+    });
+    </script>
+@endsection
 
 
 

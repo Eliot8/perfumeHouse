@@ -164,6 +164,8 @@ Route::group(['middleware' => ['user', 'verified', 'unbanned']], function() {
 
     Route::resource('purchase_history', 'PurchaseHistoryController');
     Route::post('/purchase_history/details', 'PurchaseHistoryController@purchase_history_details')->name('purchase_history.details');
+    Route::post('/purchase_history/comments', 'PurchaseHistoryController@purchase_history_comments')->name('purchase_history.comments');
+    Route::post('/purchase_history/comments/post', 'PurchaseHistoryController@purchase_history_post_comment')->name('purchase_history.postComment');
     Route::get('/purchase_history/destroy/{id}', 'PurchaseHistoryController@destroy')->name('purchase_history.destroy');
 
     Route::resource('wishlists', 'WishlistController');
@@ -239,6 +241,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/orders/update_delivery_status', 'OrderController@update_delivery_status')->name('orders.update_delivery_status');
     Route::post('/orders/update_payment_status', 'OrderController@update_payment_status')->name('orders.update_payment_status');
     Route::post('/orders/update_tracking_code', 'OrderController@update_tracking_code')->name('orders.update_tracking_code');
+    
+
 
     //Delivery Boy Assign
     Route::post('/orders/delivery-boy-assign', 'OrderController@assign_delivery_boy')->name('orders.delivery-boy-assign');

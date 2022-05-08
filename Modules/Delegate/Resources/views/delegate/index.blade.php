@@ -56,9 +56,9 @@
                         <td>
                             <strong class="btn-soft-info btn-circle btn-sm" style="transition: all 0.3s ease;">{{ \DB::table('provinces')->where('id', $delegate->province_id)->first()->name }}</strong>
                         </td>
-                        {{-- <td>{{ getDeliveryBoyEarnings($delegate->user_id) }} $</td> --}}
-                        <td>{{ getDeliveryBoyEarnings2($delegate->province_id, $delegate->user_id) }} $</td>
-                        <td>{{ ordersCount($delegate->user_id) }}</td>
+                        @php $ordersCount = ordersCount($delegate->user_id); @endphp
+                        <td>{{ $delegate->province->delegate_cost * $ordersCount }} $</td>
+                        <td>{{ $ordersCount }}</td>
                         <td class="text-right">
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('delegates.edit', $delegate->id) }}" title="{{ translate('Edit') }}">
                                 <i class="las la-edit"></i>

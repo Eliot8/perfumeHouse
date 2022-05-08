@@ -172,7 +172,7 @@ return [
         Laracasts\Flash\FlashServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Laracon21\Timezones\TimezonesServiceProvider::class,
-        niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
+        // niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
         Unicodeveloper\Paystack\PaystackServiceProvider::class,
         MehediIitdu\CoreComponentRepository\CoreComponentRepositoryServiceProvider::class,
         Laracon21\Combinations\CombinationsServiceProvider::class,
@@ -186,6 +186,9 @@ return [
          * Package Service Providers...
          */
 
+        Nwidart\Modules\LaravelModulesServiceProvider::class,
+        // Barryvdh\DomPDF\ServiceProvider::class,
+        Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class,
         
         /*
         * Application Service Providers...
@@ -196,7 +199,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         
-        Nwidart\Modules\LaravelModulesServiceProvider::class,
     ],
 
     /*
@@ -256,6 +258,8 @@ return [
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
 
         'Module' => Nwidart\Modules\Facades\Module::class,
+        // "PDF" => Barryvdh\DomPDF\Facade::class,
+        // 'PDF' => Meneses\LaravelMpdf\Facades\LaravelMpdf::class,
     ],
 
 ];

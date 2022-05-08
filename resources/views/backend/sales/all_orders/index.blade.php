@@ -104,7 +104,7 @@
                         @if (addon_is_activated('refund_request'))
                         <th>{{ translate('Refund') }}</th>
                         @endif
-                        <th>{{translate('Cancel Request')}}</th>
+                        <th>@lang('delegate::delivery.cancel_request')</th>
                         <th>@lang('delegate::delivery.delegate')</th>
                         <th class="text-right" width="15%">{{translate('options')}}</th>
                     </tr>
@@ -171,7 +171,6 @@
                             @if ($order->cancel_request == 1)
                             <span class="badge badge-inline badge-warning">{{  $order->cancel_request_at }}</span>
                             @else
-                            {{-- <span class="badge badge-inline badge-success">{{  translate('No cancel request') }}</span> --}}
                             <span class="badge badge-inline badge-success"><i class="las la-clipboard-check" style="font-size: 18px;"></i></span>
                             @endif
                         </td>

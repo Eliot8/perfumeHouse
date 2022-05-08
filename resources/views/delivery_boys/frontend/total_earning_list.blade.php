@@ -3,7 +3,7 @@
 @section('panel_content')
     <div class="card">
         <div class="card-header">
-            <h5 class="mb-0 h6">{{ translate('Earning History') }}</h5>
+            <h5 class="mb-0 h6">{{ translate('Earnings History') }}</h5>
         </div>
 
         @if (count($total_earnings) > 0)
@@ -14,28 +14,34 @@
                             <th>{{ translate('Code')}}</th>
                             <th data-breakpoints="lg">{{ translate('Date')}}</th>
                             <th>{{ translate('Amount')}}</th>
+                            <th>{{ translate('Personal Earnings')}}</th>
+                            <th>{{ translate('System Earnings')}}</th>
                             <th class="text-right">{{ translate('Options')}}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($total_earnings as $key => $earning)
-
+                        @foreach ($total_earnings as $key => $item)
+                        @php
+                            $amount = $item->orderDetails->sum('price') + $item->orderDetails->sum('shipping_cost');
+                            $personal_earnings = $item->province->delegate_cost;
+                            $system_earnings = $amount - $personal_earnings;
+                        @endphp
                             <tr>
                                 <td>
-                                    <a href="#{{ $earning->order->code }}" onclick="show_purchase_history_details({{ $earning->order->id }})">
-                                        {{ $earning->order->code }}
+                                    <a href="#{{ $item->code }}" onclick="show_purchase_history_details({{ $item->id }})">
+                                        {{ $item->code }}
                                     </a>
                                 </td>
-                                <td>{{ date('d-m-Y', strtotime($earning->created_at)) }}</td>
-                                <td>
-                                    {{ single_price($earning->earning) }}
-                                </td>
+                                <td>{{ date('d-m-Y', strtotime($item->created_at)) }}</td>
+                                <td>{{ single_price($amount) }}</td>
+                                <td>{{ single_price($personal_earnings) }}</td>
+                                <td>{{ single_price($system_earnings) }}</td>
 
                                 <td class="text-right">
-                                    <a href="javascript:void(0)" class="btn btn-soft-info btn-icon btn-circle btn-sm" onclick="show_purchase_history_details({{ $earning->order->id }})" title="{{ translate('Order Details') }}">
+                                    <a href="javascript:void(0)" class="btn btn-soft-info btn-icon btn-circle btn-sm" onclick="show_purchase_history_details({{ $item->id }})" title="{{ translate('Order Details') }}">
                                         <i class="las la-eye"></i>
                                     </a>
-                                    <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $earning->order->id) }}" title="{{ translate('Download Invoice') }}">
+                                    <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $item->id) }}" title="{{ translate('Download Invoice') }}">
                                         <i class="las la-download"></i>
                                     </a>
                                 </td>

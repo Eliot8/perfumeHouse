@@ -94,12 +94,32 @@
                         </a>
                     </li>
                     <li class="aiz-side-nav-item">
+                        <a href="{{ route('total-stock') }}"
+                            class="aiz-side-nav-link {{ areActiveRoutes(['total-stock']) }}">
+                            <i class="las la-layer-group aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">
+                                {{ translate('Delivery Stock') }}
+                            </span>
+                        </a>
+                    </li>
+                    <li class="aiz-side-nav-item position-relative">
+                        @php
+                            $comments_not_viewed = \Modules\Delegate\Entities\Comment::where('user_id', '!=', Auth::user()->id)->get();
+                            $count = 0;
+                            foreach($comments_not_viewed as $comment) {
+                                if($comment->viewed == 0) $count ++;
+                            }   
+                            $locale = app()->getLocale();
+                        @endphp
                         <a href="{{ route('total-collection') }}"
                             class="aiz-side-nav-link {{ areActiveRoutes(['today-collection']) }}">
                             <i class="las la-comment-dollar aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">
                                 {{ translate('Total Collections') }}
                             </span>
+                            @if($count > 0)
+                            <span class="badge badge-pill badge-primary position-absolute" style="top: 10px; @if($locale == 'sa') left: 10px; @else right: 10px; @endif" >{{ $count }}</span>
+                            @endif
                         </a>
                     </li>
                     <li class="aiz-side-nav-item">

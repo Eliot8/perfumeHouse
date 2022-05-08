@@ -127,13 +127,13 @@
             location.reload();
         });
 
-        function confirm_cancel_request(url)
+        window.confirm_cancel_request = function confirm_cancel_request(url)
         {
             $('#cancel-request').modal('show', {backdrop: 'static'});
             document.getElementById('confirmation').setAttribute('href' , url);
         }
 
-        function update_status(selectObject) {
+        window.update_status = function update_status(selectObject) {
             var order_id = selectObject.value;
             var status = "picked_up";
 

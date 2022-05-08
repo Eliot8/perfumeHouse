@@ -2,7 +2,6 @@
 
 namespace Modules\Delegate\Entities;
 
-use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,5 +18,6 @@ class Delegate extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+    
     
 }

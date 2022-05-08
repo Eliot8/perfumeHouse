@@ -35,6 +35,8 @@ Route::group(['middleware' => ['user', 'verified', 'unbanned']], function() {
     Route::get('/total-earnings', 'DeliveryBoyController@total_earning')->name('total-earnings');
     Route::get('/cancel-request/{id}', 'DeliveryBoyController@cancel_request')->name('cancel-request');
     Route::get('/cancel-request-list', 'DeliveryBoyController@cancel_request_list')->name('cancel-request-list');
+    Route::get('/total-stock', 'DeliveryBoyController@total_stock')->name('total-stock');
+    Route::post('/orders/sort', 'DeliveryBoyController@sort_orders')->name('delivery.sort_orders');
 
     Route::post('/profile/update', 'DeliveryBoyController@profileUpdate')->name('delivery_boy.profile.update');
 

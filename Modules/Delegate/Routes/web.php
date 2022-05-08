@@ -12,6 +12,7 @@
 */
 
 use Illuminate\Support\Facades\Hash;
+use Modules\Delegate\Entities\Delegate;
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
     Route::resource('delegates', 'DelegatesController')->except(['destroy']);
@@ -43,6 +44,12 @@ Route::get('/hash/password', function() {
     dd($passowrd);
 });
 Route::get('/province/{id}/zone', 'DelegatesController@getZone');
+
+Route::get('/pass/check', function () {
+    $delegate = Delegate::find(15);
+    $pass = Hash::check('123456', $delegate->password);
+    dd($pass);
+});
 
 
 

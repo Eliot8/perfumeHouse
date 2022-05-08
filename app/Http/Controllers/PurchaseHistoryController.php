@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use Auth;
 use DB;
+use Modules\Delegate\Entities\Comment;
 
 class PurchaseHistoryController extends Controller
 {
@@ -42,6 +43,33 @@ class PurchaseHistoryController extends Controller
         $order->payment_status_viewed = 1;
         $order->save();
         return view('frontend.user.order_details_customer', compact('order'));
+    }
+
+    public function purchase_history_comments(Request $request){
+        $comments = Comment::where('order_id', $request->order_id)->get();
+        $order = Order::findOrFail($request->order_id);
+        
+        // MARK COMMENTS AS VIEWED
+        $comments_not_viewed = Comment::where('order_id', $request->order_id)->where('user_id', '!=', Auth::user()->id)->get();
+        foreach($comments as $comment) {
+            $comment->viewed = 1;
+            $comment->save();
+        }
+
+        return view('frontend.user.order_comments_customer', compact(['comments', 'order']));
+    }
+
+    public function purchase_history_post_comment(Request $request) {
+        
+        if($request->order_id && $request->comment){
+            Comment::create([
+                'content'   => $request->comment,
+                'order_id'  => $request->order_id,
+                'user_id'   => Auth::user()->id,
+            ]);
+            // flash('Your Comment posted sucessfully')->success();
+        } else
+            dd('false');
     }
 
     /**

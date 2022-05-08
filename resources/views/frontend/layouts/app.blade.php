@@ -143,7 +143,7 @@
 @php
     echo get_setting('header_script');
 @endphp
-
+@yield('extra-css')
 </head>
 <body>
     <!-- aiz-main-wrapper -->
@@ -515,6 +515,21 @@
             $.post('{{ route('purchase_history.details') }}', { _token : AIZ.data.csrf, order_id : order_id}, function(data){
                 $('#order-details-modal-body').html(data);
                 $('#order_details').modal();
+                $('.c-preloader').hide();
+            });
+        }
+
+
+        function show_comments(order_id){
+            $('#order-comments-modal-body').html(null);
+
+            if(!$('#modal-size').hasClass('modal-lg')){
+                $('#modal-size').addClass('modal-lg');
+            }
+
+            $.post('{{ route('purchase_history.comments') }}', { _token : AIZ.data.csrf, order_id : order_id}, function(data){
+                $('#order-comments-modal-body').html(data);
+                $('#order_comments').modal();
                 $('.c-preloader').hide();
             });
         }

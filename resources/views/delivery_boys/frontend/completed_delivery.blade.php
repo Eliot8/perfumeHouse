@@ -20,22 +20,23 @@
                     </thead>
                     <tbody>
                         @foreach ($completed_deliveries as $key => $delivery)
-                            @if(optional($delivery->order)->code)
+                        {{-- {{ dd($delivery) }} --}}
+                            {{-- @if(optional($delivery->order)->code) --}}
                                 <tr>
                                     <td>
-                                        <a href="#{{ $delivery->order->code }}" onclick="show_purchase_history_details({{ $delivery->order->id }})">
-                                            {{ $delivery->order->code }}
+                                        <a href="#{{ $delivery->code }}" onclick="show_purchase_history_details({{ $delivery->id }})">
+                                            {{ $delivery->code }}
                                         </a>
                                     </td>
                                     <td>{{ $delivery->created_at }}</td>
                                     <td>
-                                        {{ single_price($delivery->collection) }}
+                                        {{ single_price($delivery->orderDetails->sum('price') + $delivery->orderDetails->sum('shipping_cost')) }}
                                     </td>
                                     <td>
                                         {{ translate(ucfirst(str_replace('_', ' ', $delivery->delivery_status))) }}
                                     </td>
                                     <td>
-                                        @if ($delivery->order->payment_status == 'paid')
+                                        @if ($delivery->payment_status == 'paid')
                                             <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
                                         @else
                                             <span class="badge badge-inline badge-danger">{{translate('Unpaid')}}</span>
@@ -50,7 +51,7 @@
                                         </a>
                                     </td>
                                 </tr>
-                            @endif
+                            {{-- @endif --}}
                         @endforeach
                     </tbody>
                 </table>

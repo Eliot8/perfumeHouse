@@ -4,7 +4,7 @@ return [
     'deliveries' => 'Deliveries',
     'add_new_delegate' => 'Add new delivery man',
     'delegates' => 'Delivery men',
-    'delegates' => 'Delivery man',
+    'delegate' => 'Delivery man',
     'stock_management' => 'Stock Management',
     'provinces' => 'Provinces',
     'province' => 'Province',
@@ -70,9 +70,14 @@ return [
     'view_neighborhood' => 'View Neighborhood',
 
     'percentage' => 'Percentage',
+    'earnings' => 'Earnings',
     'free_shipping' => 'Free',
-    'shipping_cost' => 'Delivery Cost',
-    'delegate_cost' => 'Profit Ratio',
+    'shipping_cost' => 'Shipping Cost',
+    'delegate_cost' => 'Delegate Cost',
     'orders_count' => 'Orders Count',
+    'edit_province' => 'Edit Province',
+    'cancel_request' => 'Cancel Request',
+    'final_total' => 'Final Total',
+
 
 ];

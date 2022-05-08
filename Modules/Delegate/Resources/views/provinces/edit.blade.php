@@ -25,6 +25,36 @@
                                 <input type="number" class="form-control" name="delegate_cost" value="{{ $province->delegate_cost }}" placeholder="@lang('delegate::delivery.delegate_cost')" required>
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">{{translate('Free Shipping')}}</label>
+                            <div class="col-md-8">
+                                <label class="aiz-switch aiz-switch-success mb-0">
+                                    <input type="radio" name="shipping_type" value="free" @if($province->free_shipping) checked @endif >
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">@lang('delegate::delivery.shipping_cost')</label>
+                            <div class="col-md-8">
+                                <label class="aiz-switch aiz-switch-success mb-0">
+                                    <input type="radio" name="shipping_type" value="cost" @if(!$province->free_shipping) checked @endif> 
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="flat_rate_shipping_div" style=" display: @if(!$province->free_shipping) block @else none @endif;">
+                            <div class="form-group row">
+                                <label class="col-md-3 col-from-label">{{translate('Shipping cost')}} <span class="text-danger">*</span></label>
+                                <div class="col-md-8">
+                                    <input type="number" lang="en" min="0" value="{{ $province->shipping_cost }}" step="0.01" placeholder="{{ translate('Shipping cost') }}" name="shipping_cost" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="btn-toolbar float-right mb-3" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group" role="group" aria-label="Second group">
                                 <button type="submit" name="button" value="create" class="btn btn-primary action-btn">{{ translate('Update') }}</button>
@@ -35,19 +65,19 @@
             </div>
         </div>
     </form>
-    {{-- <form action="{{ route('provinces.update', $province->id) }}" method="POST">
-        @csrf
-        @method('PUT')
-        <div class="form-group row">
-            <label class="col-md-3 col-from-label">{{ translate('Name') }} <span class="text-danger">*</span></label>
-            <div class="col-md-8">
-                <input type="text" class="form-control" name="name" value="{{ $province->name }}" placeholder="@lang('delegate::delivery.province_name')" required>
-            </div>
-        </div>
-        <button type="button" class="btn btn-link mt-2" data-dismiss="modal">{{ translate('Cancel') }}</button>
-        <button type="submit" class="btn btn-primary mt-2">{{ translate('Update') }}</button>
-    </form> --}}
 </div>
 
+@endsection
+@section('script')
+    <script type="text/javascript">
+    $("[name=shipping_type]").on("change", function (){
+        $(".flat_rate_shipping_div").hide();
+
+        if($(this).val() == 'cost'){
+            $(".flat_rate_shipping_div").show();
+        }
+
+    });
+    </script>
 @endsection
 

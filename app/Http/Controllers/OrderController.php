@@ -361,6 +361,7 @@ class OrderController extends Controller
 
             //Order Details Storing
             foreach ($seller_product as $cartItem) {
+                // dd($address->province->shipping_cost);
                 $product = Product::find($cartItem['product_id']);
 
                 $subtotal += $cartItem['price'] * $cartItem['quantity'];
@@ -389,7 +390,8 @@ class OrderController extends Controller
                 $order_detail->tax = $cartItem['tax'] * $cartItem['quantity'];
                 $order_detail->shipping_type = $cartItem['shipping_type'];
                 $order_detail->product_referral_code = $cartItem['product_referral_code'];
-                $order_detail->shipping_cost = $cartItem['shipping_cost'];
+                // $order_detail->shipping_cost = $cartItem['shipping_cost'];
+                $order_detail->shipping_cost = $address->province->shipping_cost ?? 0;
 
                 $shipping += $order_detail->shipping_cost;
                 //End of storing shipping cost
@@ -418,7 +420,8 @@ class OrderController extends Controller
                 }
             }
 
-            $order->grand_total = $subtotal + $tax + $shipping;
+            // $order->grand_total = $subtotal + $tax + $shipping;
+            $order->grand_total = $subtotal + $tax + $address->province->shipping_cost ?? 0;
 
             if ($seller_product[0]->coupon_code != null) {
                 // if (Session::has('club_point')) {
@@ -434,6 +437,7 @@ class OrderController extends Controller
             }
 
             $combined_order->grand_total += $order->grand_total;
+            // $combined_order->grand_total = $address->province->shipping_cost ?? '0';
 
             $order->save();
         }
@@ -530,12 +534,8 @@ class OrderController extends Controller
         $order = Order::findOrFail($request->order_id);
 
         if ($request->status == 'delivered') {
-            $delegate = Delegate::select('id', 'percentage')->where('user_id', $order->assign_delivery_boy)->first();
-            $province = Province::findOrFail($order->province_id);
-            // $earnings = 0;
+            $delegate = Delegate::select('id')->where('user_id', $order->assign_delivery_boy)->first();
             foreach ($order->orderDetails as $orderDetail) {
-                // EARNINGS
-                // $earnings += $orderDetail->price;
 
                 // MANAGE STOCK
                 $product_id = $orderDetail->product_id;
@@ -548,15 +548,12 @@ class OrderController extends Controller
                 }
                 $stock->save();
             }
-            // PERCENTAGE EARNING
-            // $order->earnings = $earnings * ($delegate->percentage / 100);
-
-            $order->delegate_earnings = $province->profit_ratio;
-            
+            $order->grand_total -= $order->province->delegate_cost;
         }
 
         $order->delivery_viewed = '0';
         $order->delivery_status = $request->status;
+
         // **********************
         if($request->status == 'confirmed'){
             $delegates = Delegate::where('province_id', $order->province_id)->get();
@@ -569,7 +566,6 @@ class OrderController extends Controller
                     }
                 }
             }
-
         }
         $order->save();
         
@@ -792,4 +788,5 @@ class OrderController extends Controller
 
         return 1;
     }
+
 }

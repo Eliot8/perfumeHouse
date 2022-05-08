@@ -39,6 +39,10 @@ function getDeliveryBoyEarnings2($province_id, $user_id) {
 }
 
 function ordersCount($user_id){
-    $orders = Order::where('assign_delivery_boy', $user_id)->get();
+    $orders = Order::where('assign_delivery_boy', $user_id)->where('delivery_status', 'delivered')->get();
     return $orders->count();
 }
+
+// function personalEarnings(){
+//     $delegate = Delegate
+// }

@@ -216,9 +216,28 @@
                             {{ single_price($order->coupon_discount) }}
                         </td>
                     </tr>
-                    <tr>
+                     <tr>
                         <td>
                             <strong class="text-muted">{{translate('TOTAL')}} :</strong>
+                        </td>
+                        <td style="font-weight: bold;">
+                            {{ single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('shipping_cost')) }}
+                        </td>
+                    </tr>
+                    <hr>
+                    @if($order->delivery_status == 'delivered')
+                    <tr>
+                        <td>
+                            <strong class="text-muted">@lang('delegate::delivery.delegate_cost') :</strong>
+                        </td>
+                        <td>
+                            {{ single_price($order->province->delegate_cost) }}
+                        </td>
+                    </tr>
+                    @endif
+                    <tr>
+                        <td>
+                            <strong class="text-muted">@lang('delegate::delivery.final_total') :</strong>
                         </td>
                         <td class="text-muted h5">
                             {{ single_price($order->grand_total) }}

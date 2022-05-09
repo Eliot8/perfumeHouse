@@ -171,7 +171,6 @@
         </section>
     @endif
 
-
     <div id="section_newest">
         @if (count($newest_products) > 0)
             <section class="mb-4">

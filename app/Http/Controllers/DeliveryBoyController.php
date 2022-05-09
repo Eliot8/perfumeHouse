@@ -342,17 +342,19 @@ class DeliveryBoyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function total_collection()
+    public function total_collection(Request $request)
     {
         // $today_collections = DeliveryHistory::where('delivery_boy_id', Auth::user()->id)
         //         ->where('delivery_status', 'delivered')
         //         ->where('payment_type', 'cash_on_delivery')
         //         ->paginate(10);
         $total_collections = Order::where('assign_delivery_boy', Auth::user()->id)
-                // ->where('delivery_status', 'delivered')
                 ->where('payment_type', 'cash_on_delivery')
                 ->paginate(10);
-                // dd($total_collections);
+        if(request()->sort_orders){
+            dd('sort');
+            $total_collections = $this->sort_orders($request);
+        }
         
         return view('delivery_boys.frontend.total_collection_list', compact('total_collections'));
     }
@@ -441,30 +443,25 @@ class DeliveryBoyController extends Controller
 
     public function sort_orders(Request $request)
     {
-        $orders = Order::where('assign_delivery_boy', Auth::user()->id);
+        $total_collections = Order::where('assign_delivery_boy', Auth::user()->id);
 
         if($request->delivery_status) {
-            // dd($request->delivery_status);
-            $orders = $orders->where('delivery_status', $request->delivery_status);
+            $total_collections = $total_collections->where('delivery_status', $request->delivery_status);
         }
 
         if($request->date){
             $date_1 = date('Y-m-d', strtotime(explode(' to ', $request->date)[0]));
             $date_2 = date('Y-m-d', strtotime(explode(' to ', $request->date)[1]));
-           $orders = $orders->where('created_at', '>=', $date_1)->where('created_at', '<=', $date_2);
+           $total_collections = $total_collections->where('created_at', '>=', $date_1)->where('created_at', '<=', $date_2);
         }
 
         if($request->search){
-            $search = $request->search;
-            // dd($request->search);
-            $orders = $orders->where('code', 'LIKE', '%' . $request->search . '%');
+            $total_collections = $total_collections->where('code', 'LIKE', '%' . $request->search . '%');
         }
-
-        // dd($request->request);
-        // ->paginate(10);
         
-        $orders = $orders->get();
-        dd($orders);
-        return back()->with(['total_collections' => $orders]);
+        $total_collections = $total_collections->get();
+        return $total_collections;
+        // dd($orders);
+        // return back()->with(['total_collections' => $orders]);
     }
 }

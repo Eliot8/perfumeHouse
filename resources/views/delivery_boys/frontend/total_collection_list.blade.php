@@ -2,7 +2,7 @@
 
 @section('panel_content')
     <div class="card">
-        <form action="{{ route('delivery.sort_orders') }}" id="sort_orders" method="POST">
+        <form action="" id="sort_orders" method="GET">
             @csrf
             <div class="card-header row gutters-5">
                 @php
@@ -169,7 +169,15 @@
     //     });
     // }
     
-    
+    $('#sort_orders').on('submit', function(e) {
+        e.preventDefault();
+        const delivery_status = $('#delivery_status').val();
+        const date = $('.aiz-date-range').val();
+        const search = $('#order_search').val();
+        // $(this).attr('action', '{{ route('total-collection') }}' + `?delivery_status=${delivery_status}&date=${date}&search=${search}`).submit();
+        $(this).ajaxForm({url: '{{ route('total-collection') }}' + `?delivery_status=${delivery_status}&date=${date}&search=${search}`, post: 'get'});
+        
+    });
     })(jQuery);
     </script>
 

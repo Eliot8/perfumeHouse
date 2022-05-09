@@ -36,9 +36,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-//         dd('done');
-        $sql_path = base_path('perfumehouse.sql');
-        \DB::unprepared(file_get_contents($sql_path));
         $featured_categories = Cache::rememberForever('featured_categories', function () {
             return Category::where('featured', 1)->get();
         });

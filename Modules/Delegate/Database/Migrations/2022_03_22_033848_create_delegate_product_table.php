@@ -13,15 +13,15 @@ class CreateDelegateProductTable extends Migration
      */
     public function up()
     {
-        Schema::create('delegate_product', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('stock')->default(0);
-            $table->integer('delegate_id')->unsigned();
-            $table->integer('product_id');
-            $table->foreign('delegate_id')->references('id')->on('delegates')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('products')->onUpdate('cascade')->onDelete('cascade');
-            $table->timestamps();
-        });
+        // Schema::create('delegate_product', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->integer('stock')->default(0);
+        //     $table->integer('delegate_id')->unsigned();
+        //     $table->integer('product_id');
+        //     $table->foreign('delegate_id')->references('id')->on('delegates')->onUpdate('cascade')->onDelete('cascade');
+        //     $table->foreign('product_id')->references('id')->on('products')->onUpdate('cascade')->onDelete('cascade');
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -31,6 +31,6 @@ class CreateDelegateProductTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('delegate_product');
+        // Schema::dropIfExists('delegate_product');
     }
 }

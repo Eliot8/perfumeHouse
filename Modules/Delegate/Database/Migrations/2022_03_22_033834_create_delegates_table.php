@@ -13,21 +13,21 @@ class CreateDelegatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('delegates', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('full_name');
-            $table->string('phone_number')->nullable();
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('address')->nullable();
-            $table->string('photo')->nullable();
-            $table->integer('province_id')->unsigned();
-            $table->foreign('province_id')->references('id')->on('provinces')->onUpdate('cascade')->onDelete('cascade');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->json('zones');
-            $table->timestamps();
-        });
+        // Schema::create('delegates', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->string('full_name');
+        //     $table->string('phone_number')->nullable();
+        //     $table->string('email')->unique();
+        //     $table->string('password');
+        //     $table->string('address')->nullable();
+        //     $table->string('photo')->nullable();
+        //     $table->integer('province_id')->unsigned();
+        //     $table->foreign('province_id')->references('id')->on('provinces')->onUpdate('cascade')->onDelete('cascade');
+        //     $table->integer('user_id')->unsigned();
+        //     $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+        //     $table->json('zones');
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -37,6 +37,6 @@ class CreateDelegatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('delegates');
+        // Schema::dropIfExists('delegates');
     }
 }

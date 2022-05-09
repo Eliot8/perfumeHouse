@@ -20,7 +20,7 @@
                         @foreach ($total_stock as $key => $item)
                             <tr>
                                 <td>{{ $item->product->name }}</td>
-                                <td><span class="badge badge-inline badge-info">{{ $item->stock }}</span></td>
+                                <td>{{ $item->stock }}</td>
                                 <td>
                                     {{ single_price($item->product->unit_price) }}
                                 </td>

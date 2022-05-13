@@ -276,7 +276,11 @@
                 order_id:order_id,
                 status:status
             }, function(data){
-                AIZ.plugins.notify('success', '{{ translate('Delivery status has been updated') }}');
+                if(data == 1) {
+                    AIZ.plugins.notify('success', '{{ translate('Delivery status has been updated') }}');
+                } else {
+                    AIZ.plugins.notify('danger', '@lang('delegate::delivery.stock_error')');
+                }
             });
         });
 

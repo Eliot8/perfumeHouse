@@ -79,5 +79,6 @@ return [
     'cancel_request' => 'طلب الإلغاء',
     'final_total' => 'المجموع النهائي',
 
+    'stock_error' => 'مخزون المندوب فارغ'
 
 ];

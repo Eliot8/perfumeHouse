@@ -43,6 +43,29 @@ function ordersCount($user_id){
     return $orders->count();
 }
 
-// function personalEarnings(){
-//     $delegate = Delegate
-// }
+function assigned_delivery_man($delegates, $zone_id){
+    $delivery_man = null;
+    foreach ($delegates as $delegate) {
+        if ($delegate->zones == null) {
+            $delivery_man = $delegate;
+            // $order->assign_delivery_boy = $delegate->user_id;
+        } else {
+            if (in_array($zone_id, json_decode($delegate->zones))) {
+                $delivery_man = $delegate;
+                // $order->assign_delivery_boy = $delegate->user_id;
+            }
+        }
+    }
+    return $delivery_man;
+}
+
+
+function check_delivey_man_stock($order, $delivery_man_id){
+    foreach ($order->orderDetails as $orderDetail) {
+        $stock = Stock::where('delegate_id', $delivery_man_id)->where('product_id', $orderDetail->product_id)->first();
+        if (!$stock || $stock->stock == 0 || $orderDetail->quantity > $stock->stock) {
+          return false;
+        } 
+    }
+    return true;
+}

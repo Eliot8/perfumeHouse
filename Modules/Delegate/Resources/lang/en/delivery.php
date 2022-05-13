@@ -79,5 +79,6 @@ return [
     'cancel_request' => 'Cancel Request',
     'final_total' => 'Final Total',
 
+    'stock_error' => 'Stock of Delivey man is empty',
 
 ];

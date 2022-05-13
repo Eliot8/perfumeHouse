@@ -66,7 +66,8 @@
     								<span>{{ translate('Copy Link') }}</span>
     							</a>
     							<a href="javascript:void(0)" class="dropdown-item confirm-alert" data-href="{{ route('my_uploads.destroy', $file->id ) }}" data-target="#delete-modal">
-    								<i class="las la-trash mr-2"></i>
+    								<i class="las la-tr
+									ash mr-2"></i>
     								<span>{{ translate('Delete') }}</span>
     							</a>
     						</div>

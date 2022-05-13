@@ -256,17 +256,17 @@
 
 @section('script')
     <script type="text/javascript">
-        $('#assign_deliver_boy').on('change', function(){
-            var order_id = {{ $order->id }};
-            var delivery_boy = $('#assign_deliver_boy').val();
-            $.post('{{ route('orders.delivery-boy-assign') }}', {
-                _token          :'{{ @csrf_token() }}',
-                order_id        :order_id,
-                delivery_boy    :delivery_boy
-            }, function(data){
-                AIZ.plugins.notify('success', '{{ translate('Delivery boy has been assigned') }}');
-            });
-        });
+        // $('#assign_deliver_boy').on('change', function(){
+        //     var order_id = {{ $order->id }};
+        //     var delivery_boy = $('#assign_deliver_boy').val();
+        //     $.post('{{ route('orders.delivery-boy-assign') }}', {
+        //         _token          :'{{ @csrf_token() }}',
+        //         order_id        :order_id,
+        //         delivery_boy    :delivery_boy
+        //     }, function(data){
+        //         AIZ.plugins.notify('success', '{{ translate('Delivery boy has been assigned') }}');
+        //     });
+        // });
 
         $('#update_delivery_status').on('change', function(){
             var order_id = {{ $order->id }};

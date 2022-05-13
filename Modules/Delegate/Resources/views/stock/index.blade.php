@@ -42,13 +42,13 @@
                             </div>
                         </td>
                         <td>
-                            <strong class="btn-soft-info btn-circle btn-sm" style="transition: all 0.3s ease;">{{ \DB::table('provinces')->where('id', $delegate->province_id)->first()->name }}</strong>
+                           <span class="text-muted">{{ \DB::table('provinces')->where('id', $delegate->province_id)->first()->name }}</span>
                         </td>
                         <td>
                             @if(getStockLevel($delegate->id) == 'empty')
-                            <span class="btn-soft-danger btn-circle btn-sm" style="transition: all 0.3s ease;">@lang('delegate::delivery.' . getStockLevel($delegate->id))</span>
+                            <span class="badge badge-inline badge-danger btn-circle btn-sm" style="transition: all 0.3s ease;">@lang('delegate::delivery.' . getStockLevel($delegate->id))</span>
                             @else 
-                            <span class="btn-soft-{{ getStockLevel($delegate->id) == 'high' ? 'success' : 'primary' }} btn-circle btn-sm" style="transition: all 0.3s ease;">@lang('delegate::delivery.' . getStockLevel($delegate->id))</span>
+                            <span class="badge badge-inline badge-{{ getStockLevel($delegate->id) == 'high' ? 'success' : 'primary' }} btn-circle btn-sm" style="transition: all 0.3s ease;">@lang('delegate::delivery.' . getStockLevel($delegate->id))</span>
                             @endif 
                         </td>
                         <td class="text-right">

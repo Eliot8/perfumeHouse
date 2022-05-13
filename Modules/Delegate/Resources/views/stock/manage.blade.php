@@ -28,14 +28,17 @@
                             <tr>
                                 <td>{{ ($key+1) + ($products->currentPage() - 1)*$products->perPage() }}</td>
                                 <td>
-                                    <div class="row gutters-5 w-100px w-md-100px mw-100">
+                                    <div class="row gutters-5 w-100px w-md-200px mw-100">
+                                        <div class="col-auto">
+                                            <img src="{{ uploaded_asset($item->product->thumbnail_img)}}" alt="Image" class="size-50px img-fit">
+                                        </div>
                                         <div class="col">
                                             <span class="text-muted text-truncate-2">{{ $item->product->name }}</span>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <strong class="btn-info btn-icon btn-circle btn-sm" style="transition: all 0.3s ease;">{{ $item->stock }}</strong>
+                                    <strong class="badge badge-primary btn-circle btn-sm" style="transition: all 0.3s ease;">{{ $item->stock }}</strong>
                                 </td>
                                 <td class="text-right">
                                     <button type="button" class="btn btn-soft-primary btn-icon btn-circle btn-sm" data-toggle="modal" data-target="#edit-modal{{ $item->id }}" title="{{ translate('Edit') }}">

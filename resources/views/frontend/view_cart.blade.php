@@ -310,12 +310,12 @@
 
 @section('script')
     <script type="text/javascript">
-        function removeFromCartView(e, key) {
+        window.removeFromCartView = function removeFromCartView(e, key) {
             e.preventDefault();
             removeFromCart(key);
         }
 
-        function updateQuantity(key, element) {
+        window.updateQuantity = function updateQuantity(key, element) {
             $.post('{{ route('cart.updateQuantity') }}', {
                 _token: AIZ.data.csrf,
                 id: key,
@@ -326,52 +326,52 @@
             });
         }
 
-        function showCheckoutModal() {
+        window.showCheckoutModal = function showCheckoutModal() {
             $('#login-modal').modal();
         }
 
         // Country Code
-        var isPhoneShown = true,
-            countryData = window.intlTelInputGlobals.getCountryData(),
-            input = document.querySelector("#phone-code");
+        // var isPhoneShown = true,
+        //     countryData = window.intlTelInputGlobals.getCountryData(),
+        //     input = document.querySelector("#phone-code");
 
-        for (var i = 0; i < countryData.length; i++) {
-            var country = countryData[i];
-            if (country.iso2 == 'bd') {
-                country.dialCode = '88';
-            }
-        }
+        // for (var i = 0; i < countryData.length; i++) {
+        //     var country = countryData[i];
+        //     if (country.iso2 == 'bd') {
+        //         country.dialCode = '88';
+        //     }
+        // }
 
-        var iti = intlTelInput(input, {
-            separateDialCode: true,
-            utilsScript: "{{ asset('assets/js/intlTelutils.js') }}?1590403638580",
-            @php
-            echo json_encode(
-                \App\Models\Country::where('status', 1)
-                    ->pluck('code')
-                    ->toArray(),
-            );
-            @endphp,
-            customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
-                if (selectedCountryData.iso2 == 'bd') {
-                    return "01xxxxxxxxx";
-                }
-                return selectedCountryPlaceholder;
-            }
-        });
+        // var iti = intlTelInput(input, {
+        //     separateDialCode: true,
+        //     utilsScript: "{{ asset('assets/js/intlTelutils.js') }}?1590403638580",
+        //     @php
+        //     echo json_encode(
+        //         \App\Models\Country::where('status', 1)
+        //             ->pluck('code')
+        //             ->toArray(),
+        //     );
+        //     @endphp,
+        //     customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
+        //         if (selectedCountryData.iso2 == 'bd') {
+        //             return "01xxxxxxxxx";
+        //         }
+        //         return selectedCountryPlaceholder;
+        //     }
+        // });
 
-        var country = iti.getSelectedCountryData();
-        $('input[name=country_code]').val(country.dialCode);
+        // var country = iti.getSelectedCountryData();
+        // $('input[name=country_code]').val(country.dialCode);
 
-        input.addEventListener("countrychange", function(e) {
-            // var currentMask = e.currentTarget.placeholder;
+        // input.addEventListener("countrychange", function(e) {
+        //     // var currentMask = e.currentTarget.placeholder;
 
-            var country = iti.getSelectedCountryData();
-            $('input[name=country_code]').val(country.dialCode);
+        //     var country = iti.getSelectedCountryData();
+        //     $('input[name=country_code]').val(country.dialCode);
 
-        });
+        // });
 
-        function toggleEmailPhone(el) {
+        window.toggleEmailPhone = function toggleEmailPhone(el) {
             if (isPhoneShown) {
                 $('.phone-form-group').addClass('d-none');
                 $('.email-form-group').removeClass('d-none');

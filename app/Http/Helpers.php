@@ -592,7 +592,6 @@ if (!function_exists('my_asset')) {
      */
     function my_asset($path, $secure = null)
     {
-        // dd(app('url'));
         if (env('FILESYSTEM_DRIVER') == 's3') {
             return Storage::disk('s3')->url($path);
         } else {

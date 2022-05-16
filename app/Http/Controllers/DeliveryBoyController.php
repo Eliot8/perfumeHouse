@@ -344,18 +344,14 @@ class DeliveryBoyController extends Controller
      */
     public function total_collection(Request $request)
     {
-        // $today_collections = DeliveryHistory::where('delivery_boy_id', Auth::user()->id)
-        //         ->where('delivery_status', 'delivered')
-        //         ->where('payment_type', 'cash_on_delivery')
-        //         ->paginate(10);
-        $total_collections = Order::where('assign_delivery_boy', Auth::user()->id)
-                ->where('payment_type', 'cash_on_delivery')
-                ->paginate(10);
-        if(request()->sort_orders){
-            dd('sort');
-            $total_collections = $this->sort_orders($request);
+        $filtered_orders  = $this->filter_orders($request);
+        if($filtered_orders){
+            $total_collections = $filtered_orders;
+        } else {
+            $total_collections = Order::where('assign_delivery_boy', Auth::user()->id)
+                    ->where('payment_type', 'cash_on_delivery')
+                    ->paginate(10);
         }
-        
         return view('delivery_boys.frontend.total_collection_list', compact('total_collections'));
     }
     
@@ -429,11 +425,6 @@ class DeliveryBoyController extends Controller
         
     }
 
-
-    public function profileUpdate(Request $request) {
-        dd($request);
-    }
-
     public function total_stock(){
         $delegate_id = Delegate::where('user_id', Auth::user()->id)->pluck('id');
         $total_stock = Stock::where('delegate_id', $delegate_id)->paginate(10);
@@ -441,27 +432,34 @@ class DeliveryBoyController extends Controller
         return view('delivery_boys.frontend.total_stock', compact('total_stock'));
     }
 
-    public function sort_orders(Request $request)
+    public function filter_orders(Request $request)
     {
-        $total_collections = Order::where('assign_delivery_boy', Auth::user()->id);
-
-        if($request->delivery_status) {
-            $total_collections = $total_collections->where('delivery_status', $request->delivery_status);
+        if($request->delivery_status || $request->date || $request->search){
+            $is_filtering = true;
         }
 
-        if($request->date){
-            $date_1 = date('Y-m-d', strtotime(explode(' to ', $request->date)[0]));
-            $date_2 = date('Y-m-d', strtotime(explode(' to ', $request->date)[1]));
-           $total_collections = $total_collections->where('created_at', '>=', $date_1)->where('created_at', '<=', $date_2);
+        if(isset($is_filtering)){
+            $total_collections = Order::where('assign_delivery_boy', Auth::user()->id);
+    
+            if($request->delivery_status) {
+                $total_collections = $total_collections->where('delivery_status', $request->delivery_status);
+            }
+    
+            if($request->date){
+                $date_1 = date('Y-m-d', strtotime(explode(' to ', $request->date)[0]));
+                $date_2 = date('Y-m-d', strtotime(explode(' to ', $request->date)[1]));
+               $total_collections = $total_collections->where('created_at', '>=', $date_1)->where('created_at', '<=', $date_2);
+            }
+    
+            if($request->search){
+                $total_collections = $total_collections->where('code', 'LIKE', '%' . $request->search . '%');
+            }
+            
+            $total_collections = $total_collections->paginate(8);
+
+            return $total_collections;
         }
 
-        if($request->search){
-            $total_collections = $total_collections->where('code', 'LIKE', '%' . $request->search . '%');
-        }
-        
-        $total_collections = $total_collections->get();
-        return $total_collections;
-        // dd($orders);
-        // return back()->with(['total_collections' => $orders]);
+        return false;
     }
 }

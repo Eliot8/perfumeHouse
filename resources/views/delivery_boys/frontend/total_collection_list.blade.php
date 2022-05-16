@@ -2,8 +2,8 @@
 
 @section('panel_content')
     <div class="card">
-        <form action="" id="sort_orders" method="GET">
-            @csrf
+        <form action="" id="filter_orders" method="GET">
+            {{-- @csrf --}}
             <div class="card-header row gutters-5">
                 @php
                     !isset($delivery_status) ?  $delivery_status = null : '';
@@ -36,12 +36,12 @@
                 </div>
                 <div class="col-auto">
                     <div class="form-group mb-0">
-                        <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                        <button type="button" class="btn btn-primary" id="filter_btn">{{ translate('Filter') }}</button>
                     </div>
                 </div>
             </div>
         </form>
-        @if (count($total_collections) > 0)
+        {{-- @if (count($total_collections) > 0) --}}
             <div class="card-body">
                 <table class="table aiz-table mb-0" id="total_collection_list">
                     <thead>
@@ -95,15 +95,20 @@
                                     </a>
                                 </td>
                             </tr>
-
                         @endforeach
                     </tbody>
                 </table>
-                <div class="aiz-pagination">
-                    {{ $total_collections->appends(request()->input())->links() }}
-              	</div>
+                @if (count($total_collections) > 0)
+                    <div class="aiz-pagination">
+                        {{ $total_collections->appends(request()->input())->links() }}
+                    </div>
+                @endif
             </div>
-        @endif
+        {{-- @else 
+        <div class="alert alert-info d-flex align-items-center">
+            {{ Translate('No Order found.') }}
+        </div>
+        @endif --}}
     </div>
 @endsection
 
@@ -154,29 +159,19 @@
     $('#order_comments').on('hidden.bs.modal', function () {
         location.reload();
     });
-
-    // function update_status(selectObject) {
-    //     var order_id = selectObject.value;
-    //     var status = "picked_up";
-
-    //     $.post('{{ route('orders.update_delivery_status') }}', {
-    //         _token      : '{{ @csrf_token() }}',
-    //         order_id    : order_id,
-    //         status      : status
-    //     }, function(data){
-    //         AIZ.plugins.notify('success', '{{ translate('Delivery status has been updated') }}');
-    //         location.reload();
-    //     });
-    // }
     
-    $('#sort_orders').on('submit', function(e) {
-        e.preventDefault();
+    $('#filter_btn').on('click', function(e) {
+        // e.preventDefault();
         const delivery_status = $('#delivery_status').val();
         const date = $('.aiz-date-range').val();
         const search = $('#order_search').val();
-        // $(this).attr('action', '{{ route('total-collection') }}' + `?delivery_status=${delivery_status}&date=${date}&search=${search}`).submit();
-        $(this).ajaxForm({url: '{{ route('total-collection') }}' + `?delivery_status=${delivery_status}&date=${date}&search=${search}`, post: 'get'});
-        
+        const form = $(this).closest('#filter_orders');
+        if(delivery_status || date || search ) {
+            form.attr('action', '{{ route('total-collection') }}' + `?delivery_status=${delivery_status}&date=${date}&search=${search}`);
+            form.submit();
+        } else {
+            AIZ.plugins.notify('danger', '{{ translate("Please fill in the fields") }}');
+        }
     });
     })(jQuery);
     </script>

@@ -80,5 +80,7 @@ return [
     'final_total' => 'Final Total',
 
     'stock_error' => 'Stock of Delivey man is empty',
+    'no_order_comments' => 'No comments for this order',
+    'orders_comments' => 'Order comments',
 
 ];

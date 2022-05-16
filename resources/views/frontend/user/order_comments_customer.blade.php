@@ -41,31 +41,32 @@
         <div class="col-lg-12">
             <div class="card mt-4">
                 <div class="card-header">
-                  <b class="fs-15">{{ translate('Order Comments') }}</b>
+                  <b class="fs-15">@lang('delegate::delivery.orders_comments')</b>
                 </div>
                 <div class="card-body pb-0 comments">
-                    @if($order->delivery_status != 'delivered')
-                    <div class="comment_form">
-                        <label>{{ translate('Comment') }} <span class="text-danger">*</span></label>
-                        <div class="form-group row">
-                            <div class="col-md-10">
-                                <textarea class="form-control" name="comment" id="comment" value="" placeholder="{{ translate('Enter Your Comment') }}" required></textarea>
-                            </div>
-                            <div class="col-md-2">
-                                <button type="button" id="comment_form" onclick="postComment({{ $order->id }})" class="btn btn-info btn-sm mt-2">{{ translate('Comment') }}</button>
+                    @if(Auth::user()->user_type != 'admin')
+                        @if($order->delivery_status != 'delivered')
+                        <div class="comment_form">
+                            <label>{{ translate('Comment') }} <span class="text-danger">*</span></label>
+                            <div class="form-group row">
+                                <div class="col-md-10">
+                                    <textarea class="form-control" name="comment" id="comment" value="" placeholder="{{ translate('Enter Your Comment') }}" required></textarea>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" id="comment_form" onclick="postComment({{ $order->id }})" class="btn btn-info btn-sm mt-2">{{ translate('Comment') }}</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        @endif
                     @endif
                     @forelse($comments as $comment)
-                    <div class="row bg-light py-4 px-2 my-4 mx-2 comment" style="border-radius: 5px; border: 1px solid #111;
-            box-shadow: 5px 5px #111;">
+                    <div class="row bg-light py-4 px-2 my-4 mx-2 comment" style="border-radius: 5px; border: 1px solid #111; box-shadow: 5px 5px #111;">
                         <div class="col-md-10">
                             <strong style="width: 64px;">
                                 @if($comment->user->user_type == 'customer')
-                                {{ translate('Customer') }}: 
+                                ({{ translate('Customer') }}) {{ $comment->user->name }}: 
                                 @elseif($comment->user->user_type == 'delivery_boy')
-                                @lang('delegate::delivery.delivery_man'): 
+                                (@lang('delegate::delivery.delivery_man')) - {{ $comment->user->name }} : 
                                 @endif
                             </strong>
                         </div>
@@ -83,7 +84,7 @@
                         </div>
                     </div>
                     <div class="alert alert-info d-flex align-items-center">
-                        {{ translate('No comments for this order') }}.
+                        @lang('delegate::delivery.no_order_comments').
                     </div>
                     @endforelse
                 </div>
@@ -116,10 +117,6 @@
             $('.modal-body').animate({scrollTop: $('.modal-body').scrollHeight}, "fast");
         });
         $('.modal-body').animate({ scrollTop: $(this).height() }, "fast");
-        // $('.comment').last().css({
-        //     'border': '1px solid #111',
-        //     'box-shadow': '5px 5px #111',
-        // })
     }       
     
 </script>

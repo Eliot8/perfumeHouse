@@ -79,6 +79,8 @@ return [
     'cancel_request' => 'طلب الإلغاء',
     'final_total' => 'المجموع النهائي',
 
-    'stock_error' => 'مخزون المندوب فارغ'
+    'stock_error' => 'مخزون المندوب فارغ',
+    'no_order_comments' => 'لا توجد تعليقات على هذا الطلب',
+    'orders_comments' => 'تعليقات الطلب',
 
 ];

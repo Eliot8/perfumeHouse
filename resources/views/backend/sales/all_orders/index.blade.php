@@ -181,6 +181,21 @@
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('all_orders.show', encrypt($order->id))}}" title="{{ translate('View') }}">
                                 <i class="las la-eye"></i>
                             </a>
+                            @php
+                                $comments_not_viewed = \Modules\Delegate\Entities\Comment::where('order_id', $order->id)->where('user_id', '!=', Auth::user()->id)->get();
+                                $count = 0;
+                                foreach($comments_not_viewed as $comment) {
+                                    if($comment->viewed == 0) $count ++;
+                                }
+                                $locale = app()->getLocale();
+                            @endphp
+                            <a href="javascript:void(0)" class="btn btn-soft-success btn-icon btn-circle btn-sm position-relative" onclick="show_comments({{ $order->id }})" title="{{ translate('Order Comments') }}">
+                                <i class="las la-comments"></i>
+                                @if($count > 0)
+                                <span class="badge badge-pill badge-primary position-absolute" style="top: -5px; @if($locale == 'sa') right: -8px; @else left: -8px; @endif">{{ $count }}</span>
+                                @endif
+                            </a>
+
                             <a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $order->id) }}" title="{{ translate('Download Invoice') }}">
                                 <i class="las la-download"></i>
                             </a>
@@ -205,6 +220,15 @@
 
 @section('modal')
     @include('modals.delete_modal')
+     <div class="modal fade" id="order_comments" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div id="order-comments-modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -260,6 +284,20 @@
                         location.reload();
                     }
                 }
+            });
+        }
+
+        function show_comments(order_id){
+            $('#order-comments-modal-body').html(null);
+
+            if(!$('#modal-size').hasClass('modal-lg')){
+                $('#modal-size').addClass('modal-lg');
+            }
+
+            $.post('{{ route('purchase_history.comments') }}', { _token : AIZ.data.csrf, order_id : order_id}, function(data){
+                $('#order-comments-modal-body').html(data);
+                $('#order_comments').modal();
+                $('.c-preloader').hide();
             });
         }
     </script>

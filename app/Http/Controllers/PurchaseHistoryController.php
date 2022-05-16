@@ -50,6 +50,7 @@ class PurchaseHistoryController extends Controller
         $order = Order::findOrFail($request->order_id);
         
         // MARK COMMENTS AS VIEWED
+        if(Auth::user()->user_type != 'admin')
         $comments_not_viewed = Comment::where('order_id', $request->order_id)->where('user_id', '!=', Auth::user()->id)->get();
         foreach($comments as $comment) {
             $comment->viewed = 1;
@@ -67,7 +68,6 @@ class PurchaseHistoryController extends Controller
                 'order_id'  => $request->order_id,
                 'user_id'   => Auth::user()->id,
             ]);
-            // flash('Your Comment posted sucessfully')->success();
         } else
             dd('false');
     }

@@ -164,7 +164,7 @@ Route::group(['middleware' => ['user', 'verified', 'unbanned']], function() {
 
     Route::resource('purchase_history', 'PurchaseHistoryController');
     Route::post('/purchase_history/details', 'PurchaseHistoryController@purchase_history_details')->name('purchase_history.details');
-    Route::post('/purchase_history/comments', 'PurchaseHistoryController@purchase_history_comments')->name('purchase_history.comments');
+    
     Route::post('/purchase_history/comments/post', 'PurchaseHistoryController@purchase_history_post_comment')->name('purchase_history.postComment');
     Route::get('/purchase_history/destroy/{id}', 'PurchaseHistoryController@destroy')->name('purchase_history.destroy');
 
@@ -369,6 +369,5 @@ Route::get('/mobile-page/{slug}', 'PageController@mobile_custom_page')->name('mo
 Route::get('/{slug}', 'PageController@show_custom_page')->name('custom-pages.show_custom_page');
 
 
-// Route::get('/delegate/test', function () {
-//     dd('test');
-// });
+
+Route::post('/purchase_history/comments', 'PurchaseHistoryController@purchase_history_comments')->name('purchase_history.comments');

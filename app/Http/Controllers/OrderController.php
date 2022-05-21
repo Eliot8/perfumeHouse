@@ -533,40 +533,35 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($request->order_id);
 
-        // if ($request->status == 'delivered') {
-        //     $delegate = Delegate::select('id')->where('user_id', $order->assign_delivery_boy)->first();
-        //     foreach ($order->orderDetails as $orderDetail) {
+        if ($request->status == 'delivered') {
+            $delegate = Delegate::select('id')->where('user_id', $order->assign_delivery_boy)->first();
+            foreach ($order->orderDetails as $orderDetail) {
 
-        //         // MANAGE STOCK
-        //         $product_id = $orderDetail->product_id;
-        //         $stock = Stock::where('delegate_id', $delegate->id)->where('product_id', $product_id)->first();
-                
-        //         if($stock->stock - $orderDetail->quantity < 0){
-        //             $stock->stock = 0;
-        //         } else {
-        //             $stock->stock = $stock->stock - $orderDetail->quantity;
-        //         }
-        //         $stock->save();
-        //     }
-        //     $order->grand_total -= $order->province->delegate_cost;
-        // }
+                // MANAGE STOCK
+                $stock = Stock::where('delegate_id', $delegate->id)->where('product_id', $orderDetail->product_id)->first();
+                if($stock->stock - $orderDetail->quantity < 0){
+                    $stock->stock = 0;
+                } else {
+                    $stock->stock = $stock->stock - $orderDetail->quantity;
+                }
+                $stock->save();
+            }
+            $order->grand_total -= $order->province->delegate_cost;
+        }
 
-        // $order->delivery_viewed = '0';
-        // $order->delivery_status = $request->status;
+        $order->delivery_viewed = '0';
+        $order->delivery_status = $request->status;
 
         // **********************
         if($request->status == 'confirmed'){
             //  GET ASSIGNED DELIVERY MAN
             $delegates = Delegate::where('province_id', $order->province_id)->get();
             $delivery_man = assigned_delivery_man($delegates, $order->zone_id);
-
             
             // CHECH IF STOCK IS NOT EMPTY
             if(!check_delivey_man_stock($order, $delivery_man->id)) {
                 return 0;
             }
-
-           
             // ASSIGNED DELIVERY MAN
             $order->assign_delivery_boy = $delivery_man->user_id;
 

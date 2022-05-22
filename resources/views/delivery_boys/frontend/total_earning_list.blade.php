@@ -14,8 +14,8 @@
                             <th>{{ translate('Code')}}</th>
                             <th data-breakpoints="lg">{{ translate('Date')}}</th>
                             <th>{{ translate('Amount')}}</th>
-                            <th>{{ translate('Personal Earnings')}}</th>
-                            <th>{{ translate('System Earnings')}}</th>
+                            <th>@lang('delegate::delivery.personal_earnings')</th>
+                            <th>@lang('delegate::delivery.system_earnings')</th>
                             <th class="text-right">{{ translate('Options')}}</th>
                         </tr>
                     </thead>

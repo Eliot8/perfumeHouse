@@ -83,4 +83,7 @@ return [
     'no_order_comments' => 'لا توجد تعليقات على هذا الطلب',
     'orders_comments' => 'تعليقات الطلب',
 
+    'system_earnings' => 'أرباح النظام',
+    'personal_earnings' => 'أرباح شخصية',
+
 ];

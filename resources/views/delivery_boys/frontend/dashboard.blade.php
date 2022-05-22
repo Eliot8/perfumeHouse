@@ -200,7 +200,7 @@ $delegate = \Modules\Delegate\Entities\Delegate::where('user_id', Auth::user()->
         <div class="bg-grad-9 text-white rounded-lg mb-4 overflow-hidden">
             <div class="px-3 pt-3 text-center">
                 <i class="las la-comment-dollar la-4x"></i>
-                <div class="opacity-50">{{ translate('System Earnings') }}</div>
+                <div class="opacity-50">@lang('delegate::delivery.system_earnings')</div>
                 @php 
                     $personal_earnigns = $delegate->province->delegate_cost * ordersCount($delegate->user_id);
                     $system_earnigns = $total_earnings - $personal_earnigns;
@@ -215,7 +215,7 @@ $delegate = \Modules\Delegate\Entities\Delegate::where('user_id', Auth::user()->
         <div class="bg-grad-10 text-white rounded-lg mb-4 overflow-hidden">
             <div class="px-3 pt-3 text-center">
                 <i class="las la-dollar-sign la-4x"></i>
-                <div class="opacity-50">{{ translate('Personal Earnings') }}</div>
+                <div class="opacity-50">@lang('delegate::delivery.personal_earnings')</div>
                  <div class="h3 fw-700">
                     {{  $personal_earnigns }}
                 </div>

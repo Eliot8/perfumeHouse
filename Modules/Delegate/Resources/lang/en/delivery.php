@@ -83,4 +83,7 @@ return [
     'no_order_comments' => 'No comments for this order',
     'orders_comments' => 'Order comments',
 
+    'system_earnings' => 'System Earnings',
+    'personal_earnings' => 'Personal Earnings',
+
 ];

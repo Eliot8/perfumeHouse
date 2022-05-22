@@ -89,7 +89,7 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         $role = Role::findOrFail($id);
-
+        
         if($request->has('permissions')){
             if($request->lang == env("DEFAULT_LANGUAGE")){
                 $role->name = $request->name;

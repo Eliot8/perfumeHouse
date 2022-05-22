@@ -98,7 +98,7 @@
                             class="aiz-side-nav-link {{ areActiveRoutes(['total-stock']) }}">
                             <i class="las la-layer-group aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">
-                                {{ translate('Delivery Stock') }}
+                                {{ translate('Stock') }}
                             </span>
                         </a>
                     </li>
@@ -115,7 +115,7 @@
                             class="aiz-side-nav-link {{ areActiveRoutes(['today-collection']) }}">
                             <i class="las la-comment-dollar aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">
-                                {{ translate('Total Collections') }}
+                                {{ translate('All Orders') }}
                             </span>
                             @if($count > 0)
                             <span class="badge badge-pill badge-primary position-absolute" style="top: 10px; @if($locale == 'sa') left: 10px; @else right: 10px; @endif" >{{ $count }}</span>

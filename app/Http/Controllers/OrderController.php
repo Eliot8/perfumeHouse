@@ -535,6 +535,12 @@ class OrderController extends Controller
 
         if ($request->status == 'delivered') {
             $delegate = Delegate::select('id')->where('user_id', $order->assign_delivery_boy)->first();
+            if(!$delegate){
+                return response()->json([
+                    'status' => 400,
+                    'message' => __('delegate::delivery.no_delegate_selected'),
+                ]);
+            }
             foreach ($order->orderDetails as $orderDetail) {
 
                 // MANAGE STOCK
@@ -557,10 +563,21 @@ class OrderController extends Controller
             //  GET ASSIGNED DELIVERY MAN
             $delegates = Delegate::where('province_id', $order->province_id)->get();
             $delivery_man = assigned_delivery_man($delegates, $order->zone_id);
+
+            // IF NO DELIVERY MAN FOUND IN THE PROVINCE
+            if(!$delivery_man){
+                return response()->json([
+                    'status' => 400,
+                    'message' => __('delegate::delivery.no_delegate_found'),
+                ]);
+            }
             
             // CHECH IF STOCK IS NOT EMPTY
             if(!check_delivey_man_stock($order, $delivery_man->id)) {
-                return 0;
+                return response()->json([
+                    'status' => 400,
+                    'message' => __('delegate::delivery.stock_error'),
+                ]);
             }
             // ASSIGNED DELIVERY MAN
             $order->assign_delivery_boy = $delivery_man->user_id;
@@ -669,11 +686,12 @@ class OrderController extends Controller
                 $deliveryBoyController = new DeliveryBoyController;
                 $deliveryBoyController->store_delivery_history($order);
             }
-        }
-        // if($error) {
-        //     return 0;
-        // } 
-        return 1;
+        } 
+        // return 1;
+        return response()->json([
+            'status' => 200,
+            'message' => translate('Delivery status has been updated'),
+        ]);
     }
 
    public function update_tracking_code(Request $request) {

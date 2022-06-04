@@ -79,11 +79,18 @@ return [
     'cancel_request' => 'Cancel Request',
     'final_total' => 'Final Total',
 
+    'no_delegate_selected' => 'The delivery man has not yet been determined',
+    'no_delegate_found' => 'No delivery man were found in this province',
     'stock_error' => 'Stock of Delivey man is empty',
     'no_order_comments' => 'No comments for this order',
     'orders_comments' => 'Order comments',
 
     'system_earnings' => 'System Earnings',
     'personal_earnings' => 'Personal Earnings',
+
+
+    'affiliate_user' => 'Affiliate User',
+    'enter_commission' => 'Enter Commission',
+
 
 ];

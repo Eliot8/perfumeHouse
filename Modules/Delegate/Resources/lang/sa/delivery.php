@@ -79,11 +79,17 @@ return [
     'cancel_request' => 'طلب الإلغاء',
     'final_total' => 'المجموع النهائي',
 
+    'no_delegate_selected' => 'لم يحدد المندوب بعد',
+    'no_delegate_found' => 'لم يتم العثور على أي من المندوبين في هذه المقاطعة',
     'stock_error' => 'مخزون المندوب فارغ',
     'no_order_comments' => 'لا توجد تعليقات على هذا الطلب',
     'orders_comments' => 'تعليقات الطلب',
 
     'system_earnings' => 'أرباح النظام',
     'personal_earnings' => 'أرباح شخصية',
+
+
+    'affiliate_user' => 'المسوق',
+    'enter_commission' => 'ادخل العمولة',
 
 ];

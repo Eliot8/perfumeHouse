@@ -276,10 +276,11 @@
                 order_id:order_id,
                 status:status
             }, function(data){
-                if(data == 1) {
-                    AIZ.plugins.notify('success', '{{ translate('Delivery status has been updated') }}');
+                console.dir(data);
+                if(data.status == 200) {
+                    AIZ.plugins.notify('success', data.message);
                 } else {
-                    AIZ.plugins.notify('danger', '@lang('delegate::delivery.stock_error')');
+                    AIZ.plugins.notify('danger', data.message);
                 }
             });
         });

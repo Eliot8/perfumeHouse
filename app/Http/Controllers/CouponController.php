@@ -169,10 +169,7 @@ class CouponController extends Controller
     }
 
     public function setCouponData($request, $coupon){
-        $request->validate([
-            'affiliate_user_id' => 'required',
-            'commission' => 'required'
-        ]);
+        
         
         if ($request->coupon_type == "product_base") {
             $coupon->type = $request->coupon_type;

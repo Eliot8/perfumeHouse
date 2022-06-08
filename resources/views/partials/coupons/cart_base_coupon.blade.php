@@ -41,7 +41,7 @@
 <div class="form-group row">
     <label class="col-sm-3 control-label" for="affiliate_user">@lang('delegate::delivery.affiliate_user')</label>
     <div class="col-sm-9">
-        <select class="form-control aiz-selectpicker" name="affiliate_user">
+        <select class="form-control aiz-selectpicker" name="affiliate_user" required>
             @foreach($affiliate_users as $affiliate_user)
             <option value="{{$affiliate_user->id }}">{{ $affiliate_user->user->name }}</option>
             @endforeach
@@ -51,7 +51,7 @@
 <div class="form-group row">
     <label class="col-sm-3 control-label" for="commission">{{ translate('Commission') }}</label>
     <div class="col-sm-9">
-        <input type="text" class="form-control" name="commission" placeholder="@lang('delegate::delivery.enter_commission')">
+        <input type="text" class="form-control" name="commission" placeholder="@lang('delegate::delivery.enter_commission')" required>
     </div>
 </div>
 

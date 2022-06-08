@@ -13,10 +13,10 @@ class AddAffiliateAndCommissionToCoupons extends Migration
      */
     public function up()
     {
-        Schema::table('coupons', function (Blueprint $table) {
-            $table->foreignId('affiliate_user_id')->constrained('affiliate_users')->onUpdate('cascade')->onDelete('cascade');
-            $table->decimal('commission');
-        });
+        // Schema::table('coupons', function (Blueprint $table) {
+        //     $table->foreignId('affiliate_user_id')->constrained('affiliate_users')->onUpdate('cascade')->onDelete('cascade');
+        //     $table->decimal('commission');
+        // });
     }
 
     /**
@@ -26,8 +26,8 @@ class AddAffiliateAndCommissionToCoupons extends Migration
      */
     public function down()
     {
-        Schema::table('coupons', function (Blueprint $table) {
-            //
-        });
+        // Schema::table('coupons', function (Blueprint $table) {
+        //     //
+        // });
     }
 }

@@ -53,8 +53,17 @@ if (auth()->user() != null) {
                                         {{ $product->getTranslation('name') }}
                                     </span>
                                     <span class="">{{ $cartItem['quantity'] }}x</span>
-                                    <span
-                                        class="">{{ single_price($cartItem['price'] + $cartItem['tax']) }}</span>
+                                    @php
+                                        $price = $cartItem['price'] + $cartItem['tax'];
+                                    @endphp
+                                    @if(Auth::check() && has_coupon(Auth::user()))
+                                        @php
+                                            $discounted_price = get_discounted_price($price); 
+                                        @endphp
+                                        <span class="">{{ single_price($discounted_price) }}</span>
+                                    @else
+                                        <span class="">{{ single_price($price) }}</span>
+                                    @endif
                                 </span>
                             </a>
                             <span class="">
@@ -70,7 +79,14 @@ if (auth()->user() != null) {
         </ul>
         <div class="px-3 py-2 fs-15 border-top d-flex justify-content-between">
             <span class="opacity-60">{{ translate('Subtotal') }}</span>
-            <span class="fw-600">{{ single_price($total) }}</span>
+            @if(Auth::check() && has_coupon(Auth::user()))
+                @php
+                    $total_discounted_price = get_discounted_price($total); 
+                @endphp
+                <span class="fw-600">{{ single_price($total_discounted_price) }}</span>
+            @else
+                <span class="fw-600">{{ single_price($total) }}</span>
+            @endif
         </div>
         <div class="px-3 py-2 text-center border-top">
             <ul class="list-inline mb-0">

@@ -371,3 +371,18 @@ Route::get('/{slug}', 'PageController@show_custom_page')->name('custom-pages.sho
 
 
 Route::post('/purchase_history/comments', 'PurchaseHistoryController@purchase_history_comments')->name('purchase_history.comments');
+
+
+
+
+Route::get('/test/coupon', function() {
+    if (addon_is_activated('affiliate_system')) {
+        // dd(Auth::user()->affiliate_user->coupon);
+        dd(has_coupon(Auth::user()));
+        // if () {
+        //     // dd('has coupon');
+        // }
+
+        // dd('doesnt');
+    } 
+});

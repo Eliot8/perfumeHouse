@@ -87,10 +87,15 @@
                                                 </div>
 
                                                 <div class="col-lg col-4 order-1 order-lg-0 my-3 my-lg-0">
-                                                    <span
-                                                        class="opacity-60 fs-12 d-block d-lg-none">{{ translate('Price') }}</span>
-                                                    <span
-                                                        class="fw-600 fs-16">{{ single_price($cartItem['price']) }}</span>
+                                                    <span class="opacity-60 fs-12 d-block d-lg-none">{{ translate('Price') }}</span>
+                                                    @if(Auth::check() && has_coupon(Auth::user()))
+                                                        @php
+                                                            $discounted_price = get_discounted_price($cartItem['price']); 
+                                                        @endphp
+                                                        <span class="fw-600 fs-16">{{ single_price($discounted_price) }}</span>
+                                                    @else
+                                                        <span class="fw-600 fs-16">{{ single_price($cartItem['price']) }}</span>
+                                                    @endif
                                                 </div>
                                                 <div class="col-lg col-4 order-2 order-lg-0 my-3 my-lg-0">
                                                     <span
@@ -127,10 +132,12 @@
                                                     @endif
                                                 </div>
                                                 <div class="col-lg col-4 order-3 order-lg-0 my-3 my-lg-0">
-                                                    <span
-                                                        class="opacity-60 fs-12 d-block d-lg-none">{{ translate('Total') }}</span>
-                                                    <span
-                                                        class="fw-600 fs-16 text-primary">{{ single_price(($cartItem['price'] + $cartItem['tax']) * $cartItem['quantity']) }}</span>
+                                                    <span class="opacity-60 fs-12 d-block d-lg-none">{{ translate('Total') }}</span>
+                                                    @if(Auth::check() && has_coupon(Auth::user()))
+                                                        <span class="fw-600 fs-16 text-primary">{{ single_price(($discounted_price + $cartItem['tax']) * $cartItem['quantity']) }}</span>
+                                                    @else
+                                                        <span class="fw-600 fs-16 text-primary">{{ single_price(($cartItem['price'] + $cartItem['tax']) * $cartItem['quantity']) }}</span>
+                                                    @endif
                                                 </div>
                                                 <div class="col-lg-auto col-6 order-5 order-lg-0 text-right">
                                                     <a href="javascript:void(0)"
@@ -147,7 +154,14 @@
 
                             <div class="px-3 py-2 mb-4 border-top d-flex justify-content-between">
                                 <span class="opacity-60 fs-15">{{ translate('Subtotal') }}</span>
-                                <span class="fw-600 fs-17">{{ single_price($total) }}</span>
+                                @if(Auth::check() && has_coupon(Auth::user()))
+                                    @php
+                                        $total_discounted_price = get_discounted_price($total); 
+                                    @endphp
+                                    <span class="fw-600 fs-17">{{ single_price($total_discounted_price) }}</span>
+                                @else
+                                    <span class="fw-600 fs-17">{{ single_price($total) }}</span>
+                                @endif
                             </div>
                             <div class="row align-items-center">
                                 <div class="col-md-6 text-center text-md-left order-1 order-md-0">
@@ -329,47 +343,6 @@
         window.showCheckoutModal = function showCheckoutModal() {
             $('#login-modal').modal();
         }
-
-        // Country Code
-        // var isPhoneShown = true,
-        //     countryData = window.intlTelInputGlobals.getCountryData(),
-        //     input = document.querySelector("#phone-code");
-
-        // for (var i = 0; i < countryData.length; i++) {
-        //     var country = countryData[i];
-        //     if (country.iso2 == 'bd') {
-        //         country.dialCode = '88';
-        //     }
-        // }
-
-        // var iti = intlTelInput(input, {
-        //     separateDialCode: true,
-        //     utilsScript: "{{ asset('assets/js/intlTelutils.js') }}?1590403638580",
-        //     @php
-        //     echo json_encode(
-        //         \App\Models\Country::where('status', 1)
-        //             ->pluck('code')
-        //             ->toArray(),
-        //     );
-        //     @endphp,
-        //     customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
-        //         if (selectedCountryData.iso2 == 'bd') {
-        //             return "01xxxxxxxxx";
-        //         }
-        //         return selectedCountryPlaceholder;
-        //     }
-        // });
-
-        // var country = iti.getSelectedCountryData();
-        // $('input[name=country_code]').val(country.dialCode);
-
-        // input.addEventListener("countrychange", function(e) {
-        //     // var currentMask = e.currentTarget.placeholder;
-
-        //     var country = iti.getSelectedCountryData();
-        //     $('input[name=country_code]').val(country.dialCode);
-
-        // });
 
         window.toggleEmailPhone = function toggleEmailPhone(el) {
             if (isPhoneShown) {

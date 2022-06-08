@@ -862,3 +862,27 @@ if (!function_exists('addon_is_activated')) {
         return $activation == null ? false : true;
     }
 }
+
+if(!function_exists('has_coupon')){
+    function has_coupon($user) {
+        // if(){
+            if($user->affiliate_user && date('m/d/Y', $user->affiliate_user->coupon->end_date) >= date('m/d/Y')){
+                return true;
+            }
+            return false;
+        // }
+    }
+}
+
+if(!function_exists('get_discounted_price')){
+    function get_discounted_price($price) {
+        $discount_type = Auth::user()->affiliate_user->coupon->discount_type;
+        $discount = Auth::user()->affiliate_user->coupon->discount;
+        if($discount_type == 'percent'){
+            $discounted_price = $price - ($price * ($discount / 100));
+        } else {
+            $discounted_price = $price - $discount;
+        }
+        return $discounted_price;
+    }
+}

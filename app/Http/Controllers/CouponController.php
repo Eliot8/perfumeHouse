@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AffiliateUser;
 use Illuminate\Http\Request;
 use App\Models\Coupon;
 use App\Models\User;
@@ -50,6 +51,7 @@ class CouponController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         if(count(Coupon::where('code', $request->coupon_code)->get()) > 0){
             flash(translate('Coupon already exist for this coupon code'))->error();
             return back();
@@ -167,6 +169,11 @@ class CouponController extends Controller
     }
 
     public function setCouponData($request, $coupon){
+        $request->validate([
+            'affiliate_user_id' => 'required',
+            'commission' => 'required'
+        ]);
+        
         if ($request->coupon_type == "product_base") {
             $coupon->type = $request->coupon_type;
             $coupon->code = $request->coupon_code;
@@ -194,6 +201,8 @@ class CouponController extends Controller
             $data['min_buy']          = $request->min_buy;
             $data['max_discount']     = $request->max_discount;
             $coupon->details          = json_encode($data);
+            $coupon->affiliate_user_id = $request->affiliate_user;
+            $coupon->commission        = $request->commission;
         }
 
         return $coupon;
@@ -212,7 +221,8 @@ class CouponController extends Controller
             return view('partials.coupons.product_base_coupon', compact('products'));
         }
         elseif($request->coupon_type == "cart_base"){
-            return view('partials.coupons.cart_base_coupon');
+            $affiliate_users = \App\Models\AffiliateUser::get();
+            return view('partials.coupons.cart_base_coupon', compact('affiliate_users'));
         }
     }
 
@@ -232,7 +242,8 @@ class CouponController extends Controller
         }
         elseif($request->coupon_type == "cart_base"){
             $coupon = Coupon::findOrFail($request->id);
-            return view('partials.coupons.cart_base_coupon_edit',compact('coupon'));
+            $affiliate_users = \App\Models\AffiliateUser::get();
+            return view('partials.coupons.cart_base_coupon_edit',compact('coupon', 'affiliate_users'));
         }
     }
 

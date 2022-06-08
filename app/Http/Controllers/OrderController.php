@@ -289,9 +289,15 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $carts = Cart::where('user_id', Auth::user()->id)
-            ->get();
+        // if (addon_is_activated('affiliate_system')) {
+        //     if(Auth::user()->affiliate_user->coupon){
 
+        //     }
+        // }   
+        
+        $carts = Cart::where('user_id', Auth::user()->id)
+        ->get();
+        
         if ($carts->isEmpty()) {
             flash(translate('Your cart is empty'))->warning();
             return redirect()->route('home');
@@ -308,10 +314,6 @@ class OrderController extends Controller
             $shippingAddress['province']     = \Modules\Delegate\Entities\Province::find($address->province_id)->name;
             $shippingAddress['zone']         = $address->zone_id == null ? '' : \Modules\Delegate\Entities\Neighborhood::find($address->zone_id)->name;
 
-            // $shippingAddress['country']     = $address->country->name;
-            // $shippingAddress['state']       = $address->state->name;
-            // $shippingAddress['city']        = $address->city->name;
-            // $shippingAddress['postal_code'] = $address->postal_code;
             $shippingAddress['phone']       = $address->phone;
             if ($address->latitude || $address->longitude) {
                 $shippingAddress['lat_lang'] = $address->latitude . ',' . $address->longitude;
@@ -361,7 +363,6 @@ class OrderController extends Controller
 
             //Order Details Storing
             foreach ($seller_product as $cartItem) {
-                // dd($address->province->shipping_cost);
                 $product = Product::find($cartItem['product_id']);
 
                 $subtotal += $cartItem['price'] * $cartItem['quantity'];
@@ -386,7 +387,13 @@ class OrderController extends Controller
                 $order_detail->seller_id = $product->user_id;
                 $order_detail->product_id = $product->id;
                 $order_detail->variation = $product_variation;
-                $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
+
+                if(auth()->check() && has_coupon(auth()->user())) {
+                    $order_detail->price = get_discounted_price($cartItem['price']) * $cartItem['quantity'];
+                } else {
+                    $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
+                }
+
                 $order_detail->tax = $cartItem['tax'] * $cartItem['quantity'];
                 $order_detail->shipping_type = $cartItem['shipping_type'];
                 $order_detail->product_referral_code = $cartItem['product_referral_code'];
@@ -410,31 +417,45 @@ class OrderController extends Controller
                     $seller->save();
                 }
 
-                if (addon_is_activated('affiliate_system')) {
-                    if ($order_detail->product_referral_code) {
-                        $referred_by_user = User::where('referral_code', $order_detail->product_referral_code)->first();
+                // if (addon_is_activated('affiliate_system')) {
+                //     if ($order_detail->product_referral_code) {
+                //         $referred_by_user = User::where('referral_code', $order_detail->product_referral_code)->first();
 
-                        $affiliateController = new AffiliateController;
-                        $affiliateController->processAffiliateStats($referred_by_user->id, 0, $order_detail->quantity, 0, 0);
-                    }
-                }
+                //         $affiliateController = new AffiliateController;
+                //         $affiliateController->processAffiliateStats($referred_by_user->id, 0, $order_detail->quantity, 0, 0);
+                //     }
+                // }
             }
 
-            // $order->grand_total = $subtotal + $tax + $shipping;
-            $order->grand_total = $subtotal + $tax + $address->province->shipping_cost ?? 0;
-
-            if ($seller_product[0]->coupon_code != null) {
-                // if (Session::has('club_point')) {
-                //     $order->club_point = Session::get('club_point');
-                // }
-                $order->coupon_discount = $coupon_discount;
-                $order->grand_total -= $coupon_discount;
+            if (Auth::check() && has_coupon(Auth::user())) {
+                $user = Auth::user();
+                $order->grand_total = get_discounted_price($subtotal) + $tax + $address->province->shipping_cost ?? 0;
 
                 $coupon_usage = new CouponUsage;
-                $coupon_usage->user_id = Auth::user()->id;
-                $coupon_usage->coupon_id = Coupon::where('code', $seller_product[0]->coupon_code)->first()->id;
+                $coupon_usage->user_id = $user->id;
+                $coupon_usage->coupon_id = $user->affiliate_user->coupon->id;
                 $coupon_usage->save();
+
+                $affiliateController = new AffiliateController;
+                $affiliateController->processAffiliateStats($user->id, 0, $order_detail->quantity, 0, 0);
+
+                // COMMISSION
+                $user->affiliate_user->balance = $user->affiliate_user->balance + $user->affiliate_user->coupon->commission;
+                $user->affiliate_user->save();
+
+            } else {
+                $order->grand_total = $subtotal + $tax + $address->province->shipping_cost ?? 0;
             }
+
+            // if ($seller_product[0]->coupon_code != null) {
+            //     $order->coupon_discount = $coupon_discount;
+            //     $order->grand_total -= $coupon_discount;
+
+            //     $coupon_usage = new CouponUsage;
+            //     $coupon_usage->user_id = Auth::user()->id;
+            //     $coupon_usage->coupon_id = Coupon::where('code', $seller_product[0]->coupon_code)->first()->id;
+            //     $coupon_usage->save();
+            // }
 
             $combined_order->grand_total += $order->grand_total;
             // $combined_order->grand_total = $address->province->shipping_cost ?? '0';

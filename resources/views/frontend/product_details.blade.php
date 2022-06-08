@@ -100,6 +100,13 @@
                         <div class="text-left">
                             <h1 class="mb-2 fs-20 fw-600">
                                 {{ $detailedProduct->getTranslation('name') }}
+                                @if(Auth::check() && has_coupon(Auth::user()))
+                                    @if(app()->getlocale() == 'en')
+                                    <span class="float-right badge rounded-pill badge-success badge-inline">Your coupon is activated</span>
+                                    @else
+                                    <span class="float-right badge rounded-pill badge-success badge-inline">قسيمتك مفعلة</span>
+                                    @endif
+                                @endif
                             </h1>
 
                             <div class="row align-items-center">
@@ -199,8 +206,7 @@
                                                     {{ home_discounted_price($detailedProduct) }}
                                                 </strong>
                                                 @if ($detailedProduct->unit != null)
-                                                    <span
-                                                        class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
+                                                    <span class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -210,17 +216,47 @@
                                         <div class="col-sm-2">
                                             <div class="opacity-50 my-2">{{ translate('Price') }}:</div>
                                         </div>
-                                        <div class="col-sm-10">
+                                        <div class="col-sm-8">
+                                            @if(Auth::check() && has_coupon(Auth::user()))
+                                            <div class="fs-20 opacity-60">
+                                                <del>
+                                                    {{ home_price($detailedProduct) }}
+                                                    @if ($detailedProduct->unit != null)
+                                                        <span>/{{ $detailedProduct->getTranslation('unit') }}</span>
+                                                    @endif
+                                                </del>
+                                            </div>
+
+                                            <div class="">
+                                                <strong class="h2 fw-600 text-primary">
+                                                    @php 
+                                                    $price = substr(home_discounted_price($detailedProduct), 1);
+                                                    $discounted_price = get_discounted_price($price);
+                                                    @endphp
+                                                    {{ single_price($discounted_price) }}
+                                                </strong>
+                                                @if ($detailedProduct->unit != null)
+                                                    <span class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
+                                                @endif
+                                            </div>
+                                            @else
                                             <div class="">
                                                 <strong class="h2 fw-600 text-primary">
                                                     {{ home_discounted_price($detailedProduct) }}
                                                 </strong>
                                                 @if ($detailedProduct->unit != null)
-                                                    <span
-                                                        class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
+                                                    <span class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
                                                 @endif
                                             </div>
+                                            @endif
                                         </div>
+                                        @if(Auth::check() && has_coupon(Auth::user()))
+                                        <div class="col-sm-2">
+                                            <div class="text-left">
+                                                <span class="badge badge-primary badge-inline">- {{ Auth::user()->affiliate_user->coupon->discount }} @if(Auth::user()->affiliate_user->coupon->discount_type == 'percent')% @else $ @endif</span>
+                                            </div>
+                                        </div>
+                                         @endif
                                     </div>
                                 @endif
                             @endif
@@ -671,9 +707,9 @@
                                         @endphp
                                         @foreach ($detailedProduct->orderDetails as $key => $orderDetail)
                                             @if ($orderDetail->order != null &&
-    $orderDetail->order->user_id == Auth::user()->id &&
-    $orderDetail->delivery_status == 'delivered' &&
-    \App\Models\Review::where('user_id', Auth::user()->id)->where('product_id', $detailedProduct->id)->first() == null)
+                                                $orderDetail->order->user_id == Auth::user()->id &&
+                                                $orderDetail->delivery_status == 'delivered' &&
+                                                \App\Models\Review::where('user_id', Auth::user()->id)->where('product_id', $detailedProduct->id)->first() == null)
                                                 @php
                                                     $commentable = true;
                                                 @endphp

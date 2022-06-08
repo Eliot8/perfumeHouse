@@ -553,4 +553,9 @@ class AffiliateController extends Controller
         return back();
     }
 
+    public function coupon() {
+        // $affiliate_users = \App\Models\AffiliateUser::get();
+        return view('affiliate.frontend.coupon');
+    }
+
 }

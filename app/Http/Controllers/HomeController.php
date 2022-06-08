@@ -466,9 +466,11 @@ class HomeController extends Controller
         }
 
         $price += $tax;
-
+        if(Auth::check() && has_coupon(Auth::user())){
+            $price = get_discounted_price($price);
+        }
         return array(
-            'price' => single_price($price*$request->quantity),
+            'price' => single_price($price * $request->quantity),
             'quantity' => $quantity,
             'digital' => $product->digital,
             'variation' => $str,

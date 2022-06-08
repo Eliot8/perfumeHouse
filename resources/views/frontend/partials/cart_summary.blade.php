@@ -56,7 +56,6 @@
                         }
                         $shipping = \App\Models\Address::find($cartItem->address_id)->province->shipping_cost;
                         $cartItem['shipping_cost'] = $shipping ?? '0';
-                        // dd($cartItem['shipping_cost']);
                     @endphp
                     <tr class="cart_item">
                         <td class="product-name">
@@ -66,7 +65,14 @@
                             </strong>
                         </td>
                         <td class="product-total text-right">
-                            <span class="pl-4 pr-0">{{ single_price($cartItem['price']*$cartItem['quantity']) }}</span>
+                            @if(Auth::check() && has_coupon(Auth::user()))
+                                @php
+                                    $discounted_price = get_discounted_price($cartItem['price']); 
+                                @endphp
+                                <span class="pl-4 pr-0">{{ single_price(($discounted_price + $cartItem['tax']) * $cartItem['quantity']) }}</span>
+                            @else
+                                <span class="pl-4 pr-0">{{ single_price(($cartItem['price'] + $cartItem['tax']) * $cartItem['quantity']) }}</span>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
@@ -79,7 +85,14 @@
                 <tr class="cart-subtotal">
                     <th>{{translate('Subtotal')}}</th>
                     <td class="text-right">
-                        <span class="fw-600">{{ single_price($subtotal) }}</span>
+                        @if(Auth::check() && has_coupon(Auth::user()))
+                            @php
+                                $subtotal_price = get_discounted_price($subtotal); 
+                            @endphp
+                            <span class="fw-600">{{ single_price($subtotal_price) }}</span>
+                        @else
+                            <span class="fw-600">{{ single_price($subtotal) }}</span>
+                        @endif
                     </td>
                 </tr>
 
@@ -128,7 +141,11 @@
                 <tr class="cart-total">
                     <th><span class="strong-600">{{translate('Total')}}</span></th>
                     <td class="text-right">
+                        @if(Auth::check() && has_coupon(Auth::user()))
+                        <strong><span>{{ single_price($subtotal_price + $shipping) }}</span></strong>
+                        @else 
                         <strong><span>{{ single_price($total) }}</span></strong>
+                        @endif
                     </td>
                 </tr>
             </tfoot>

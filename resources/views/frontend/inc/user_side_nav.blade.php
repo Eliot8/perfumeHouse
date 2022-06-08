@@ -420,6 +420,12 @@
                                             class="aiz-side-nav-text">{{ translate('Withdraw request history') }}</span>
                                     </a>
                                 </li>
+                                <li class="aiz-side-nav-item">
+                                    <a href="{{ route('affiliate.coupon') }}"
+                                        class="aiz-side-nav-link">
+                                        <span class="aiz-side-nav-text">{{ translate('Coupon') }}</span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     @endif

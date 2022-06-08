@@ -49,6 +49,23 @@
     </div>
 </div>
 
+<div class="form-group row">
+    <label class="col-sm-3 control-label" for="affiliate_user">@lang('delegate::delivery.affiliate_user')</label>
+    <div class="col-sm-9">
+        <select class="form-control aiz-selectpicker" name="affiliate_user">
+            @foreach($affiliate_users as $affiliate_user)
+            <option value="{{$affiliate_user->id }}" @if($coupon->affiliate_user_id == $affiliate_user->id ) selected @endif>{{ $affiliate_user->user->name }}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-sm-3 control-label" for="start_date">{{ translate('Commission') }}</label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" name="commissin" placeholder="@lang('delegate::delivery.enter_commission')" value="{{ $coupon->commission }}">
+    </div>
+</div>
+
 
 <script type="text/javascript">
    $(document).ready(function(){

@@ -60,9 +60,9 @@
     </div>
 </div>
 <div class="form-group row">
-    <label class="col-sm-3 control-label" for="start_date">{{ translate('Commission') }}</label>
+    <label class="col-sm-3 control-label" for="commission">{{ translate('Commission') }}</label>
     <div class="col-sm-9">
-        <input type="text" class="form-control" name="commissin" placeholder="@lang('delegate::delivery.enter_commission')" value="{{ $coupon->commission }}" required>
+        <input type="text" class="form-control" name="commission" placeholder="@lang('delegate::delivery.enter_commission')" value="{{ $coupon->commission }}" required>
     </div>
 </div>
 

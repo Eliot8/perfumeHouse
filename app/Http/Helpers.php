@@ -878,6 +878,8 @@ if(!function_exists('get_discounted_price')){
     function get_discounted_price($price) {
         $discount_type = Auth::user()->affiliate_user->coupon->discount_type;
         $discount = Auth::user()->affiliate_user->coupon->discount;
+        $price = str_replace(',', '', $price);
+        
         if($discount_type == 'percent'){
             $discounted_price = $price - ($price * ($discount / 100));
         } else {

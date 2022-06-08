@@ -230,7 +230,7 @@
                                             <div class="">
                                                 <strong class="h2 fw-600 text-primary">
                                                     @php 
-                                                    $price = substr(home_discounted_price($detailedProduct), 1);
+                                                    $price = substr(home_discounted_price($detailedProduct), -3);
                                                     $discounted_price = get_discounted_price($price);
                                                     @endphp
                                                     {{ single_price($discounted_price) }}

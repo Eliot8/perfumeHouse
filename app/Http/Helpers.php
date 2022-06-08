@@ -866,7 +866,7 @@ if (!function_exists('addon_is_activated')) {
 if(!function_exists('has_coupon')){
     function has_coupon($user) {
         // if(){
-            if($user->affiliate_user && date('m/d/Y', $user->affiliate_user->coupon->end_date) >= date('m/d/Y')){
+            if($user->affiliate_user && $user->affiliate_user->coupon && date('m/d/Y', $user->affiliate_user->coupon->end_date) >= date('m/d/Y')){
                 return true;
             }
             return false;

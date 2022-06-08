@@ -32,7 +32,9 @@
                             <h5 class="mb-0 h6">{{ translate('Coupon Information')}}</h5>
                         </div>
                           <div class="card-body">
+                            @if(has_coupon(Auth::user()))
                             @php
+                            
                                 $coupon = Auth::user()->affiliate_user->coupon;
                                 $min_buy = json_decode($coupon->details)->min_buy;
                                 $max_discount = json_decode($coupon->details)->max_discount;
@@ -83,7 +85,11 @@
                                     <input type="text" class="form-control" placeholder="@lang('delegate::delivery.enter_commission')" value="{{ $coupon->commission }}" disabled>
                                 </div>
                             </div>
-
+                            @else
+                            <div class="alert alert-info mt-2 mb-0" role="alert">
+                                {{ translate('You don\'t have a coupon yet') }}
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>

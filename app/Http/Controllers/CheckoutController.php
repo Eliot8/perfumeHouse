@@ -273,7 +273,7 @@ class CheckoutController extends Controller
 
         if ($coupon != null) {
             if (strtotime(date('d-m-Y')) >= $coupon->start_date && strtotime(date('d-m-Y')) <= $coupon->end_date) {
-                if (CouponUsage::where('user_id', Auth::user()->id)->where('coupon_id', $coupon->id)->first() == null) {
+                // if (CouponUsage::where('user_id', Auth::user()->id)->where('coupon_id', $coupon->id)->first() == null) {
                     $coupon_details = json_decode($coupon->details);
 
                     $carts = Cart::where('user_id', Auth::user()->id)
@@ -329,10 +329,10 @@ class CheckoutController extends Controller
 
                     $response_message['response'] = 'success';
                     $response_message['message'] = translate('Coupon has been applied');
-                } else {
-                    $response_message['response'] = 'warning';
-                    $response_message['message'] = translate('You already used this coupon!');
-                }
+                // } else {
+                //     $response_message['response'] = 'warning';
+                //     $response_message['message'] = translate('You already used this coupon!');
+                // }
             } else {
                 $response_message['response'] = 'warning';
                 $response_message['message'] = translate('Coupon expired!');

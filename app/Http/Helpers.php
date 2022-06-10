@@ -908,7 +908,7 @@ if(!function_exists('get_valid_coupon')){
             return false;
         }
         
-        dd($coupon);
+        dd(array_values(reset($coupon))[0]);
          return $coupon[1];
     }
 }

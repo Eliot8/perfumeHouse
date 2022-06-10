@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Customer;
 use App\Models\Category;
+use App\Models\Coupon;
 use Auth;
 use DB;
 use Hash;
@@ -486,6 +487,16 @@ class AffiliateController extends Controller
     // Affiliate Withdraw Request
     public function withdraw_request_store(Request $request)
     {
+        // $delivery_status = Order::where('user_id', Auth::user()->id)->pluck('delivery_status', 'id');
+        // if($delivery_status->where('delivery_status', '!=', 'delivered')->count() > 0){
+        //     flash(translate('Your order is not delivered yet.'))->error();
+        //     return back();
+        // }
+        $delivery_status = Order::select('id', 'delivery_status')->where('user_id', Auth::user()->id)->latest()->first();
+        if ($delivery_status != 'delivered') {
+            flash(translate('Your order has not yet been delivered.'))->error();
+            return back();
+        }
         $withdraw_request           = new AffiliateWithdrawRequest;
         $withdraw_request->user_id  = Auth::user()->id;
         $withdraw_request->amount   = $request->amount;
@@ -554,8 +565,9 @@ class AffiliateController extends Controller
     }
 
     public function coupon() {
-        // $affiliate_users = \App\Models\AffiliateUser::get();
-        return view('affiliate.frontend.coupon');
+        $affiliate_user_id = Auth::user()->affiliate_user->id;
+        $coupons = Coupon::where('affiliate_user_id', $affiliate_user_id)->paginate(6);
+        return view('affiliate.frontend.coupon', compact('coupons'));
     }
 
 }

@@ -907,6 +907,8 @@ if(!function_exists('get_valid_coupon')){
         if($coupon->count() > 1 || $coupon->count() == 0){
             return false;
         }
+        
+        dd($coupon);
          return $coupon[1];
     }
 }

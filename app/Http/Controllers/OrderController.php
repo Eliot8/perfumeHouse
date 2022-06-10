@@ -431,16 +431,21 @@ class OrderController extends Controller
                 $user = Auth::user();
                 $order->grand_total = get_discounted_price($subtotal) + $tax + $address->province->shipping_cost ?? 0;
 
+                $coupon = get_valid_coupon();
                 $coupon_usage = new CouponUsage;
                 $coupon_usage->user_id = $user->id;
-                $coupon_usage->coupon_id = $user->affiliate_user->coupon->id;
+                $coupon_usage->coupon_id = $coupon->id;
                 $coupon_usage->save();
 
                 $affiliateController = new AffiliateController;
                 $affiliateController->processAffiliateStats($user->id, 0, $order_detail->quantity, 0, 0);
 
-                // COMMISSION
-                $user->affiliate_user->balance = $user->affiliate_user->balance + $user->affiliate_user->coupon->commission;
+                // CALCUL COMMISSION
+                if($coupon->commission_type == 'percent'){
+                    $user->affiliate_user->balance += $order->grand_total * ($coupon->commission / 100);
+                } else {
+                    $user->affiliate_user->balance += $coupon->commission;
+                }
                 $user->affiliate_user->save();
 
             } else {

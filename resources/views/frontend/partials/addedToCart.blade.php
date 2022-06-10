@@ -18,7 +18,7 @@
                 <div class="col-sm-10">
                     <div class="h6 text-primary">
                         <strong>
-                            @php
+                            {{-- @php
                                 $price = ($data['price'] + $data['tax']) * $data['quantity'];
                             @endphp
                             @if(Auth::check() && has_coupon(Auth::user()))
@@ -28,7 +28,8 @@
                             {{ single_price($discounted_price) }}
                             @else
                             {{ single_price($price) }}
-                            @endif
+                            @endif --}}
+                            {{ single_price(($data['price'] + $data['tax']) * $data['quantity']) }}
                         </strong>
                     </div>
                 </div>

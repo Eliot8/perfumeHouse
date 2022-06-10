@@ -12,6 +12,9 @@
  */
 // use App\Mail\SupportMailManager;
 //demo
+
+use Carbon\Carbon;
+
 Route::get('/demo/cron_1', 'DemoController@cron_1');
 Route::get('/demo/cron_2', 'DemoController@cron_2');
 Route::get('/convert_assets', 'DemoController@convert_assets');
@@ -373,16 +376,3 @@ Route::get('/{slug}', 'PageController@show_custom_page')->name('custom-pages.sho
 Route::post('/purchase_history/comments', 'PurchaseHistoryController@purchase_history_comments')->name('purchase_history.comments');
 
 
-
-
-Route::get('/test/coupon', function() {
-    if (addon_is_activated('affiliate_system')) {
-        // dd(Auth::user()->affiliate_user->coupon);
-        dd(has_coupon(Auth::user()));
-        // if () {
-        //     // dd('has coupon');
-        // }
-
-        // dd('doesnt');
-    } 
-});

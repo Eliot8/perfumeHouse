@@ -100,13 +100,13 @@
                         <div class="text-left">
                             <h1 class="mb-2 fs-20 fw-600">
                                 {{ $detailedProduct->getTranslation('name') }}
-                                @if(Auth::check() && has_coupon(Auth::user()))
+                                {{-- @if(Auth::check() && has_coupon(Auth::user()))
                                     @if(app()->getlocale() == 'en')
                                     <span class="float-right badge rounded-pill badge-success badge-inline">Your coupon is activated</span>
                                     @else
                                     <span class="float-right badge rounded-pill badge-success badge-inline">قسيمتك مفعلة</span>
                                     @endif
-                                @endif
+                                @endif --}}
                             </h1>
 
                             <div class="row align-items-center">
@@ -217,7 +217,7 @@
                                             <div class="opacity-50 my-2">{{ translate('Price') }}:</div>
                                         </div>
                                         <div class="col-sm-8">
-                                            @if(Auth::check() && has_coupon(Auth::user()))
+                                            {{-- @if(Auth::check() && has_coupon(Auth::user()))
                                             <div class="fs-20 opacity-60">
                                                 <del>
                                                     {{ home_price($detailedProduct) }}
@@ -239,7 +239,7 @@
                                                     <span class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
                                                 @endif
                                             </div>
-                                            @else
+                                            @else --}}
                                             <div class="">
                                                 <strong class="h2 fw-600 text-primary">
                                                     {{ home_discounted_price($detailedProduct) }}
@@ -248,15 +248,15 @@
                                                     <span class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
                                                 @endif
                                             </div>
-                                            @endif
+                                            {{-- @endif --}}
                                         </div>
-                                        @if(Auth::check() && has_coupon(Auth::user()))
+                                        {{-- @if(Auth::check() && has_coupon(Auth::user()))
                                         <div class="col-sm-2">
                                             <div class="text-left">
-                                                <span class="badge badge-primary badge-inline">- {{ Auth::user()->affiliate_user->coupon->discount }} @if(Auth::user()->affiliate_user->coupon->discount_type == 'percent')% @else $ @endif</span>
+                                                <span class="badge badge-primary badge-inline">- {{ get_valid_coupon()->discount }} @if(get_valid_coupon()->discount_type == 'percent')% @else $ @endif</span>
                                             </div>
                                         </div>
-                                         @endif
+                                         @endif --}}
                                     </div>
                                 @endif
                             @endif

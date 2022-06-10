@@ -33,62 +33,100 @@
                         </div>
                           <div class="card-body">
                             @if(has_coupon(Auth::user()))
-                            @php
-                            
-                                $coupon = Auth::user()->affiliate_user->coupon;
-                                $min_buy = json_decode($coupon->details)->min_buy;
-                                $max_discount = json_decode($coupon->details)->max_discount;
-                            @endphp
-                            <div class="form-group row">
-                                <label class="col-md-3 col-form-label">{{ translate('Code') }}</label>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" style="text-transform: uppercase;" placeholder="{{ translate('code') }}" value="{{ $coupon->code }}" disabled>
+                                {{-- @php 
+                                    $coupon = Auth::user()->affiliate_user->coupon; 
+                                @endphp --}}
+                                {{-- @if(!coupon_has_expired($coupon->end_date)) --}}
+                                {{-- @php
+                                    $min_buy = json_decode($coupon->details)->min_buy;
+                                    $max_discount = json_decode($coupon->details)->max_discount;
+                                    $start_date = date('m/d/Y', $coupon->start_date);
+                                    $end_date = date('m/d/Y', $coupon->end_date);
+                                @endphp --}}
+                                <table class="table aiz-table mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ translate('Code')}}</th>
+                                        <th>{{ translate('Minimum Shopping')}}</th>
+                                        <th>{{ translate('Discount')}}</th>
+                                        <th>{{ translate('Maximum Discount Amount') }}</th>
+                                        <th>{{ translate('Date') }}</th>
+                                        <th>{{ translate('Commission') }}</th>
+                                        <th>{{ translate('Validity') }}</th>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($coupons as $coupon)
+                                        <tr>
+                                            <td>{{ $coupon->code }}</td>
+                                            <td>{{ json_decode($coupon->details)->min_buy }}</td>
+                                            <td>{{ $coupon->discount }}@if($coupon->discount_type == 'percent')%@endif</td>
+                                            <td>{{ json_decode($coupon->details)->max_discount }}</td>
+                                            <td>{{ date('d/m/Y', $coupon->start_date) }} - {{ date('d/m/Y', $coupon->end_date) }}</td>
+                                            <td>{{ $coupon->commission }}@if($coupon->commission_type == 'percent')%@endif</td>
+                                            <td>
+                                                @if(coupon_has_expired($coupon->end_date))
+                                                <span class="badge badge-inline badge-danger">Expired</span>
+                                                @else
+                                                <span class="badge badge-inline badge-success">Valid</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                                <div class="aiz-pagination">
+                                    {{ $coupons->links() }}
                                 </div>
-                            </div>
+                                    {{-- <div class="form-group row">
+                                        <label class="col-md-3 col-form-label">{{ translate('Code') }}</label>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" style="text-transform: uppercase;" placeholder="{{ translate('code') }}" value="{{ $coupon->code }}" disabled>
+                                        </div>
+                                    </div>
 
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label">{{ translate('Minimum Shopping') }}</label>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" placeholder="{{ translate('Minimum Shopping')}}" value="{{ $min_buy }}" disabled>
+                                        </div>
+                                    </div>
 
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label">{{ translate('Discount') }}</label>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" placeholder="{{ translate('Discount')}}" value="{{ $coupon->discount }}@if($coupon->discount_type == 'percent')%@endif" disabled>
+                                        </div>
+                                    </div>
 
-                            <div class="form-group row">
-                                <label class="col-md-3 col-form-label">{{ translate('Minimum Shopping') }}</label>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" placeholder="{{ translate('Minimum Shopping')}}" value="{{ $min_buy }}" disabled>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label">{{ translate('Maximum Discount Amount') }}</label>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" placeholder="{{ translate('Maximum Discount Amount')}}" value="{{ $max_discount }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 control-label">{{translate('Date')}}</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" value="{{ $start_date .' - '. $end_date }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 control-label">{{ translate('Commission') }}</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" placeholder="@lang('delegate::delivery.enter_commission')" value="{{ $coupon->commission }}" disabled>
+                                        </div>
+                                    </div> --}}
+                                {{-- @else
+                                 <div class="alert alert-warning mt-2 mb-0" role="alert">
+                                    {{ translate('Your coupon has expired') }}
                                 </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-md-3 col-form-label">{{ translate('Discount') }}</label>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" placeholder="{{ translate('Discount')}}" value="{{ $coupon->discount }}@if($coupon->discount_type == 'percent')%@endif" disabled>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-md-3 col-form-label">{{ translate('Maximum Discount Amount') }}</label>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" placeholder="{{ translate('Maximum Discount Amount')}}" value="{{ $max_discount }}" disabled>
-                                </div>
-                            </div>
-
-                            @php
-                            $start_date = date('m/d/Y', $coupon->start_date);
-                            $end_date = date('m/d/Y', $coupon->end_date);
-                            @endphp
-                            <div class="form-group row">
-                                <label class="col-sm-3 control-label">{{translate('Date')}}</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" value="{{ $start_date .' - '. $end_date }}" disabled>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 control-label">{{ translate('Commission') }}</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" placeholder="@lang('delegate::delivery.enter_commission')" value="{{ $coupon->commission }}" disabled>
-                                </div>
-                            </div>
+                                @endif --}}
                             @else
-                            <div class="alert alert-info mt-2 mb-0" role="alert">
-                                {{ translate('You don\'t have a coupon yet') }}
-                            </div>
+                                <div class="alert alert-info mt-2 mb-0" role="alert">
+                                    {{ translate('You don\'t have a coupon yet') }}
+                                </div>
                             @endif
                         </div>
                     </div>

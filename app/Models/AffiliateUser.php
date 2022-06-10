@@ -17,6 +17,6 @@ class AffiliateUser extends Model
     }
 
     public function coupon() {
-      return $this->hasOne(Coupon::class);
+      return $this->hasMany(Coupon::class);
     }
 }

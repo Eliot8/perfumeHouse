@@ -60,10 +60,16 @@
     </div>
 </div>
 <div class="form-group row">
-    <label class="col-sm-3 control-label" for="commission">{{ translate('Commission') }}</label>
-    <div class="col-sm-9">
-        <input type="text" class="form-control" name="commission" placeholder="@lang('delegate::delivery.enter_commission')" value="{{ $coupon->commission }}" required>
+    <label class="col-lg-3 col-from-label" for="commission">{{ translate('Commission') }}</label>
+    <div class="col-sm-7">
+        <input type="number" lang="en" min="0" step="0.01" class="form-control" name="commission" placeholder="@lang('delegate::delivery.enter_commission')" value="{{ $coupon->commission }}" required>
     </div>
+     <div class="col-lg-2">
+       <select class="form-control aiz-selectpicker" name="commission_type">
+           <option value="amount" @if ($coupon->commission_type == 'amount') selected  @endif>{{translate('Amount')}}</option>
+           <option value="percent" @if ($coupon->commission_type == 'percent') selected  @endif>{{translate('Percent')}}</option>
+       </select>
+   </div>
 </div>
 
 

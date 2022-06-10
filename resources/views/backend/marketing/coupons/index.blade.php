@@ -23,6 +23,8 @@
             <thead>
                 <tr>
                     <th data-breakpoints="lg">#</th>
+                    <th>@lang('delegate::delivery.affiliate_user')</th>
+                    <th>{{ translate('Commission') }}</th>
                     <th>{{translate('Code')}}</th>
                     <th data-breakpoints="lg">{{translate('Type')}}</th>
                     <th data-breakpoints="lg">{{translate('Start Date')}}</th>
@@ -34,6 +36,8 @@
                 @foreach($coupons as $key => $coupon)
                     <tr>
                         <td>{{$key+1}}</td>
+                        <td>{{ $coupon->affiliate_user->user->name }}</td>
+                        <td>{{ $coupon->commission }} @if($coupon->commission_type == 'percent') % @endif</td>
                         <td>{{$coupon->code}}</td>
                         <td>@if ($coupon->type == 'cart_base')
                                 {{ translate('Cart Base') }}

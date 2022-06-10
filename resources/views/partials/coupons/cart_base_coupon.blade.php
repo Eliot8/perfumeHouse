@@ -49,11 +49,18 @@
     </div>
 </div>
 <div class="form-group row">
-    <label class="col-sm-3 control-label" for="commission">{{ translate('Commission') }}</label>
-    <div class="col-sm-9">
-        <input type="text" class="form-control" name="commission" placeholder="@lang('delegate::delivery.enter_commission')" required>
+    <label class="col-lg-3 col-from-label" for="commission">{{ translate('Commission') }}</label>
+    <div class="col-sm-7">
+        <input type="number" lang="en" min="0" step="0.01" class="form-control" name="commission" placeholder="@lang('delegate::delivery.enter_commission')" required>
     </div>
+     <div class="col-lg-2">
+       <select class="form-control aiz-selectpicker" name="commission_type">
+           <option value="amount">{{translate('Amount')}}</option>
+           <option value="percent">{{translate('Percent')}}</option>
+       </select>
+   </div>
 </div>
+
 
 <script type="text/javascript">
 

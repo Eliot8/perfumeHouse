@@ -187,19 +187,20 @@ class CouponController extends Controller
             $coupon->details = json_encode($cupon_details);
 
         } elseif ($request->coupon_type == "cart_base") {
-            $coupon->type             = $request->coupon_type;
-            $coupon->code             = $request->coupon_code;
-            $coupon->discount         = $request->discount;
-            $coupon->discount_type    = $request->discount_type;
-            $date_var                 = explode(" - ", $request->date_range);
-            $coupon->start_date       = strtotime($date_var[0]);
-            $coupon->end_date         = strtotime( $date_var[1]);
-            $data                     = array();
-            $data['min_buy']          = $request->min_buy;
-            $data['max_discount']     = $request->max_discount;
-            $coupon->details          = json_encode($data);
-            $coupon->affiliate_user_id = $request->affiliate_user;
-            $coupon->commission        = $request->commission;
+            $coupon->type               = $request->coupon_type;
+            $coupon->code               = $request->coupon_code;
+            $coupon->discount           = $request->discount;
+            $coupon->discount_type      = $request->discount_type;
+            $date_var                   = explode(" - ", $request->date_range);
+            $coupon->start_date         = strtotime($date_var[0]);
+            $coupon->end_date           = strtotime( $date_var[1]);
+            $data                       = array();
+            $data['min_buy']            = $request->min_buy;
+            $data['max_discount']       = $request->max_discount;
+            $coupon->details            = json_encode($data);
+            $coupon->affiliate_user_id  = $request->affiliate_user;
+            $coupon->commission         = $request->commission;
+            $coupon->commission_type    = $request->commission_type;
         }
 
         return $coupon;

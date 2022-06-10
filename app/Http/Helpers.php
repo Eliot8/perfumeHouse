@@ -865,19 +865,30 @@ if (!function_exists('addon_is_activated')) {
 
 if(!function_exists('has_coupon')){
     function has_coupon($user) {
-        // if(){
-            if($user->affiliate_user && $user->affiliate_user->coupon && date('m/d/Y', $user->affiliate_user->coupon->end_date) >= date('m/d/Y')){
-                return true;
-            }
-            return false;
-        // }
+        if($user->affiliate_user && $user->affiliate_user->coupon){
+            return true;
+        }
+        return false;
+    }
+}
+
+if(!function_exists('coupon_has_expired')){
+    function coupon_has_expired($end_date) {
+        if(date('m/d/Y', $end_date) <= date('m/d/Y')){
+            return true;
+        }
+        return false;
     }
 }
 
 if(!function_exists('get_discounted_price')){
     function get_discounted_price($price) {
-        $discount_type = Auth::user()->affiliate_user->coupon->discount_type;
-        $discount = Auth::user()->affiliate_user->coupon->discount;
+        $coupon = get_valid_coupon();
+
+        if(!$coupon) return false;
+
+        $discount_type = $coupon->discount_type;
+        $discount = $coupon->discount;
         $price = str_replace(',', '', $price);
         
         if($discount_type == 'percent'){
@@ -886,5 +897,16 @@ if(!function_exists('get_discounted_price')){
             $discounted_price = $price - $discount;
         }
         return $discounted_price;
+    }
+}
+
+if(!function_exists('get_valid_coupon')){
+    function get_valid_coupon(){
+        $coupons = Auth::user()->affiliate_user->coupon;
+        $coupon = $coupons->where('end_date', '>=', strtotime(date('m/d/Y')));
+        if($coupon->count() > 1 || $coupon->count() == 0){
+            return false;
+        }
+         return $coupon[1];
     }
 }

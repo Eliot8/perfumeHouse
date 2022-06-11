@@ -289,8 +289,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        dd('error'):
-        
         $carts = Cart::where('user_id', Auth::user()->id)
         ->get();
         

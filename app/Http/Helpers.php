@@ -907,6 +907,6 @@ if(!function_exists('get_valid_coupon')){
         if($coupon->count() > 1 || $coupon->count() == 0){
             return false;
         }
-         return $coupon[1];
+         return array_values(reset($coupon))[0];
     }
 }

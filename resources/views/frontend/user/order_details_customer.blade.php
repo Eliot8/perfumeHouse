@@ -60,9 +60,18 @@
                         </tr>
                         <tr>
                             <td class="w-50 fw-600">{{ translate('Shipping address')}}:</td>
-                            {{-- <td>{{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->city }}, {{ json_decode($order->shipping_address)->postal_code }}, {{ json_decode($order->shipping_address)->country }}</td> --}}
                             <td>{{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->zone }}, {{ json_decode($order->shipping_address)->province }}</td>
                         </tr>
+                        <tr>
+                            <td class="w-50 fw-600">@lang('delegate::delivery.customer_phone_number'):</td>
+                            <td>{{ $order->user->phone }}</td>
+                        </tr>
+                        @if($order->coupon_id != null)
+                        <tr>
+                            <td class="w-50 fw-600">@lang('delegate::delivery.marketer_phone_number'):</td>
+                            <td>{{ \App\Models\Coupon::find($order->coupon_id)->affiliate_user->user->phone }}</td>
+                        </tr>
+                        @endif
                     </table>
                 </div>
                 <div class="col-lg-6">

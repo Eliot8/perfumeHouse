@@ -92,5 +92,8 @@ return [
     'affiliate_user' => 'Affiliate User',
     'enter_commission' => 'Enter Commission',
 
+    'customer_phone_number' => 'Customer phone number',
+    'marketer_phone_number' => 'Marketer phone number',
+    
 
 ];

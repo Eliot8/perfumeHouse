@@ -11,17 +11,15 @@
                     <thead>
                         <tr>
                             <th>{{ translate('Code')}}</th>
-                            <th>{{ translate('Date')}}</th>
+                            <th data-breakpoints="lg">{{ translate('Date')}}</th>
                             <th>{{ translate('Amount')}}</th>
                             <th data-breakpoints="lg">{{ translate('Delivery Status')}}</th>
-                            <th data-breakpoints="lg">{{ translate('Payment Status')}}</th>
+                            <th>{{ translate('Payment Status')}}</th>
                             <th class="text-right">{{ translate('Options')}}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($completed_deliveries as $key => $delivery)
-                        {{-- {{ dd($delivery) }} --}}
-                            {{-- @if(optional($delivery->order)->code) --}}
                                 <tr>
                                     <td>
                                         <a href="#{{ $delivery->code }}" onclick="show_purchase_history_details({{ $delivery->id }})">

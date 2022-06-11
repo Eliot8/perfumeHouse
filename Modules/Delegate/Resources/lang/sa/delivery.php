@@ -92,4 +92,8 @@ return [
     'affiliate_user' => 'المسوق',
     'enter_commission' => 'ادخل العمولة',
 
+    'customer_phone_number' => 'رقم هاتف العميل',
+    'marketer_phone_number' => 'رقم هاتف المسوق',
+
+
 ];

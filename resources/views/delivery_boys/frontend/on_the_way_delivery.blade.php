@@ -15,8 +15,8 @@
                             <th>{{ translate('Amount')}}</th>
                             <th data-breakpoints="lg">{{ translate('Delivery Status')}}</th>
                             <th data-breakpoints="lg">{{ translate('Payment Status')}}</th>
-                            <th data-breakpoints="lg">{{ translate('Payment Type')}}</th>
-                            <th data-breakpoints="lg">{{ translate('Mark As Delivered')}}</th>
+                            <th >{{ translate('Payment Type')}}</th>
+                            <th >{{ translate('Mark As Delivered')}}</th>
                             <th class="text-right">{{ translate('Options')}}</th>
                         </tr>
                     </thead>

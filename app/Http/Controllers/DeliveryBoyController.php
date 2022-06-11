@@ -240,9 +240,6 @@ class DeliveryBoyController extends Controller
                 ->where('delivery_status', 'confirmed')
                 ->where('cancel_request', '0')
                 ->paginate(10);
-//        $assigned_deliveries = DeliveryHistory::where('delivery_boy_id', Auth::user()->id)
-//                ->where('delivery_status', 'pending')
-//                ->paginate(10);
         
         return view('delivery_boys.frontend.assigned_delivery', compact('assigned_deliveries'));
     }
@@ -259,9 +256,6 @@ class DeliveryBoyController extends Controller
                 ->where('delivery_status', 'picked_up')
                 ->where('cancel_request', '0')
                 ->paginate(10);
-//        $pickup_deliveries = DeliveryHistory::where('delivery_boy_id', Auth::user()->id)
-//                ->where('delivery_status', 'picked_up')
-//                ->paginate(10);
         
         return view('delivery_boys.frontend.pickup_delivery', compact('pickup_deliveries'));
     }
@@ -272,15 +266,13 @@ class DeliveryBoyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function on_the_way_deliveries()
     {
         $on_the_way_deliveries = Order::where('assign_delivery_boy', Auth::user()->id)
                 ->where('delivery_status', 'on_the_way')
                 ->where('cancel_request', '0')
                 ->paginate(10);
-//        $on_the_way_deliveries = DeliveryHistory::where('delivery_boy_id', Auth::user()->id)
-//                ->where('delivery_status', 'on_the_way')
-//                ->paginate(10);
         
         return view('delivery_boys.frontend.on_the_way_delivery', compact('on_the_way_deliveries'));
     }
@@ -296,10 +288,6 @@ class DeliveryBoyController extends Controller
        $completed_deliveries = Order::where('assign_delivery_boy', Auth::user()->id)
                ->where('delivery_status', 'delivered')
                ->paginate(10);
-            //    dd($completed_deliveries);
-        // $completed_deliveries = DeliveryHistory::where('delivery_boy_id', Auth::user()->id)
-        //         ->where('delivery_status', 'delivered')
-        //         ->paginate(10);
         
         return view('delivery_boys.frontend.completed_delivery', compact('completed_deliveries'));
     }

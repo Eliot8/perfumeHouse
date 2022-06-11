@@ -95,5 +95,7 @@ return [
     'customer_phone_number' => 'رقم هاتف العميل',
     'marketer_phone_number' => 'رقم هاتف المسوق',
 
+    'do_not_have_enough_balance' => 'ليس لديك رصيد كافي',
+
 
 ];

@@ -433,11 +433,6 @@ class OrderController extends Controller
 
                 $coupon = get_valid_coupon();
 
-                $coupon_usage = new CouponUsage;
-                $coupon_usage->user_id = $user->id;
-                $coupon_usage->coupon_id = $coupon->id;
-                $coupon_usage->save();
-
                 // SET COUPON ID
                 $order->coupon_id = $coupon->id;
 
@@ -446,11 +441,18 @@ class OrderController extends Controller
 
                 // CALCUL COMMISSION
                 if($coupon->commission_type == 'percent'){
-                    $user->affiliate_user->balance += $subtotal * ($coupon->commission / 100);
+                    $user->affiliate_user->balance_pending += $subtotal * ($coupon->commission / 100);
                 } else {
-                    $user->affiliate_user->balance += $coupon->commission;
+                    $user->affiliate_user->balance_pending += $coupon->commission;
                 }
                 $user->affiliate_user->save();
+
+                $coupon_usage = new CouponUsage;
+                $coupon_usage->user_id = $user->id;
+                $coupon_usage->coupon_id = $coupon->id;
+                $coupon_usage->order_id = $order->id;
+                $coupon_usage->commission = $user->affiliate_user->balance_pending;
+                $coupon_usage->save();
 
 
             } else {
@@ -460,15 +462,17 @@ class OrderController extends Controller
             if ($seller_product[0]->coupon_code != null) {
                 $order->coupon_discount = $coupon_discount;
                 $order->grand_total -= $coupon_discount;
-                $coupon_id =  Coupon::where('code', $seller_product[0]->coupon_code)->first()->id;
+                $coupon =  Coupon::where('code', $seller_product[0]->coupon_code)->first();
 
                 $coupon_usage = new CouponUsage;
                 $coupon_usage->user_id = Auth::user()->id;
-                $coupon_usage->coupon_id = $coupon_id;
+                $coupon_usage->coupon_id = $coupon->id;
+                $coupon_usage->order_id = $order->id;
+                $coupon_usage->commission = $coupon->affiliate_user->balance_pending;
                 $coupon_usage->save();
 
                 // SET COUPON ID
-                $order->coupon_id = $coupon_id;
+                $order->coupon_id = $coupon->id;
             }
 
             $combined_order->grand_total += $order->grand_total;
@@ -569,6 +573,8 @@ class OrderController extends Controller
         $order = Order::findOrFail($request->order_id);
 
         if ($request->status == 'delivered') {
+
+            // DELIVERY MAN CODE
             $delegate = Delegate::select('id')->where('user_id', $order->assign_delivery_boy)->first();
             if(!$delegate){
                 return response()->json([
@@ -588,6 +594,17 @@ class OrderController extends Controller
                 $stock->save();
             }
             $order->grand_total -= $order->province->delegate_cost;
+
+            // TRANSFORM COMMISSION FROM AFFILIATE BALANCE PENDING TO AFFILIATE BALANCE
+            if($order->coupon_id != null){
+                $affiliate_user = Coupon::find($order->coupon_id)->affiliate_user;
+                $coupon_usage = CouponUsage::where('order_id', $order->id)->first();
+
+                $affiliate_user->balance_pending    -= $coupon_usage->commission;
+                $affiliate_user->balance            += $coupon_usage->commission;
+                $affiliate_user->save();
+            }
+
         }
 
         $order->delivery_viewed = '0';

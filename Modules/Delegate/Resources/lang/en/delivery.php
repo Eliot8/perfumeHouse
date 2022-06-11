@@ -94,6 +94,9 @@ return [
 
     'customer_phone_number' => 'Customer phone number',
     'marketer_phone_number' => 'Marketer phone number',
+
+    'do_not_have_enough_balance' => 'You do not have enough balance',
+    
     
 
 ];

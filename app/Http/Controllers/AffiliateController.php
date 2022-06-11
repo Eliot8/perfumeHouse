@@ -21,6 +21,7 @@ use Auth;
 use DB;
 use Hash;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Lang;
 
 class AffiliateController extends Controller
 {
@@ -487,14 +488,8 @@ class AffiliateController extends Controller
     // Affiliate Withdraw Request
     public function withdraw_request_store(Request $request)
     {
-        // $delivery_status = Order::where('user_id', Auth::user()->id)->pluck('delivery_status', 'id');
-        // if($delivery_status->where('delivery_status', '!=', 'delivered')->count() > 0){
-        //     flash(translate('Your order is not delivered yet.'))->error();
-        //     return back();
-        // }
-        $delivery_status = Order::select('id', 'delivery_status')->where('user_id', Auth::user()->id)->latest()->first();
-        if ($delivery_status != 'delivered') {
-            flash(translate('Your order has not yet been delivered.'))->error();
+        if(Auth::user()->affiliate_user->balance - $request->amount < 0){
+            flash(Lang::get('delegate::delivery.do_not_have_enough_balance'))->error();
             return back();
         }
         $withdraw_request           = new AffiliateWithdrawRequest;

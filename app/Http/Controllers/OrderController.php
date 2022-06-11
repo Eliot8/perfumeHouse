@@ -289,11 +289,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        // if (addon_is_activated('affiliate_system')) {
-        //     if(Auth::user()->affiliate_user->coupon){
-
-        //     }
-        // }   
+        dd('error'):
         
         $carts = Cart::where('user_id', Auth::user()->id)
         ->get();

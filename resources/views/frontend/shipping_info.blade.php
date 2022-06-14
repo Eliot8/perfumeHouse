@@ -62,6 +62,10 @@
                                                 <span class="aiz-rounded-check flex-shrink-0 mt-1"></span>
                                                 <span class="flex-grow-1 pl-3 text-left">
                                                     <div>
+                                                        <span class="opacity-60">{{ translate('Name') }}:</span>
+                                                        <span class="fw-600 ml-2">{{ $address->name }}</span>
+                                                    </div>
+                                                    <div>
                                                         <span class="opacity-60">{{ translate('Address') }}:</span>
                                                         <span class="fw-600 ml-2">{{ $address->address }}</span>
                                                     </div>

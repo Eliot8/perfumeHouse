@@ -46,17 +46,11 @@ class AddressController extends Controller
         else{
             $address->user_id   = Auth::user()->id;
         }
+        $address->name          = $request->name;
         $address->address       = $request->address;
 
         $address->province_id   = $request->province;
         $address->zone_id       = $request->zone;
-
-        // $address->country_id    = $request->country_id;
-        // $address->state_id      = $request->state_id;
-        // $address->city_id       = $request->city_id;
-        // $address->longitude     = $request->longitude;
-        // $address->latitude      = $request->latitude;
-        // $address->postal_code   = $request->postal_code;
         $address->phone         = $request->phone;
         $address->save();
 
@@ -104,17 +98,11 @@ class AddressController extends Controller
         // dd($request->request);
         $address = Address::findOrFail($id);
         
+        $address->name       = $request->name;
         $address->address       = $request->address;
 
         $address->province_id   = $request->province;
         $address->zone_id       = $request->zone;
-
-        // $address->country_id    = $request->country_id;
-        // $address->state_id      = $request->state_id;
-        // $address->city_id       = $request->city_id;
-        // $address->longitude     = $request->longitude;
-        // $address->latitude      = $request->latitude;
-        // $address->postal_code   = $request->postal_code;
         $address->phone         = $request->phone;
 
         $address->save();

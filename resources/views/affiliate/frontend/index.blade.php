@@ -21,7 +21,7 @@
                             </span>
                             <div class="px-3 pt-3 pb-3">
                                 <div class="h4 fw-700 text-center">{{ single_price(Auth::user()->affiliate_user->balance) }}</div>
-                                <div class="opacity-50 text-center">{{ translate('Affiliate') }}</div>
+                                <div class="opacity-50 text-center">{{ translate('Affiliate Balance') }}</div>
                             </div>
                           </div>
                         </div>

@@ -130,10 +130,22 @@
                     <div class="col-lg-6">
                         <div class="border p-3 pr-5 rounded mb-3 position-relative">
                             <div>
+                                <span class="w-50 fw-600">{{ translate('Name') }}:</span>
+                                <span class="ml-2">{{ $address->name }}</span>
+                            </div>
+                            <div>
                                 <span class="w-50 fw-600">{{ translate('Address') }}:</span>
                                 <span class="ml-2">{{ $address->address }}</span>
                             </div>
+                             <div>
+                                <span class="w-50 fw-600">@lang('delegate::delivery.province'):</span>
+                                <span class="ml-2">{{ Modules\Delegate\Entities\Province::find($address->province_id)->name  }}</span>
+                            </div>
                             <div>
+                                <span class="w-50 fw-600">@lang('delegate::delivery.zone'):</span>
+                                <span class="ml-2">{{ Modules\Delegate\Entities\Neighborhood::find($address->zone_id)->name ?? Modules\Delegate\Entities\Province::find($address->province_id)->name  }}</span>
+                            </div>
+                            {{-- <div>
                                 <span class="w-50 fw-600">{{ translate('Postal Code') }}:</span>
                                 <span class="ml-2">{{ $address->postal_code }}</span>
                             </div>
@@ -148,7 +160,7 @@
                             <div>
                                 <span class="w-50 fw-600">{{ translate('Country') }}:</span>
                                 <span class="ml-2">{{ optional($address->country)->name }}</span>
-                            </div>
+                            </div> --}}
                             <div>
                                 <span class="w-50 fw-600">{{ translate('Phone') }}:</span>
                                 <span class="ml-2">{{ $address->phone }}</span>

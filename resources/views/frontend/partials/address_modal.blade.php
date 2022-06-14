@@ -13,49 +13,20 @@
                     <div class="p-3">
                         <div class="row">
                             <div class="col-md-2">
+                                <label>{{ translate('Name')}}</label>
+                            </div>
+                            <div class="col-md-10">
+                                <textarea class="form-control mb-3" placeholder="{{ translate('Your Name')}}" rows="2" name="name" required></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
                                 <label>{{ translate('Address')}}</label>
                             </div>
                             <div class="col-md-10">
                                 <textarea class="form-control mb-3" placeholder="{{ translate('Your Address')}}" rows="2" name="address" required></textarea>
                             </div>
                         </div>
-                        {{-- <div class="row">
-                            <div class="col-md-2">
-                                <label>{{ translate('Country')}}</label>
-                            </div>
-                            <div class="col-md-10">
-                                <div class="mb-3">
-                                    <select class="form-control aiz-selectpicker" data-live-search="true" data-placeholder="{{ translate('Select your country') }}" name="country_id" required>
-                                        <option value="">{{ translate('Select your country') }}</option>
-                                        @foreach (\App\Models\Country::where('status', 1)->get() as $key => $country)
-                                            <option value="{{ $country->id }}">{{ $country->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div> --}}
-                        
-                        {{-- <div class="row">
-                            <div class="col-md-2">
-                                <label>{{ translate('State')}}</label>
-                            </div>
-                            <div class="col-md-10">
-                                <select class="form-control mb-3 aiz-selectpicker" data-live-search="true" name="state_id" required>
-
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label>{{ translate('City')}}</label>
-                            </div>
-                            <div class="col-md-10">
-                                <select class="form-control mb-3 aiz-selectpicker" data-live-search="true" name="city_id" required>
-
-                                </select>
-                            </div>
-                        </div> --}}
                         <div class="row">
                             <div class="col-md-2">
                                 <label>@lang('delegate::delivery.province')</label>

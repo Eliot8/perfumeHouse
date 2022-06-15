@@ -2,6 +2,8 @@
 
 namespace Modules\Delegate\Http\Controllers;
 
+use App\Models\AttributeValue;
+use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductStock;
 use Illuminate\Contracts\Support\Renderable;
@@ -121,6 +123,50 @@ class StockController extends Controller
         }
         $product_stock->qty += $quantity;
         $product_stock->save();
+    }
+
+    public function getColors($id, Request $request) {
+        if($request->ajax()){
+            // $product = Product::find($request->get('product_id'));
+            $product_colors = Product::select('colors')->where('id', $id)->first()->colors;
+            $colors = json_decode($product_colors);
+
+            if(count($colors) == 0){
+                return 0;
+            }
+
+            $html = '<option value="" disabled>' . translate("Select Color") . '</option>';
+            foreach($colors as $code){
+                $color = Color::select('id', 'name', 'code')->where('code', $code)->first();
+                $html .= '<option  value="' .  $color->code . '" data-content="<span><span class=' ;
+                $html .= "'size-15px d-inline-block mr-2 rounded border' style='background:" .  $color->code;
+                $html .= "'></span><span>" . $color->name;
+                $html .= '</span></span>"></option>';
+            }
+            return response()->json(json_encode($html));
+        } else 
+            return false;
+    }
+
+    public function getAttributes($id, Request $request) {
+        if($request->ajax()){
+            $product_attributes = Product::select('attributes')->where('id', $id)->first()->attributes;
+            $attributes = json_decode($product_attributes);
+
+            if(count($attributes) == 0) return 0;
+
+            $html = '<option value="" disabled>' . translate("Select Attribute") . '</option>';
+            foreach($attributes as $attribute){
+                $attribute_values = AttributeValue::select('id', 'attribute_id', 'value')->where('attribute_id', $attribute)->get();
+                $html .= '<optgroup label="' . $attribute_values[0]->attribute->name . '">';
+                foreach($attribute_values as $attribute_value){
+                    $html .= '<option>' . $attribute_value->value . '</option>';
+                }
+                $html .= '</optgroup>';
+            }
+            return response()->json(json_encode($html));
+        } else 
+            return false;
     }
 
 }

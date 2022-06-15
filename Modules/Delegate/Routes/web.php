@@ -34,22 +34,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
 
     // AJAX
-    // Route::get('/province/{id}/zone', 'DelegatesController@getZone');
     Route::post('/delegate/deleteModal', 'DelegatesController@getModalDeleteByAjax');
-      
+    Route::get('/product/{id}/colors', 'StockController@getColors')->name('product.colors');
+    Route::get('/product/{id}/attributes', 'StockController@getAttributes')->name('product.attributes');
+    
 });
 
-Route::get('/hash/password', function() {
-    $passowrd = Hash::make('*jrJarj@^p5jMh5q*jrJarj@^p5jMh5q');
-    dd($passowrd);
-});
+// AJAX
 Route::get('/province/{id}/zone', 'DelegatesController@getZone');
 
-Route::get('/pass/check', function () {
-    $delegate = Delegate::find(15);
-    $pass = Hash::check('123456', $delegate->password);
-    dd($pass);
-});
 
 
 

@@ -70,17 +70,39 @@
                         <input type="hidden" name="delegate" value="{{ $delegate_id }}">
                         @csrf
                         <div class="form-group mb-3">
-                            <label for="email">{{ translate('Product') }} <span class="text-danger">*</span></label>
+                            <label for="product">{{ translate('Product') }} <span class="text-danger">*</span></label>
                             <select class="form-control aiz-selectpicker" name="product" id="products" data-live-search="true">
                                 <option value="" disabled selected>@lang('delegate::delivery.select_product')</option>
-                                @foreach (\DB::table('products')->select('id', 'name')->get() as $product)
-                                <option value="{{ $product->id }}">{{ $product->name }}</option>
+                                @foreach (\DB::table('products')->select('id', 'name', 'colors', 'attributes')->get() as $product)
+                                <option value="{{ $product->id }}"
+                                    @if(count(json_decode($product->colors)) > 0) data-color="true" @endif 
+                                    @if(count(json_decode($product->attributes)) > 0) data-attribute="true" @endif
+                                    >{{ $product->name }}</option>
                                 @endforeach
                             </select>
                             @error('product')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                        
+                        <div id="colors_box" class="form-group mb-3" style="display: none;">
+                            <label for="colors">{{ translate('Colors') }} <span class="text-danger">*</span></label>
+                            <select class="form-control aiz-selectpicker" data-live-search="true" data-selected-text-format="count" name="colors[]" id="colors" multiple>
+                            </select>
+                            @error('colors')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div id="attributes_box" class="form-group mb-3" style="display: none;">
+                            <label for="attributes">{{ translate('Attributes') }} <span class="text-danger">*</span></label>
+                            <select class="form-control aiz-selectpicker" data-live-search="true" data-selected-text-format="count" name="attributes[]" id="attributes" multiple>
+                            </select>
+                            @error('attributes')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <div class="form-group mb-3">
                             <label for="email">{{ translate('Quantity') }} <span class="text-danger">*</span></label>
                             <input type="number" class="form-control @error('quantity') is-invalid @enderror" name="quantity" value="{{ old('quantity') }}" placeholder="{{ translate('Quantity') }}" required>
@@ -131,17 +153,48 @@
         $('.la-eye').show();
         $('#delegate_password').attr('type', 'text');
     });
-    
-    /********** GET ZONES USING AJAX *******************/
-    $('#province_id').on('change', function() {
-        $.ajax({
-            url: `/admin/province/${$(this).val()}/zone`,
-            type: "GET",
-            // dataType: "HTML",
-            success: function(response) {
-                $('#zone_id').empty().append(response.options).selectpicker('refresh');
-            }
-        });
+
+    $('#products').on('change', function() {
+        // console.dir($(this).find(':selected').attr('data-attribute'));
+        const data_color = $(this).find(':selected').attr('data-color');
+        const data_attribute = $(this).find(':selected').attr('data-attribute');
+
+        // if(data_color || data-attribute){
+        if(data_color){
+            $('#colors_box').show();
+            $('#colors').empty();
+            $.ajax({
+                url: `/admin/product/${$(this).val()}/colors`,
+                type: "GET",
+                dataType: "JSON",
+                success: function(response) {
+                    const data = JSON.parse(response);
+                    $('#colors').append(data);
+                    AIZ.plugins.bootstrapSelect('refresh');
+                }
+            });
+        } else {
+            $('#colors_box').hide();
+        }
+
+        if(data_attribute){
+            $('#attributes_box').show();
+            $('#attributes').empty();
+
+            $.ajax({
+                url: `/admin/product/${$(this).val()}/attributes`,
+                type: "GET",
+                dataType: "JSON",
+                success: function(response) {
+                    const data = JSON.parse(response);
+                    $('#attributes').append(data);
+                    AIZ.plugins.bootstrapSelect('refresh');
+                }
+            });
+        } else {
+            $('#attributes_box').hide();
+        }
+
     });
 </script>
 

@@ -32,6 +32,7 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->request);
         $request->validate([
             'product' => 'required',
             'quantity' => ['required', 'numeric'],
@@ -50,6 +51,14 @@ class StockController extends Controller
         $stock->product_id = $request->input('product');
         $stock->delegate_id = $request->input('delegate');
         $stock->stock = $request->input('quantity');
+        
+        if($request->get('colors')){
+            $stock->colors = json_encode($request->get('colors'));
+        }
+        if($request->get('attributes')){
+            $stock->attributes = json_encode($request->get('attributes'));
+        }
+        
         $stock->save();
 
         flash(Lang::get('delegate::delivery.stock_added'))->success();

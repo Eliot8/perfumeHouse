@@ -19,6 +19,8 @@
                             <tr>
                                 <th data-breakpoints="lg">#</th>
                                 <th>{{ translate('Product Name') }}</th>
+                                <th>{{ translate('Colors') }}</th>
+                                <th>{{ translate('attributes') }}</th>
                                 <th data-breakpoints="lg">{{ translate('Quantity') }}</th>
                                 <th data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
                             </tr>
@@ -36,6 +38,21 @@
                                             <span class="text-muted text-truncate-2">{{ $item->product->name }}</span>
                                         </div>
                                     </div>
+                                </td>
+                                <td>
+                                    <span>
+                                        @foreach(json_decode($item->colors) as $color)
+                                        <span class="size-15px d-inline-block mr-2 rounded border" style="background: {{ $color }}"></span>
+                                        <span>{{ \App\Models\Color::where('code', $color)->first()->name }}</span>
+                                        @endforeach
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        @foreach(json_decode($item->attributes) as $attribute)
+                                        {{ $attribute }}
+                                        @endforeach
+                                    </span>
                                 </td>
                                 <td>
                                     <strong class="badge badge-primary btn-circle btn-sm" style="transition: all 0.3s ease;">{{ $item->stock }}</strong>
@@ -155,11 +172,9 @@
     });
 
     $('#products').on('change', function() {
-        // console.dir($(this).find(':selected').attr('data-attribute'));
         const data_color = $(this).find(':selected').attr('data-color');
         const data_attribute = $(this).find(':selected').attr('data-attribute');
 
-        // if(data_color || data-attribute){
         if(data_color){
             $('#colors_box').show();
             $('#colors').empty();

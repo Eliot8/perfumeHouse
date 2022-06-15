@@ -41,21 +41,22 @@
                                 </td>
                                 <td>
                                     <span>
-                                        @forelse(json_decode($item->colors) as $color)
-                                        <span class="size-15px d-inline-block mr-2 rounded border" style="background: {{ $color }}"></span>
-                                        <span>{{ \App\Models\Color::where('code', $color)->first()->name }}</span>
-                                        @empty
-                                            <span></span>
-                                        @endforelse
+                                    {{-- {{ dd(count(json_decode($item->attributes))) }} --}}
+                                        @if(!empty(json_decode($item->colors)))
+                                            @foreach(json_decode($item->colors) as $color)
+                                            <span class="size-15px d-inline-block mr-2 rounded border" style="background: {{ $color }}"></span>
+                                            <span>{{ \App\Models\Color::where('code', $color)->first()->name }}</span>
+                                            @endforeach
+                                        @endif
                                     </span>
                                 </td>
                                 <td>
                                     <span>
-                                        @forelse(json_decode($item->attributes) as $attribute)
-                                        {{ $attribute }}
-                                        @empty
-                                            <span></span>
-                                        @endforelse
+                                        @if(!empty(json_decode($item->attributes)))
+                                            @foreach(json_decode($item->attributes) as $attribute)
+                                            {{ $attribute }}
+                                            @endforeach
+                                        @endif
                                     </span>
                                 </td>
                                 <td>

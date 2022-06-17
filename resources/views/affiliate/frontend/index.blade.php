@@ -196,15 +196,16 @@
                                         <td>{{ ($key+1) + ($affiliate_logs->currentPage() - 1)*$affiliate_logs->perPage() }}</td>
                                         <td>
                                             @if($affiliate_log->user_id !== null)
-                                                {{ $affiliate_log->user->name }}
+                                            {{ $affiliate_log->user->name }}
                                             @else
-                                                {{ translate('Guest').' ('. $affiliate_log->guest_id.')' }}
+                                            {{ translate('Guest').' ('. $affiliate_log->guest_id.')' }}
                                             @endif
                                         </td>
                                         <td>{{ single_price($affiliate_log->amount) }}</td>
                                         <td>
                                             @if($affiliate_log->order_id != null)
-                                                {{ $affiliate_log->order->code }}
+                                                {{-- {{ $affiliate_log->order->code }} --}}
+                                                {{ \App\Models\Order::find($affiliate_log->order_id)->code }}
                                             @else
                                                 {{ $affiliate_log->order_detail->order->code }}
                                             @endif

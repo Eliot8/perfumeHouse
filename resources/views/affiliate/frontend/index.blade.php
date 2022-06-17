@@ -204,10 +204,9 @@
                                         <td>{{ single_price($affiliate_log->amount) }}</td>
                                         <td>
                                             @if($affiliate_log->order_id != null)
-                                                {{ dd($affiliate_log->order_id) }}
-                                                {{ \App\Models\Order::where($affiliate_log->order_id)->code }}
+                                                {{ $affiliate_log->order ? $affiliate_log->order->code : ''}}
                                             @else
-                                                {{ $affiliate_log->order_detail->order->code }}
+                                                {{ $affiliate_log->order ? $affiliate_log->order_detail->order->code : ''}}
                                             @endif
                                         </td>
                                         <td> {{ ucwords(str_replace('_',' ', $affiliate_log->affiliate_type)) }}</td>

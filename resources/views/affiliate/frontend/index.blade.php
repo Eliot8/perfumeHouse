@@ -204,8 +204,8 @@
                                         <td>{{ single_price($affiliate_log->amount) }}</td>
                                         <td>
                                             @if($affiliate_log->order_id != null)
-                                                {{-- {{ $affiliate_log->order->code }} --}}
-                                                {{ \App\Models\Order::find($affiliate_log->order_id)->code }}
+                                                {{ dd($affiliate_log->order_id) }}
+                                                {{ \App\Models\Order::where($affiliate_log->order_id)->code }}
                                             @else
                                                 {{ $affiliate_log->order_detail->order->code }}
                                             @endif

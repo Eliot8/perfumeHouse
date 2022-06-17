@@ -203,7 +203,6 @@
                                         </td>
                                         <td>{{ single_price($affiliate_log->amount) }}</td>
                                         <td>
-                                        {{ dd($affiliate_log, $affiliate_log->order); }}
                                             @if($affiliate_log->order_id != null)
                                                 {{-- {{ $affiliate_log->order->code }} --}}
                                                 {{ \App\Models\Order::find($affiliate_log->order_id)->code }}

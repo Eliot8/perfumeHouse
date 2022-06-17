@@ -289,8 +289,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $carts = Cart::where('user_id', Auth::user()->id)
-        ->get();
+        $carts = Cart::where('user_id', Auth::user()->id)->get();
         
         if ($carts->isEmpty()) {
             flash(translate('Your cart is empty'))->warning();
@@ -382,7 +381,7 @@ class OrderController extends Controller
                 $order_detail->product_id = $product->id;
                 $order_detail->variation = $product_variation;
 
-                if(auth()->check() && has_coupon(auth()->user())) {
+                if(Auth::check() && has_coupon(Auth::user()) && get_valid_coupon()) {
                     $order_detail->price = get_discounted_price($cartItem['price']) * $cartItem['quantity'];
                 } else {
                     $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
@@ -421,32 +420,34 @@ class OrderController extends Controller
                 // }
             }
 
-            if (Auth::check() && has_coupon(Auth::user())) {
-                $user = Auth::user();
-                $order->grand_total = get_discounted_price($subtotal) + $tax + $address->province->shipping_cost ?? 0;
-
+            $user = Auth::user();
+            if (Auth::check() && has_coupon($user) && get_valid_coupon()) {
                 $coupon = get_valid_coupon();
+                // if($coupon){
+                    $order->grand_total = get_discounted_price($subtotal) + $tax + $address->province->shipping_cost ?? 0;
 
-                // SET COUPON ID
-                $order->coupon_id = $coupon->id;
+                    // SET COUPON ID
+                    $order->coupon_id = $coupon->id;
+    
+                    $affiliateController = new AffiliateController;
+                    $affiliateController->processAffiliateStats($user->id, 0, $order_detail->quantity, 0, 0);
+    
+                    // CALCUL COMMISSION
+                    if($coupon->commission_type == 'percent'){
+                        $user->affiliate_user->balance_pending += $subtotal * ($coupon->commission / 100);
+                    } else {
+                        $user->affiliate_user->balance_pending += $coupon->commission;
+                    }
+                    $user->affiliate_user->save();
+    
+                    $coupon_usage = new CouponUsage;
+                    $coupon_usage->user_id = $user->id;
+                    $coupon_usage->coupon_id = $coupon->id;
+                    $coupon_usage->order_id = $order->id;
+                    $coupon_usage->commission = $user->affiliate_user->balance_pending;
+                    $coupon_usage->save();
+                // }
 
-                $affiliateController = new AffiliateController;
-                $affiliateController->processAffiliateStats($user->id, 0, $order_detail->quantity, 0, 0);
-
-                // CALCUL COMMISSION
-                if($coupon->commission_type == 'percent'){
-                    $user->affiliate_user->balance_pending += $subtotal * ($coupon->commission / 100);
-                } else {
-                    $user->affiliate_user->balance_pending += $coupon->commission;
-                }
-                $user->affiliate_user->save();
-
-                $coupon_usage = new CouponUsage;
-                $coupon_usage->user_id = $user->id;
-                $coupon_usage->coupon_id = $coupon->id;
-                $coupon_usage->order_id = $order->id;
-                $coupon_usage->commission = $user->affiliate_user->balance_pending;
-                $coupon_usage->save();
 
 
             } else {
@@ -576,16 +577,33 @@ class OrderController extends Controller
                     'message' => __('delegate::delivery.no_delegate_selected'),
                 ]);
             }
+            
+            // MANAGE DELIVERY MAN STOCK
             foreach ($order->orderDetails as $orderDetail) {
-
-                // MANAGE STOCK
-                $stock = Stock::where('delegate_id', $delegate->id)->where('product_id', $orderDetail->product_id)->first();
-                if($stock->stock - $orderDetail->quantity < 0){
-                    $stock->stock = 0;
+                if ($orderDetail->product->variant_product) {
+                    $delivery_stock = Stock::where([
+                        'delegate_id'   => $delegate->id,
+                        'product_id'    => $orderDetail->product_id,
+                        'variation'    => $orderDetail->variation,
+                    ])->first();
                 } else {
-                    $stock->stock = $stock->stock - $orderDetail->quantity;
+                    $delivery_stock = Stock::where([
+                        'delegate_id'   => $delegate->id,
+                        'product_id'    => $orderDetail->product_id,
+                    ])->first();
                 }
-                $stock->save();
+                
+                if (!$delivery_stock) {
+                    return false;
+                }
+
+                if ($delivery_stock->stock - $orderDetail->quantity < 0) {
+                    $delivery_stock->stock = 0;
+                } else {
+                    $delivery_stock->stock -= $orderDetail->quantity;
+                }
+
+                $delivery_stock->save();
             }
             $order->grand_total -= $order->province->delegate_cost;
 

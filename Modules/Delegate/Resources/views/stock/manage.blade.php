@@ -41,12 +41,11 @@
                                 </td>
                                 <td>
                                     <span>
-                                    {{-- {{ dd(count(json_decode($item->attributes))) }} --}}
-                                        @if(!empty(json_decode($item->colors)))
-                                            @foreach(json_decode($item->colors) as $color)
-                                            <span class="size-15px d-inline-block mr-2 rounded border" style="background: {{ $color }}"></span>
-                                            <span>{{ \App\Models\Color::where('code', $color)->first()->name }}</span>
-                                            @endforeach
+                                        @if(!empty($item->color))
+                                            <span class="d-block">
+                                                <span class="size-15px d-inline-block mr-2 rounded border" style="background: {{ $item->color }}"></span>
+                                                <span>{{ \App\Models\Color::where('code', $item->color)->first()->name }}</span>
+                                            </span>
                                         @endif
                                     </span>
                                 </td>
@@ -54,7 +53,7 @@
                                     <span>
                                         @if(!empty(json_decode($item->attributes)))
                                             @foreach(json_decode($item->attributes) as $attribute)
-                                            {{ $attribute }}
+                                            <span class="d-block"> {{ $attribute }} </span> 
                                             @endforeach
                                         @endif
                                     </span>
@@ -108,8 +107,8 @@
                         </div>
                         
                         <div id="colors_box" class="form-group mb-3" style="display: none;">
-                            <label for="colors">{{ translate('Colors') }} <span class="text-danger">*</span></label>
-                            <select class="form-control aiz-selectpicker" data-live-search="true" data-selected-text-format="count" name="colors[]" id="colors" multiple>
+                            <label for="color">{{ translate('Colors') }} <span class="text-danger">*</span></label>
+                            <select class="form-control aiz-selectpicker" data-live-search="true" data-selected-text-format="count" name="color" id="colors">
                             </select>
                             @error('colors')
                             <div class="invalid-feedback">{{ $message }}</div>

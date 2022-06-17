@@ -11,8 +11,6 @@
 |
 */
 
-use Illuminate\Support\Facades\Hash;
-use Modules\Delegate\Entities\Delegate;
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
     Route::resource('delegates', 'DelegatesController')->except(['destroy']);

@@ -88,7 +88,7 @@
 
                                                 <div class="col-lg col-4 order-1 order-lg-0 my-3 my-lg-0">
                                                     <span class="opacity-60 fs-12 d-block d-lg-none">{{ translate('Price') }}</span>
-                                                    @if(Auth::check() && has_coupon(Auth::user()))
+                                                    @if(Auth::check() && has_coupon(Auth::user()) && get_valid_coupon())
                                                         @php
                                                             $discounted_price = get_discounted_price($cartItem['price']); 
                                                         @endphp
@@ -133,7 +133,7 @@
                                                 </div>
                                                 <div class="col-lg col-4 order-3 order-lg-0 my-3 my-lg-0">
                                                     <span class="opacity-60 fs-12 d-block d-lg-none">{{ translate('Total') }}</span>
-                                                    @if(Auth::check() && has_coupon(Auth::user()))
+                                                    @if(Auth::check() && has_coupon(Auth::user()) && get_valid_coupon())
                                                         <span class="fw-600 fs-16 text-primary">{{ single_price(($discounted_price + $cartItem['tax']) * $cartItem['quantity']) }}</span>
                                                     @else
                                                         <span class="fw-600 fs-16 text-primary">{{ single_price(($cartItem['price'] + $cartItem['tax']) * $cartItem['quantity']) }}</span>
@@ -154,7 +154,7 @@
 
                             <div class="px-3 py-2 mb-4 border-top d-flex justify-content-between">
                                 <span class="opacity-60 fs-15">{{ translate('Subtotal') }}</span>
-                                @if(Auth::check() && has_coupon(Auth::user()))
+                                @if(Auth::check() && has_coupon(Auth::user()) && get_valid_coupon())
                                     @php
                                         $total_discounted_price = get_discounted_price($total); 
                                     @endphp

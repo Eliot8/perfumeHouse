@@ -96,6 +96,9 @@ return [
     'marketer_phone_number' => 'Marketer phone number',
 
     'do_not_have_enough_balance' => 'You do not have enough balance',
+
+    'no_stock_exist' => 'There is no stock for this product',
+    'no_enough_stock' => 'Not enough stock',
     
     
 

@@ -35,7 +35,7 @@ return [
     'stock_added' => 'تم إضافة المخزون بنجاح',
     'stock_updated' => 'تم تحديث المخزون بنجاح',
     'stock_deleted' => 'تم حذف المخزون بنجاح',
-    'stock_exist' => 'المخزون موجود بالفعل',
+    'stock_exist' => 'المخزون موجود بالفعل ، يرجى تعديله',
 
     'delegate_added' => 'تم إضافة المندوب بنجاح',
     'delegate_updated' => 'تم تحديث المندوب بنجاح',
@@ -96,6 +96,9 @@ return [
     'marketer_phone_number' => 'رقم هاتف المسوق',
 
     'do_not_have_enough_balance' => 'ليس لديك رصيد كافي',
+
+    'no_stock_exist' => 'لا يوجد مخزون لهذا المنتج',
+    'no_enough_stock' => 'المخزون الحالي أصغر من المخزون الذي تم ادخاله',
 
 
 ];

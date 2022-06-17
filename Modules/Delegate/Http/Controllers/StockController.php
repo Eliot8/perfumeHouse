@@ -12,6 +12,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Lang;
 use Modules\Delegate\Entities\Delegate;
 use Modules\Delegate\Entities\Stock;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class StockController extends Controller
 {
@@ -32,31 +33,66 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->request);
         $request->validate([
             'product' => 'required',
             'quantity' => ['required', 'numeric'],
             'delegate' => 'required',
         ]);
         
-        $already_exist = Stock::where(['delegate_id' => $request->input('delegate'), 'product_id' => $request->input('product')])->first();
-        if($already_exist){
+        $product_stock = ProductStock::where('product_id', $request->input('product'))->first();
+        if($product_stock->variant){
+            $variation= '';
+    
+            if($request->get('color')){
+                $variation .= Color::where('code', $request->get('color'))->first()->name . '-';
+            }
+    
+            if($request->get('attributes')){
+                $variation .= preg_replace("/\s+/", "", implode("-", $request->get('attributes')));
+            }
+
+            $delivery_stock = Stock::where([
+                'delegate_id' => $request->input('delegate'),
+                'product_id' => $request->input('product'),
+                'variation' => $variation,
+                ])->first();
+        }else{
+            $delivery_stock = Stock::where([
+                'delegate_id' => $request->input('delegate'),
+                'product_id' => $request->input('product'),
+                ])->first();
+        }
+
+        if($delivery_stock){
             flash(Lang::get('delegate::delivery.stock_exist'))->error();
             return back();
         }
-        // DECREASE PRODUCT STOCK
-        $this->decreaseProductStock($request->product, $request->quantity);
 
+
+        // DECREASE PRODUCT STOCK
+        $response = $this->decreaseProductStock($request->product, $request->quantity);
+        
+        if($response->getStatusCode() !== 200){
+           flash(json_decode($response->getContent())->message)->error();
+           return back();
+        }
+
+        // CREATE NEW INSTANCE OF STOCK
         $stock = new Stock();
         $stock->product_id = $request->input('product');
         $stock->delegate_id = $request->input('delegate');
         $stock->stock = $request->input('quantity');
         
-        if($request->get('colors')){
-            $stock->colors = json_encode($request->get('colors'));
+        if($request->get('color')){
+            $stock->color = $request->get('color');
         }
+
         if($request->get('attributes')){
             $stock->attributes = json_encode($request->get('attributes'));
+        }
+
+        if(!empty($variation)){
+            $stock->variation = $variation;
         }
         
         $stock->save();
@@ -116,27 +152,38 @@ class StockController extends Controller
 
     protected function decreaseProductStock($product_id, $quantity) {
         $product_stock = ProductStock::where('product_id', $product_id)->first();
-        if ($product_stock->qty - $quantity < 0) {
-            flash('stock error')->error();
-            return back();
+
+        if(!$product_stock){
+            return response(['message' => Lang::get('delegate::delivery.no_stock_exist')], 500);
         }
+
+        if ($product_stock->qty - $quantity < 0) {;
+            return response(['message' => Lang::get('delegate::delivery.no_enough_stock')], 500);
+        }
+
         $product_stock->qty -= $quantity;
         $product_stock->save();
+        return response(200);
     }
 
     protected function increaseProductStock($product_id, $quantity) {
         $product_stock = ProductStock::where('product_id', $product_id)->first();
-        if ($product_stock->qty - $quantity < 0) {
-            flash('stock error')->error();
-            return back();
+
+        if (!$product_stock) {
+            return response(['message' => Lang::get('delegate::delivery.no_stock_exist')], 500);
         }
+
+        if ($product_stock->qty - $quantity < 0) {
+            return response(['message' => Lang::get('delegate::delivery.no_enough_stock')], 500);
+        }
+
         $product_stock->qty += $quantity;
         $product_stock->save();
+        return response(200);
     }
 
     public function getColors($id, Request $request) {
         if($request->ajax()){
-            // $product = Product::find($request->get('product_id'));
             $product_colors = Product::select('colors')->where('id', $id)->first()->colors;
             $colors = json_decode($product_colors);
 

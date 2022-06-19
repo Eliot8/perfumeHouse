@@ -18,7 +18,7 @@ class ProvinceController extends Controller
      */
     public function index()
     {
-        $provinces =Province::paginate(8);
+        $provinces = Province::paginate(8);
         return view('delegate::provinces.index', compact('provinces'));
     }
 
@@ -43,21 +43,21 @@ class ProvinceController extends Controller
             'delegate_cost' => ['required', 'numeric'],
             'shipping_type' => ['required'],
         ]);
-        
-        if($validator->fails()){
+
+        if ($validator->fails()) {
             flash(translate($validator->errors()->first()))->error();
             return back();
         }
-        
+
         $province = new Province();
         $province->name = $request->input('name');
         $province->delegate_cost = $request->input('delegate_cost');
 
-        if($request->shipping_type == 'free') {
+        if ($request->shipping_type == 'free') {
             $province->free_shipping = 1;
         }
-        
-        if($request->shipping_type == 'cost') {
+
+        if ($request->shipping_type == 'cost') {
             $province->free_shipping = 0;
             $province->shipping_cost = $request->shipping_cost;
         }
@@ -112,6 +112,7 @@ class ProvinceController extends Controller
 
         if ($request->shipping_type == 'free') {
             $province->free_shipping = 1;
+            $province->shipping_cost = 0;
         }
 
         if ($request->shipping_type == 'cost') {

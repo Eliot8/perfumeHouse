@@ -60,13 +60,13 @@
                             @endif
                         </td>
                         <td>
-                            {{ $province->delegate_cost ?? '0'}} $
+                            {{ single_price($province->delegate_cost) }} 
                         </td>
                         <td>
                             @if($province->free_shipping)
                             <span class="badge badge-info badge-inline px-2">@lang('delegate::delivery.free_shipping')</span>
                             @else 
-                             {{ $province->shipping_cost ?? '0' }} $
+                             {{ single_price($province->shipping_cost) }} 
                             @endif
                         </td>
                         <td class="text-right">

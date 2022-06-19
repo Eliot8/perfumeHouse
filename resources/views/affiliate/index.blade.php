@@ -65,10 +65,10 @@
                         <label class="col-lg-3 col-from-label">{{ translate('Product Sharing and Purchasing')}}</label>
                         <div class="col-lg-6">
                             @php
-                            if(\App\Models\AffiliateOption::where('type', 'product_sharing')->first() != null && \App\Models\AffiliateOption::where('type', 'product_sharing')->first()->details != null){
+                            if(App\Models\AffiliateOption::where('type', 'product_sharing')->first() != null && \App\Models\AffiliateOption::where('type', 'product_sharing')->first()->details != null){
                                 $commission_product_sharing = json_decode(\App\Models\AffiliateOption::where('type', 'product_sharing')->first()->details)->commission;
-                                $commission_type_product_sharing = json_decode(\Models\App\AffiliateOption::where('type', 'product_sharing')->first()->details)->commission_type;
-                                $status = \App\Models\AffiliateOption::where('type', 'product_sharing')->first()->status;
+                                $commission_type_product_sharing = json_decode(\App\Models\AffiliateOption::where('type', 'product_sharing')->first()->details)->commission_type;
+                                $status = App\Models\AffiliateOption::where('type', 'product_sharing')->first()->status;
                             }
                             else {
                                 $commission_product_sharing = null;

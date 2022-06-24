@@ -423,47 +423,49 @@ class OrderController extends Controller
             $user = Auth::user();
             if (Auth::check() && has_coupon($user) && get_valid_coupon()) {
                 $coupon = get_valid_coupon();
-                // if($coupon){
-                    $order->grand_total = get_discounted_price($subtotal) + $tax + $address->province->shipping_cost ?? 0;
+                $order->grand_total = get_discounted_price($subtotal) + $tax + $address->province->shipping_cost ?? 0;
 
-                    // SET COUPON ID
-                    $order->coupon_id = $coupon->id;
-    
-                    $affiliateController = new AffiliateController;
-                    $affiliateController->processAffiliateStats($user->id, 0, $order_detail->quantity, 0, 0);
-    
-                    // CALCUL COMMISSION
-                    if($coupon->commission_type == 'percent'){
-                        $user->affiliate_user->balance_pending += $subtotal * ($coupon->commission / 100);
-                    } else {
-                        $user->affiliate_user->balance_pending += $coupon->commission;
-                    }
-                    $user->affiliate_user->save();
-    
-                    $coupon_usage = new CouponUsage;
-                    $coupon_usage->user_id = $user->id;
-                    $coupon_usage->coupon_id = $coupon->id;
-                    $coupon_usage->order_id = $order->id;
-                    $coupon_usage->commission = $user->affiliate_user->balance_pending;
-                    $coupon_usage->save();
-                // }
+                // SET COUPON ID
+                $order->coupon_id = $coupon->id;
 
+                $affiliateController = new AffiliateController;
+                $affiliateController->processAffiliateStats($user->id, 0, $order_detail->quantity, 0, 0);
 
+                // CALCUL COMMISSION
+                if ($coupon->commission_type == 'percent') {
+                    $calculate_comission = $subtotal * ($coupon->commission / 100);
+                } else {
+                    $calculate_comission = $coupon->commission;
+                }
+                $user->affiliate_user->balance_pending += $calculate_comission;
+                $user->affiliate_user->save();
 
+                $coupon_usage = new CouponUsage;
+                $coupon_usage->user_id = $user->id;
+                $coupon_usage->coupon_id = $coupon->id;
+                $coupon_usage->order_id = $order->id;
+                $coupon_usage->commission = $calculate_comission;
+                $coupon_usage->save();
             } else {
                 $order->grand_total = $subtotal + $tax + $address->province->shipping_cost ?? 0;
             }
-
+           
             if ($seller_product[0]->coupon_code != null) {
                 $order->coupon_discount = $coupon_discount;
                 $order->grand_total -= $coupon_discount;
                 $coupon =  Coupon::where('code', $seller_product[0]->coupon_code)->first();
 
+                if ($coupon->commission_type == 'percent') {
+                    $calculate_comission = $subtotal * ($coupon->commission / 100);
+                } else {
+                    $calculate_comission = $coupon->commission;
+                }
+
                 $coupon_usage = new CouponUsage;
                 $coupon_usage->user_id = Auth::user()->id;
                 $coupon_usage->coupon_id = $coupon->id;
                 $coupon_usage->order_id = $order->id;
-                $coupon_usage->commission = $coupon->affiliate_user->balance_pending;
+                $coupon_usage->commission = $calculate_comission;
                 $coupon_usage->save();
 
                 // SET COUPON ID
@@ -611,7 +613,6 @@ class OrderController extends Controller
             if($order->coupon_id != null){
                 $affiliate_user = Coupon::find($order->coupon_id)->affiliate_user;
                 $coupon_usage = CouponUsage::where('order_id', $order->id)->first();
-
                 $affiliate_user->balance_pending    -= $coupon_usage->commission;
                 $affiliate_user->balance            += $coupon_usage->commission;
                 $affiliate_user->save();
@@ -654,6 +655,15 @@ class OrderController extends Controller
             $user = User::where('id', $order->user_id)->first();
             $user->balance += $order->grand_total;
             $user->save();
+            
+            // DEDUCTION OF COMMISSION 
+            if ($order->coupon_id != null) {
+                $affiliate_user = Coupon::find($order->coupon_id)->affiliate_user;
+                $coupon_usage = CouponUsage::where('order_id', $order->id)->first();
+                $affiliate_user->balance_pending    -= $coupon_usage->commission;
+                $affiliate_user->save();
+                $coupon_usage->delete();
+            }
         }
 
         if (Auth::user()->user_type == 'seller') {
@@ -675,6 +685,7 @@ class OrderController extends Controller
                     //     $product_stock->qty += $orderDetail->quantity;
                     //     $product_stock->save();
                     // }
+
                 }
             }
         } else {
@@ -684,19 +695,29 @@ class OrderController extends Controller
                 $orderDetail->save();
 
                 if ($request->status == 'cancelled') {
-                    // $variant = $orderDetail->variation;
-                    // if ($orderDetail->variation == null) {
-                    //     $variant = '';
-                    // }
+                    $variant = $orderDetail->variation;
+                    if ($orderDetail->variation == null) {
+                        $variant = '';
+                    }
 
-                    // $product_stock = ProductStock::where('product_id', $orderDetail->product_id)
-                    //     ->where('variant', $variant)
-                    //     ->first();
+                    $product_stock = ProductStock::where('product_id', $orderDetail->product_id)
+                        ->where('variant', $variant)
+                        ->first();
 
-                    // if ($product_stock != null) {
-                    //     $product_stock->qty += $orderDetail->quantity;
-                    //     $product_stock->save();
-                    // }
+                    if ($product_stock != null) {
+                        $product_stock->qty += $orderDetail->quantity;
+                        $product_stock->save();
+                    }
+                    // DEDUCTION OF COMMISSION 
+                    if ($order->coupon_id != null) {
+                        $affiliate_user = Coupon::find($order->coupon_id)->affiliate_user;
+                        $coupon_usage = CouponUsage::where('order_id', $order->id)->first();
+                        $affiliate_user->balance_pending    -= $coupon_usage->commission;
+                        if($affiliate_user->balance_pending < 0){
+                            $affiliate_user->balance_pending = 0;
+                        }
+                        $affiliate_user->save();
+                    }
                 }
 
                 if (addon_is_activated('affiliate_system')) {

@@ -7,6 +7,7 @@ use App\Models\Attribute;
 use App\Models\Color;
 use App\Models\AttributeTranslation;
 use App\Models\AttributeValue;
+use App\Models\Product;
 use CoreComponentRepository;
 use Str;
 
@@ -116,6 +117,43 @@ class AttributeController extends Controller
     {
         $attribute = Attribute::findOrFail($id);
 
+        // REMOVE ATTRIBUTES FROM PRDUCT AFTER DELETE THEM
+        $products = Product::select(['id', 'attributes', 'choice_options'])->get();
+        foreach ($products as $product) {
+
+            $product_attributes = json_decode($product->attributes);
+            $new_product_attributes_options = [];
+
+            if (in_array($id, $product_attributes)) {
+                $product_attributes_options = json_decode($product->choice_options);
+                foreach($product_attributes_options as $option){
+                    if($option->attribute_id != $id){
+                        array_push($new_product_attributes_options, $option);
+                    } 
+                    
+                }
+                $product->attributes = json_encode(array_values(array_diff($product_attributes, [$id])));
+                $product->choice_options = json_encode($new_product_attributes_options);
+
+                // UPDATE STOCK OF THAT PRODUCT
+                foreach($product->stocks as $stock){
+                    foreach($attribute->attribute_values as $item){
+                        $attr = str_replace(' ', '', $item->value);
+                        
+                        if(in_array($attr, explode('-', $stock->variant))){
+                            $new_variant = implode("-", array_diff(explode('-', $stock->variant), [$attr]));
+                            $stock->variant = $new_variant;
+                            $stock->sku = $new_variant;
+                            $stock->save();
+                            $item->delete();
+                        }
+                    }
+                }
+                $product->save();
+            }
+        }
+        //
+
         foreach ($attribute->attribute_translations as $key => $attribute_translation) {
             $attribute_translation->delete();
         }
@@ -158,6 +196,7 @@ class AttributeController extends Controller
 
     public function destroy_attribute_value($id)
     {
+
         $attribute_values = AttributeValue::findOrFail($id);
         AttributeValue::destroy($id);
         
@@ -226,11 +265,24 @@ class AttributeController extends Controller
     
     public function destroy_color($id)
     {
+        // REMOVE COLORS FROM PRODUCTS AFTER DELETING COLOR
+        $color_code = Color::find($id)->code;
+        $products = Product::select(['id', 'colors'])->get();
+        foreach ($products as $product) {
+            $products_colors = json_decode($product->colors);
+            if (in_array($color_code, $products_colors)) {
+                $product->colors = json_encode(array_values(array_diff($products_colors, [$color_code])));
+            }
+            $product->save();
+        }
+
+        //
         Color::destroy($id);
         
         flash(translate('Color has been deleted successfully'))->success();
         return redirect()->route('colors');
 
     }
+
     
 }

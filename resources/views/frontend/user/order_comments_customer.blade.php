@@ -83,7 +83,7 @@
                             </strong>
                         </div>
                     </div>
-                    <div class="alert alert-info d-flex align-items-center">
+                    <div id="order_alert" class="alert alert-info d-flex align-items-center">
                         @lang('delegate::delivery.no_order_comments').
                     </div>
                     @endforelse
@@ -114,6 +114,7 @@
             </div>`;
             $('.comments').append(data);
             $('#comment').val('');
+            $('#order_alert').remove();
             $('.modal-body').animate({scrollTop: $('.modal-body').scrollHeight}, "fast");
         });
         $('.modal-body').animate({ scrollTop: $(this).height() }, "fast");

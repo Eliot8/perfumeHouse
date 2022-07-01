@@ -122,7 +122,7 @@ class DelegatesController extends Controller
             if($request->input('reset_password') === 'true'){
                 $delegate->password = Hash::make($request->input('password'));
                 $user = User::findOrFail($delegate->user_id);
-                $user->password = $request->input('password');
+                $user->password = $delegate->password;
                 $user->save();
             }
     

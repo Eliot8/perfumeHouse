@@ -1,7 +1,91 @@
 @extends('backend.layouts.app')
 
 @section('content')
-
+<div class="card">
+    <div class="card-header row gutters-5" >
+        <div class="col">
+            <h5 class="mb-0 h6">{{ translate('Filter') }}</h5>
+        </div> 
+        @if(request()->query())
+        <div class="mb-2 mb-md-0">
+            <a href="{{ route('all_orders.index') }}" >{{ translate('Clear Filter') }}</a>
+        </div>
+        @endif
+    </div>
+    <div class="card-body" >
+        <form class="form-horizontal" action="{{ route('all_orders.index') }}" method="GET">
+            <div class="row">
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Customer') }}</label>
+                    <select class="form-control aiz-selectpicker" name="customer">
+                        <option value="" selected disabled hidden>Filter by customer</option>
+                        @foreach (\App\Models\User::where('user_type', 'customer')->get() as $customer)
+                            <option value="{{ $customer->id }}" @if(request()->has('customer') && request()->filled('customer') && request()->get('customer') == $customer->id) selected @endif>
+                                {{ $customer->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Delivery Status') }}</label>
+                    <select class="form-control aiz-selectpicker" name="delivery_status">
+                        <option value="" selected disabled hidden>Filter by delivery status</option>
+                        @foreach (getDeliveryStatus() as $key => $value)
+                            <option value="{{ $key }}" @if(request()->has('delivery_status') && request()->filled('delivery_status') && request()->get('delivery_status') == $key) selected @endif>
+                                 {{ $value }} </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Payment Status') }}</label>
+                    <select class="form-control aiz-selectpicker" name="payment_status">
+                        <option value="" selected disabled hidden>Filter by payment status</option>
+                        @foreach (getPaymentStatus() as $key => $value)
+                            <option value="{{ $key }}" @if(request()->has('payment_status') && request()->filled('payment_status') && request()->get('payment_status') == $key) selected @endif> 
+                                {{ $value }} </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Delivery man') }}</label>
+                    <select class="form-control aiz-selectpicker" name="delivery_man">
+                        <option value="" selected disabled hidden>Filter by delivery man</option>
+                        @foreach (\Modules\Delegate\Entities\Delegate::select('id', 'full_name')->get() as $delivery_man)
+                            <option value="{{ $delivery_man->id }}" @if(request()->has('delivery_man') && request()->filled('delivery_man') && request()->get('delivery_man') == $delivery_man->id) selected @endif>
+                                {{ $delivery_man->full_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Date') }}</label>
+                    <input type="text" class="aiz-date-range form-control" value="{{ request()->query('date') }}" name="date" placeholder="{{ translate('Filter by date') }}" data-format="DD-MM-Y" data-separator=" to " data-advanced-range="true" autocomplete="off">
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Order Code') }}</label>
+                    <input type="text" class="form-control" id="order_code" name="order_code" value="{{ request()->query('order_code') }}" placeholder="{{ translate('Type Order code & hit Enter') }}">
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Cancel Request') }}</label>
+                    <div>
+                        <label class="aiz-switch aiz-switch-success mb-0">
+                        <input value="true" name="cancel_request" type="checkbox" @if(request()->query('cancel_request')) checked @endif>
+                        <span class="slider round"></span></label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group mb-0 float-right">
+                        <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="card">
     <form class="" action="" id="sort_orders" method="GET">
         <div class="card-header row gutters-5">
@@ -15,15 +99,12 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="#" onclick="bulk_delete()"> {{translate('Delete selection')}}</a>
-<!--                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal">
-                        <i class="las la-sync-alt"></i>
-                        {{translate('Change Order Status')}}
-                    </a>-->
+                    <a class="dropdown-item" href="#" onclick="bulk_mark_as_confirmed()"> {{translate('Mark as confirmed')}}</a>
                 </div>
             </div>
 
             <!-- Change Status Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            {{-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -77,14 +158,13 @@
                 <div class="form-group mb-0">
                     <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
         <div class="card-body">
             <table class="table aiz-table mb-0">
                 <thead>
                     <tr>
-                        <!--<th>#</th>-->
                         <th>
                             <div class="form-group">
                                 <div class="aiz-checkbox-inline">
@@ -112,9 +192,6 @@
                 <tbody>
                     @foreach ($orders as $key => $order)
                     <tr>
-    <!--                    <td>
-                            {{ ($key+1) + ($orders->currentPage() - 1)*$orders->perPage() }}
-                        </td>-->
                         <td>
                             <div class="form-group">
                                 <div class="aiz-checkbox-inline">
@@ -247,26 +324,6 @@
 
         });
 
-//        function change_status() {
-//            var data = new FormData($('#order_form')[0]);
-//            $.ajax({
-//                headers: {
-//                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//                },
-//                url: "{{route('bulk-order-status')}}",
-//                type: 'POST',
-//                data: data,
-//                cache: false,
-//                contentType: false,
-//                processData: false,
-//                success: function (response) {
-//                    if(response == 1) {
-//                        location.reload();
-//                    }
-//                }
-//            });
-//        }
-
         function bulk_delete() {
             var data = new FormData($('#sort_orders')[0]);
             $.ajax({
@@ -287,6 +344,28 @@
             });
         }
 
+        function bulk_mark_as_confirmed() {
+            var data = new FormData($('#sort_orders')[0]);
+            // console.table(data);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{route('bulk-order-confirmed')}}",
+                type: 'POST',
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if(response == 1) {
+                        AIZ.plugins.notify('success', '{{ translate('Delivery status has been updated') }}');
+                        location.reload();
+                    }
+                }
+            });
+        }
+
         function show_comments(order_id){
             $('#order-comments-modal-body').html(null);
 
@@ -300,5 +379,9 @@
                 $('.c-preloader').hide();
             });
         }
+
+        // function filter_by_customer(id){
+
+        // }
     </script>
 @endsection

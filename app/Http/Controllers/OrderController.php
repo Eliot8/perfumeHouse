@@ -42,6 +42,7 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+        
         $payment_status = null;
         $delivery_status = null;
         $sort_search = null;
@@ -79,24 +80,28 @@ class OrderController extends Controller
     // All Orders
     public function all_orders(Request $request)
     {
+        
         CoreComponentRepository::instantiateShopRepository();
 
         $date = $request->date;
         $sort_search = null;
         $delivery_status = null;
 
+
         $orders = Order::orderBy('id', 'desc');
-        if ($request->has('search')) {
-            $sort_search = $request->search;
-            $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
-        }
-        if ($request->delivery_status != null) {
-            $orders = $orders->where('delivery_status', $request->delivery_status);
-            $delivery_status = $request->delivery_status;
-        }
-        if ($date != null) {
-            $orders = $orders->where('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
-        }
+
+        $orders = fitlerOrders($request, $orders);
+        // if ($request->has('search')) {
+        //     $sort_search = $request->search;
+        //     $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
+        // }
+        // if ($request->delivery_status != null) {
+        //     $orders = $orders->where('delivery_status', $request->delivery_status);
+        //     $delivery_status = $request->delivery_status;
+        // }
+        // if ($date != null) {
+        //     $orders = $orders->where('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+        // }
         $orders = $orders->paginate(15);
         return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date'));
     }
@@ -552,6 +557,23 @@ class OrderController extends Controller
         if ($request->id) {
             foreach ($request->id as $order_id) {
                 $this->destroy($order_id);
+            }
+        }
+
+        return 1;
+    }
+
+    public function bulk_order_mark_as_confirmed(Request $request)
+    {
+        if ($request->id) {
+            foreach ($request->id as $order_id) {
+                $order = Order::find($order_id);
+                if($order->delivery_status == 'pending'){
+                    $request->merge(['status' => 'confirmed', 'order_id' => $order_id]);
+                    // $order->delivery_status = 'confirmed';
+                    // $order->save();
+                    $this->update_delivery_status($request);
+                } 
             }
         }
 

@@ -181,6 +181,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
 
     Route::get('/orders/destroy/{id}', 'OrderController@destroy')->name('orders.destroy');
     Route::post('/bulk-order-delete', 'OrderController@bulk_order_delete')->name('bulk-order-delete');
+    Route::post('/bulk-order-confirmed', 'OrderController@bulk_order_mark_as_confirmed')->name('bulk-order-confirmed');
 
     Route::post('/pay_to_seller', 'CommissionController@pay_to_seller')->name('commissions.pay_to_seller');
 

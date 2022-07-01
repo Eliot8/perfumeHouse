@@ -20,6 +20,8 @@ use App\Models\Product;
 use App\Models\Shop;
 use App\Utility\SendSMSUtility;
 use App\Utility\NotificationUtility;
+use Illuminate\Http\Request;
+use Modules\Delegate\Entities\Delegate;
 
 //sensSMS function for OTP
 if (!function_exists('sendSMS')) {
@@ -908,5 +910,58 @@ if(!function_exists('get_valid_coupon')){
             return false;
         }
          return array_values(reset($coupon))[0];
+    }
+}
+
+if(!function_exists('getDeliveryStatus')){
+    function getDeliveryStatus(){
+        return collect([
+            'pending'       => 'Pending',
+            'confirmed'     => 'Confirmed',
+            'picked_up'     => 'Picked Up',
+            'on_the_way'    => 'On The Way',
+            'delivered'     => 'Delivered',
+            'cancelled'     => 'Cancel',
+        ]);
+    }
+}
+
+if(!function_exists('getPaymentStatus')){
+    function getPaymentStatus(){
+        return collect([
+            'paid'       => 'Paid',
+            'unpaid'     => 'Un-Paid',
+        ]);
+    }
+}
+
+if(!function_exists('filterOrders')){
+    function fitlerOrders(Request $request, $orders){
+        if ($request->has('customer')) {
+            $orders = $orders->where('user_id', $request->get('customer'));
+        }
+        if ($request->has('delivery_status')) {
+            $orders = $orders->where('delivery_status', $request->get('delivery_status'));
+        }
+        if ($request->has('payment_status')) {
+            $orders = $orders->where('payment_status', $request->get('payment_status'));
+        }
+        if ($request->has('delivery_man')) {
+            $delivery_man = Delegate::find($request->get('delivery_man'));
+            $orders = $orders->where('assign_delivery_boy', $delivery_man->user_id);
+        }
+        if ($request->get('date')) {
+            // $ord = $orders->get();
+            $date = $request->get('date');
+            $orders = $orders->where('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+            // dd($ord, $orders->get());
+        }
+        if ($request->has('order_code')) {
+            $orders = $orders->where('code', 'like', '%' . $request->get('order_code') . '%');
+        }
+        if ($request->has('cancel_request')) {
+            $orders = $orders->where('cancel_request', 1);
+        }
+        return $orders;
     }
 }

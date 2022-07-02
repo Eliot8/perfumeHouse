@@ -570,13 +570,24 @@ class OrderController extends Controller
                 $order = Order::find($order_id);
                 if($order->delivery_status == 'pending'){
                     $request->merge(['status' => 'confirmed', 'order_id' => $order_id]);
-                    // $order->delivery_status = 'confirmed';
-                    // $order->save();
                     $this->update_delivery_status($request);
                 } 
             }
         }
+        return 1;
+    }
 
+    public function bulk_order_mark_as_paid(Request $request)
+    {
+        if ($request->id) {
+            foreach ($request->id as $order_id) {
+                $order = Order::find($order_id);
+                if($order->payment_status == 'unpaid'){
+                    $order->payment_status = 'paid';
+                    $order->save();
+                } 
+            }
+        }
         return 1;
     }
 

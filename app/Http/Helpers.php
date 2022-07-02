@@ -951,10 +951,8 @@ if(!function_exists('filterOrders')){
             $orders = $orders->where('assign_delivery_boy', $delivery_man->user_id);
         }
         if ($request->get('date')) {
-            // $ord = $orders->get();
             $date = $request->get('date');
             $orders = $orders->where('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
-            // dd($ord, $orders->get());
         }
         if ($request->has('order_code')) {
             $orders = $orders->where('code', 'like', '%' . $request->get('order_code') . '%');

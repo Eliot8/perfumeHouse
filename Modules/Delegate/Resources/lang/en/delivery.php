@@ -99,7 +99,9 @@ return [
 
     'no_stock_exist' => 'There is no stock for this product',
     'no_enough_stock' => 'Not enough stock',
-    
-    
+
+    'delete_selection' => 'Delete selection',
+    'mark_as_confirmed' => 'Mark as confirmed',
+    'mark_as_paid' => 'Mark as paid',
 
 ];

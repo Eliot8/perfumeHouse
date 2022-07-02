@@ -16,7 +16,7 @@ Route::get('/update/step1', 'UpdateController@step1')->name('update.step1');
 Route::get('/update/step2', 'UpdateController@step2')->name('update.step2');
 
 Route::get('/admin', 'AdminController@admin_dashboard')->name('admin.dashboard')->middleware(['auth', 'admin']);
-Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function() {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
     //Update Routes
 
     Route::resource('categories', 'CategoryController');
@@ -127,7 +127,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::get('/languages/app-translations/export/{id}', 'LanguageController@exportARBFile')->name('app-translations.export');
 
     // website setting
-    Route::group(['prefix' => 'website'], function() {
+    Route::group(['prefix' => 'website'], function () {
         Route::get('/footer', 'WebsiteController@footer')->name('website.footer');
         Route::get('/header', 'WebsiteController@header')->name('website.header');
         Route::get('/appearance', 'WebsiteController@appearance')->name('website.appearance');
@@ -182,6 +182,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::get('/orders/destroy/{id}', 'OrderController@destroy')->name('orders.destroy');
     Route::post('/bulk-order-delete', 'OrderController@bulk_order_delete')->name('bulk-order-delete');
     Route::post('/bulk-order-confirmed', 'OrderController@bulk_order_mark_as_confirmed')->name('bulk-order-confirmed');
+    Route::post('/bulk-order-paid', 'OrderController@bulk_order_mark_as_paid')->name('bulk-order-paid');
 
     Route::post('/pay_to_seller', 'CommissionController@pay_to_seller')->name('commissions.pay_to_seller');
 
@@ -269,8 +270,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::resource('countries', 'CountryController');
     Route::post('/countries/status', 'CountryController@updateStatus')->name('countries.status');
 
-    Route::resource('states','StateController');
-	Route::post('/states/status', 'StateController@updateStatus')->name('states.status');
+    Route::resource('states', 'StateController');
+    Route::post('/states/status', 'StateController@updateStatus')->name('states.status');
 
     Route::resource('cities', 'CityController');
     Route::get('/cities/edit/{id}', 'CityController@edit')->name('cities.edit');

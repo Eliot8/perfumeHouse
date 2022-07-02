@@ -100,5 +100,8 @@ return [
     'no_stock_exist' => 'لا يوجد مخزون لهذا المنتج',
     'no_enough_stock' => 'المخزون الحالي أصغر من المخزون الذي تم ادخاله',
 
+    'delete_selection' => 'حذف',
+    'mark_as_confirmed' => 'تأكيد الطلب',
+    'mark_as_paid' => 'مدفوعة',
 
 ];

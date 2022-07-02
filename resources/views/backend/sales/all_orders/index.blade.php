@@ -18,7 +18,7 @@
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Customer') }}</label>
                     <select class="form-control aiz-selectpicker" name="customer">
-                        <option value="" selected disabled hidden>Filter by customer</option>
+                        <option value="" selected disabled hidden>{{ translate('customer') }}</option>
                         @foreach (\App\Models\User::where('user_type', 'customer')->get() as $customer)
                             <option value="{{ $customer->id }}" @if(request()->has('customer') && request()->filled('customer') && request()->get('customer') == $customer->id) selected @endif>
                                 {{ $customer->name }}
@@ -29,27 +29,27 @@
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Delivery Status') }}</label>
                     <select class="form-control aiz-selectpicker" name="delivery_status">
-                        <option value="" selected disabled hidden>Filter by delivery status</option>
+                        <option value="" selected disabled hidden>{{ translate('delivery status') }}</option>
                         @foreach (getDeliveryStatus() as $key => $value)
                             <option value="{{ $key }}" @if(request()->has('delivery_status') && request()->filled('delivery_status') && request()->get('delivery_status') == $key) selected @endif>
-                                 {{ $value }} </option>
+                                 {{ translate($value) }} </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Payment Status') }}</label>
                     <select class="form-control aiz-selectpicker" name="payment_status">
-                        <option value="" selected disabled hidden>Filter by payment status</option>
+                        <option value="" selected disabled hidden>{{ translate('payment status') }}</option>
                         @foreach (getPaymentStatus() as $key => $value)
                             <option value="{{ $key }}" @if(request()->has('payment_status') && request()->filled('payment_status') && request()->get('payment_status') == $key) selected @endif> 
-                                {{ $value }} </option>
+                               {{ translate($value) }} </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Delivery man') }}</label>
                     <select class="form-control aiz-selectpicker" name="delivery_man">
-                        <option value="" selected disabled hidden>Filter by delivery man</option>
+                        <option value="" selected disabled hidden>{{ translate('Delivery man') }}</option>
                         @foreach (\Modules\Delegate\Entities\Delegate::select('id', 'full_name')->get() as $delivery_man)
                             <option value="{{ $delivery_man->id }}" @if(request()->has('delivery_man') && request()->filled('delivery_man') && request()->get('delivery_man') == $delivery_man->id) selected @endif>
                                 {{ $delivery_man->full_name }}
@@ -61,14 +61,14 @@
             <div class="row">
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Date') }}</label>
-                    <input type="text" class="aiz-date-range form-control" value="{{ request()->query('date') }}" name="date" placeholder="{{ translate('Filter by date') }}" data-format="DD-MM-Y" data-separator=" to " data-advanced-range="true" autocomplete="off">
+                    <input type="text" class="aiz-date-range form-control" value="{{ request()->query('date') }}" name="date" placeholder="{{ translate('date') }}" data-format="DD-MM-Y" data-separator=" to " data-advanced-range="true" autocomplete="off">
                 </div>
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Order Code') }}</label>
                     <input type="text" class="form-control" id="order_code" name="order_code" value="{{ request()->query('order_code') }}" placeholder="{{ translate('Type Order code & hit Enter') }}">
                 </div>
                 <div class="col-lg-3 form-group">
-                    <label class="col-from-label">{{ translate('Cancel Request') }}</label>
+                    <label class="col-from-label">@lang('delegate::delivery.cancel_request')</label>
                     <div>
                         <label class="aiz-switch aiz-switch-success mb-0">
                         <input value="true" name="cancel_request" type="checkbox" @if(request()->query('cancel_request')) checked @endif>
@@ -89,8 +89,17 @@
 <div class="card">
     <form class="" action="" id="sort_orders" method="GET">
         <div class="card-header row gutters-5">
-            <div class="col">
+            <div class="col-3">
                 <h5 class="mb-md-0 h6">{{ translate('All Orders') }}</h5>
+            </div>
+
+
+            <div class="col">
+                <a href="" class="btn btn-info">{{ translate('Export to CSV') }}</a>
+                <a href="" class="btn btn-info">{{ translate('Export to Excel') }}</a>
+                <a href="" class="btn btn-info">{{ translate('Print') }}</a>
+                <a href="" class="column_visibility btn btn-info">{{ translate('Column visibility') }}</a>
+                <a href="" class="btn btn-info">{{ translate('Export to PDF') }}</a>
             </div>
 
             <div class="dropdown mb-2 mb-md-0">
@@ -98,8 +107,9 @@
                     {{translate('Bulk Action')}}
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#" onclick="bulk_delete()"> {{translate('Delete selection')}}</a>
-                    <a class="dropdown-item" href="#" onclick="bulk_mark_as_confirmed()"> {{translate('Mark as confirmed')}}</a>
+                    <a class="dropdown-item" href="#" onclick="bulk_delete()"> @lang('delegate::delivery.delete_selection')</a>
+                    <a class="dropdown-item" href="#" onclick="bulk_mark_as_confirmed()"> @lang('delegate::delivery.mark_as_confirmed')</a>
+                    <a class="dropdown-item" href="#" onclick="bulk_mark_as_paid()"> @lang('delegate::delivery.mark_as_paid')</a>
                 </div>
             </div>
 
@@ -346,12 +356,31 @@
 
         function bulk_mark_as_confirmed() {
             var data = new FormData($('#sort_orders')[0]);
-            // console.table(data);
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 url: "{{route('bulk-order-confirmed')}}",
+                type: 'POST',
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if(response == 1) {
+                        AIZ.plugins.notify('success', '{{ translate('Delivery status has been updated') }}');
+                        location.reload();
+                    }
+                }
+            });
+        }
+        function bulk_mark_as_paid(id){
+            var data = new FormData($('#sort_orders')[0]);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{route('bulk-order-paid')}}",
                 type: 'POST',
                 data: data,
                 cache: false,
@@ -380,8 +409,10 @@
             });
         }
 
-        // function filter_by_customer(id){
-
-        // }
+        function column_visibility(e){
+            e.preventDefault();
+            console.log('visibility');
+        }
+        
     </script>
 @endsection

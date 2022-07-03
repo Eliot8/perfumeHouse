@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
 @section('content')
-<div class="card">
+<div class="card filter-card">
     <div class="card-header row gutters-5" >
         <div class="col">
             <h5 class="mb-0 h6">{{ translate('Filter') }}</h5>
@@ -94,15 +94,31 @@
             </div>
 
 
-            <div class="col">
-                <a href="" class="btn btn-info">{{ translate('Export to CSV') }}</a>
-                <a href="" class="btn btn-info">{{ translate('Export to Excel') }}</a>
-                <a href="" class="btn btn-info">{{ translate('Print') }}</a>
-                <a href="" class="column_visibility btn btn-info">{{ translate('Column visibility') }}</a>
-                <a href="" class="btn btn-info">{{ translate('Export to PDF') }}</a>
+            <div class="col table-links">
+                <a href="" class="export-to-csv btn btn-primary btn-sm mb-1"><i class="las la-file-csv fs-18 mr-2"></i>@lang('delegate::delivery.export_to_csv')</a>
+                <a href="" class="export-to-excel btn btn-primary btn-sm mb-1"><i class="las la-file-excel fs-18 mr-2"></i>@lang('delegate::delivery.export_to_excel')</a>
+                <a href="" class="print btn btn-primary btn-sm mb-1"><i class="las la-print fs-18 mr-2"></i>@lang('delegate::delivery.print')</a>
+                <div class="btn-group mb-1">
+                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                        <i class="las la-columns fs-18 mr-2"></i>
+                        @lang('delegate::delivery.column_visibility')
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item column_visibility" id="order_code" style="cursor: pointer;">{{ translate('Order Code') }}</li>
+                        <li class="dropdown-item column_visibility" id="num_products" style="cursor: pointer;">{{ translate('Num. of Products') }}</li>
+                        <li class="dropdown-item column_visibility" id="customer" style="cursor: pointer;">{{ translate('Customer') }}</li>
+                        <li class="dropdown-item column_visibility" id="amount" style="cursor: pointer;">{{ translate('Amount') }}</li>
+                        <li class="dropdown-item column_visibility" id="delivery_staus" style="cursor: pointer;">{{ translate('Delivery Status') }}</li>
+                        <li class="dropdown-item column_visibility" id="payment_status" style="cursor: pointer;">{{ translate('Payment Status') }}</li>
+                        <li class="dropdown-item column_visibility" id="cancel_request" style="cursor: pointer;">@lang('delegate::delivery.cancel_request')</li>
+                        <li class="dropdown-item column_visibility" id="delivery_man" style="cursor: pointer;">@lang('delegate::delivery.delegate')</li>
+                        <li class="dropdown-item column_visibility" id="options" style="cursor: pointer;">{{ translate('Options') }}</li>
+                    </ul>
+                </div>
+                <a href="" class="export-to-pdf btn btn-primary btn-sm mb-1"><i class="las la-file-pdf fs-18 mr-2"></i>@lang('delegate::delivery.export_to_pdf')</a>
             </div>
 
-            <div class="dropdown mb-2 mb-md-0">
+            <div class="dropdown mb-1 mb-md-0">
                 <button class="btn border dropdown-toggle" type="button" data-toggle="dropdown">
                     {{translate('Bulk Action')}}
                 </button>
@@ -112,63 +128,6 @@
                     <a class="dropdown-item" href="#" onclick="bulk_mark_as_paid()"> @lang('delegate::delivery.mark_as_paid')</a>
                 </div>
             </div>
-
-            <!-- Change Status Modal -->
-            {{-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">
-                                {{translate('Choose an order status')}}
-                            </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <select class="form-control aiz-selectpicker" onchange="change_status()" data-minimum-results-for-search="Infinity" id="update_delivery_status">
-                                <option value="pending">{{translate('Pending')}}</option>
-                                <option value="confirmed">{{translate('Confirmed')}}</option>
-                                <option value="picked_up">{{translate('Picked Up')}}</option>
-                                <option value="on_the_way">{{translate('On The Way')}}</option>
-                                <option value="delivered">{{translate('Delivered')}}</option>
-                                <option value="cancelled">{{translate('Cancel')}}</option>
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-2 ml-auto">
-                <select class="form-control aiz-selectpicker" name="delivery_status" id="delivery_status">
-                    <option value="">{{translate('Filter by Delivery Status')}}</option>
-                    <option value="pending" @if ($delivery_status == 'pending') selected @endif>{{translate('Pending')}}</option>
-                    <option value="confirmed" @if ($delivery_status == 'confirmed') selected @endif>{{translate('Confirmed')}}</option>
-                    <option value="picked_up" @if ($delivery_status == 'picked_up') selected @endif>{{translate('Picked Up')}}</option>
-                    <option value="on_the_way" @if ($delivery_status == 'on_the_way') selected @endif>{{translate('On The Way')}}</option>
-                    <option value="delivered" @if ($delivery_status == 'delivered') selected @endif>{{translate('Delivered')}}</option>
-                    <option value="cancelled" @if ($delivery_status == 'cancelled') selected @endif>{{translate('Cancel')}}</option>
-                </select>
-            </div>
-            <div class="col-lg-2">
-                <div class="form-group mb-0">
-                    <input type="text" class="aiz-date-range form-control" value="{{ $date }}" name="date" placeholder="{{ translate('Filter by date') }}" data-format="DD-MM-Y" data-separator=" to " data-advanced-range="true" autocomplete="off">
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="form-group mb-0">
-                    <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
-                </div>
-            </div>
-            <div class="col-auto">
-                <div class="form-group mb-0">
-                    <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
-                </div>
-            </div> --}}
         </div>
 
         <div class="card-body">
@@ -185,18 +144,18 @@
                                 </div>
                             </div>
                         </th>
-                        <th>{{ translate('Order Code') }}</th>
-                        <th data-breakpoints="md">{{ translate('Num. of Products') }}</th>
-                        <th data-breakpoints="md">{{ translate('Customer') }}</th>
-                        <th data-breakpoints="md">{{ translate('Amount') }}</th>
-                        <th data-breakpoints="md">{{ translate('Delivery Status') }}</th>
-                        <th data-breakpoints="md">{{ translate('Payment Status') }}</th>
+                        <th class="order_code">{{ translate('Order Code') }}</th>
+                        <th class="num_products" data-breakpoints="md">{{ translate('Num. of Products') }}</th>
+                        <th class="customer" data-breakpoints="md">{{ translate('Customer') }}</th>
+                        <th class="amount" data-breakpoints="md">{{ translate('Amount') }}</th>
+                        <th class="delivery_status" data-breakpoints="md">{{ translate('Delivery Status') }}</th>
+                        <th class="payment_status" data-breakpoints="md">{{ translate('Payment Status') }}</th>
                         @if (addon_is_activated('refund_request'))
                         <th>{{ translate('Refund') }}</th>
                         @endif
-                        <th>@lang('delegate::delivery.cancel_request')</th>
-                        <th>@lang('delegate::delivery.delegate')</th>
-                        <th class="text-right" width="15%">{{translate('options')}}</th>
+                        <th class="cancel_request">@lang('delegate::delivery.cancel_request')</th>
+                        <th class="delivery_man">@lang('delegate::delivery.delegate')</th>
+                        <th class="options text-right" width="15%">{{translate('options')}}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -212,23 +171,23 @@
                                 </div>
                             </div>
                         </td>
-                        <td>
+                        <td class="order_code">
                             {{ $order->code }}
                         </td>
-                        <td>
+                        <td class="num_products">
                             {{ count($order->orderDetails) }}
                         </td>
-                        <td>
+                        <td class="customer">
                             @if ($order->user != null)
                             {{ $order->user->name }}
                             @else
                             Guest ({{ $order->guest_id }})
                             @endif
                         </td>
-                        <td>
+                        <td class="amount">
                             {{ single_price($order->grand_total) }}
                         </td>
-                        <td>
+                        <td class="delivery_status">
                             @php
                                 $status = $order->delivery_status;
                                 if($order->delivery_status == 'cancelled') {
@@ -238,7 +197,7 @@
                             @endphp
                             {!! $status !!}
                         </td>
-                        <td>
+                        <td class="payment_status">
                             @if ($order->payment_status == 'paid')
                             <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
                             @else
@@ -254,17 +213,17 @@
                             @endif
                         </td>
                         @endif
-                        <td>
+                        <td class="cance_request">
                             @if ($order->cancel_request == 1)
                             <span class="badge badge-inline badge-warning">{{  $order->cancel_request_at }}</span>
                             @else
                             <span class="badge badge-inline badge-success"><i class="las la-clipboard-check" style="font-size: 18px;"></i></span>
                             @endif
                         </td>
-                        <td>
+                        <td class="delivery_man">
                             {{ Modules\Delegate\Entities\Delegate::where('user_id', $order->assign_delivery_boy)->first()->full_name ?? 'لم يحدد بعد'}}
                         </td>
-                        <td class="text-right">
+                        <td class="options text-right">
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('all_orders.show', encrypt($order->id))}}" title="{{ translate('View') }}">
                                 <i class="las la-eye"></i>
                             </a>
@@ -409,10 +368,59 @@
             });
         }
 
-        function column_visibility(e){
+        $('.column_visibility').on('click', function(){
+            const id = $(this).attr('id');
+            $(this).toggleClass('bg-primary');
+            $(`.${id}`).toggleClass('d-none');
+        });
+
+        $('.print').on('click', function(e){
             e.preventDefault();
-            console.log('visibility');
-        }
-        
+            window.print();
+        });
+
+        $(".export-to-excel").click(function(e) {
+            e.preventDefault();
+            $(".aiz-table").table2excel({
+                exclude: ".excludeThisClass",
+                name: "All Orders",
+                filename: "orders.xls", 
+                preserveColors: false 
+            });
+        });
+        $(".export-to-pdf").click(function(e) {
+            e.preventDefault();
+             html2canvas($('.aiz-table')[0], {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("orders.pdf");
+                }
+            });
+        });
+
+        $(".export-to-csv").click(function(e) {
+            e.preventDefault();
+            $(".aiz-table").tableHTMLExport({
+                type:'csv',
+                filename: 'orders.csv',
+                separator: ',',
+                newline: '\r\n',
+                trimContent: true,
+                quoteFields: true,
+                // CSS selector(s)
+                ignoreColumns: '',
+                ignoreRows: '',      
+                // your html table has html content?
+                htmlContent: true,
+                // debug
+                consoleLog: false,      
+            });
+        });
     </script>
 @endsection

@@ -32,6 +32,7 @@
             font-size: 12px;
         }
     </style>
+	<link rel="stylesheet" media="print" href="{{ asset('assets/print.css') }}">
 	<script>
     	var AIZ = AIZ || {};
         AIZ.local = {
@@ -81,7 +82,16 @@
 
 	<script src="{{ asset('assets/js/vendors.js') }}" ></script>
 	<script src="{{ asset('assets/js/aiz-core.js') }}" ></script>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.5/jspdf.plugin.autotable.min.js"></script>
+	<script src="{{ asset('assets/jquery-plugins/tableHTMLExport.js') }}" ></script>
+	
+	{{-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> --}}
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 
+	<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
     @yield('script')
 
     <script type="text/javascript">

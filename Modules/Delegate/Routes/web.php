@@ -35,7 +35,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::post('/delegate/deleteModal', 'DelegatesController@getModalDeleteByAjax');
     Route::get('/product/{id}/colors', 'StockController@getColors')->name('product.colors');
     Route::get('/product/{id}/attributes', 'StockController@getAttributes')->name('product.attributes');
-    
 });
 
 // AJAX

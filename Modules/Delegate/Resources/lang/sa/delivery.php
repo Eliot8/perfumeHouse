@@ -104,4 +104,10 @@ return [
     'mark_as_confirmed' => 'تأكيد الطلب',
     'mark_as_paid' => 'مدفوعة',
 
+    'export_to_csv' => 'تصدير الى CSV',
+    'export_to_excel' => 'تصدير الى Excel',
+    'export_to_pdf' => 'تصدير الى PDF',
+    'print' => 'مطبعة',
+    'column_visibility' => 'رؤية العمود',
+
 ];

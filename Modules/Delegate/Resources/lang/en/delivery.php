@@ -104,4 +104,10 @@ return [
     'mark_as_confirmed' => 'Mark as confirmed',
     'mark_as_paid' => 'Mark as paid',
 
+    'export_to_csv' => 'Export to CSV',
+    'export_to_excel' => 'Expot to Excel',
+    'export_to_pdf' => 'Export to PDF',
+    'print' => 'Print',
+    'column_visibility' => 'Column visibility',
+
 ];

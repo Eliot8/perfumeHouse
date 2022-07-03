@@ -89,7 +89,7 @@ return [
     'personal_earnings' => 'أرباح شخصية',
 
 
-    'affiliate_user' => 'المسوق',
+    'affiliate_user' => 'المسوق بعمولة',
     'enter_commission' => 'ادخل العمولة',
 
     'customer_phone_number' => 'رقم هاتف العميل',

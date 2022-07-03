@@ -957,6 +957,9 @@ if(!function_exists('filterOrders')){
         if ($request->has('order_code')) {
             $orders = $orders->where('code', 'like', '%' . $request->get('order_code') . '%');
         }
+        if ($request->has('affiliate_user')) {
+            $orders = $orders->where('user_id', $request->get('affiliate_user'));
+        }
         if ($request->has('cancel_request')) {
             $orders = $orders->where('cancel_request', 1);
         }

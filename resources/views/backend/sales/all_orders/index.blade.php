@@ -67,6 +67,17 @@
                     <label class="col-from-label">{{ translate('Order Code') }}</label>
                     <input type="text" class="form-control" id="order_code" name="order_code" value="{{ request()->query('order_code') }}" placeholder="{{ translate('Type Order code & hit Enter') }}">
                 </div>
+                 <div class="col-lg-3 form-group">
+                    <label class="col-from-label">@lang('delegate::delivery.affiliate_user')</label>
+                    <select class="form-control aiz-selectpicker" name="affiliate_user">
+                        <option value="" selected disabled hidden>@lang('delegate::delivery.affiliate_user')</option>
+                        @foreach (\App\Models\AffiliateUser::select('id', 'user_id')->get() as $affiliate_user)
+                            <option value="{{ $affiliate_user->user_id }}" @if(request()->has('affiliate_user') && request()->filled('affiliate_user') && request()->get('affiliate_user') == $affiliate_user->id) selected @endif>
+                                {{ $affiliate_user->user->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">@lang('delegate::delivery.cancel_request')</label>
                     <div>

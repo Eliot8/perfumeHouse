@@ -91,17 +91,7 @@ class OrderController extends Controller
         $orders = Order::orderBy('id', 'desc');
 
         $orders = fitlerOrders($request, $orders);
-        // if ($request->has('search')) {
-        //     $sort_search = $request->search;
-        //     $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
-        // }
-        // if ($request->delivery_status != null) {
-        //     $orders = $orders->where('delivery_status', $request->delivery_status);
-        //     $delivery_status = $request->delivery_status;
-        // }
-        // if ($date != null) {
-        //     $orders = $orders->where('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
-        // }
+        
         $orders = $orders->paginate(15);
         return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date'));
     }

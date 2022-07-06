@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="card filter-card">
-    <div class="card-header row gutters-5" >
-        <div class="col">
+    <div class="card-header row gutters-5">
+        <div class="col" data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
             <h5 class="mb-0 h6">{{ translate('Filter') }}</h5>
         </div> 
         @if(request()->query())
@@ -12,7 +12,7 @@
         </div>
         @endif
     </div>
-    <div class="card-body" >
+    <div class="card-body collapse show" id="filter">
         <form class="form-horizontal" action="{{ route('all_orders.index') }}" method="GET">
             <div class="row">
                 <div class="col-lg-3 form-group">

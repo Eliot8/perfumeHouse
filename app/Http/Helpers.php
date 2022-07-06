@@ -966,3 +966,45 @@ if(!function_exists('filterOrders')){
         return $orders;
     }
 }
+
+if(!function_exists('filterProducts')){
+    function fitlerProducts(Request $request, $products){
+        if ($request->has('user_id')) {
+            $products = $products->where('user_id', $request->get('user_id'));
+        }
+        if ($request->search != null) {
+            $sort_search = $request->search;
+            $products = $products
+                ->where('name', 'like', '%' . $sort_search . '%')
+                ->orWhereHas('stocks', function ($q) use ($sort_search) {
+                    $q->where('sku', 'like', '%' . $sort_search . '%');
+                });
+        }
+        if ($request->type != null) {
+            $var = explode(",", $request->type);
+            $col_name = $var[0];
+            $query = $var[1];
+            $products = $products->orderBy($col_name, $query);
+        }
+  
+        if ($request->has('category')) {
+            $products = $products->where('category_id', $request->get('category'));
+        }
+
+        if ($request->has('brand')) {
+            $products = $products->where('brand_id', $request->get('brand'));
+        }
+
+        if ($request->has('published')) {
+            $products = $products->where('published', 1);
+        }
+        if ($request->has('featured')) {
+            $products = $products->where('featured', 1);
+        }
+        if ($request->has('todays_deal')) {
+            $products = $products->where('todays_deal', 1);
+        }
+
+        return $products;
+    }
+}

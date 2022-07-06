@@ -104,26 +104,9 @@ class ProductController extends Controller
         $seller_id = null;
         $sort_search = null;
         $products = Product::orderBy('created_at', 'desc')->where('auction_product', 0)->where('wholesale_product', 0);
-        if ($request->has('user_id') && $request->user_id != null) {
-            $products = $products->where('user_id', $request->user_id);
-            $seller_id = $request->user_id;
-        }
-        if ($request->search != null) {
-            $sort_search = $request->search;
-            $products = $products
-                ->where('name', 'like', '%' . $sort_search . '%')
-                ->orWhereHas('stocks', function($q) use ($sort_search){
-                        $q->where('sku', 'like', '%'.$sort_search.'%');
-                    });
-            
-        }
-        if ($request->type != null) {
-            $var = explode(",", $request->type);
-            $col_name = $var[0];
-            $query = $var[1];
-            $products = $products->orderBy($col_name, $query);
-            $sort_type = $request->type;
-        }
+        
+        $products = fitlerProducts($request, $products);
+       
 
         $products = $products->paginate(15);
         $type = 'All';

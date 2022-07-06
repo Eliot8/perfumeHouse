@@ -1,6 +1,112 @@
 @extends('backend.layouts.app')
 
 @section('content')
+<div class="card filter-card">
+    <div class="card-header row gutters-5" >
+        <div class="col" data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
+            <h5 class="mb-0 h6">{{ translate('Filter') }}</h5>
+        </div> 
+        @if(request()->query())
+        <div class="mb-2 mb-md-0">
+            <a href="{{ route('products.all') }}" >{{ translate('Clear Filter') }}</a>
+        </div>
+        @endif
+    </div>
+    <div class="card-body collapse show" id="filter">
+        <form class="form-horizontal" action="{{ route('products.all') }}" method="GET">
+            <div class="row">
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Added By') }}</label>
+                    @if($type == 'Seller')
+                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id">
+                        <option value="">{{ translate('All Sellers') }}</option>
+                        @foreach (App\Models\Seller::all() as $key => $seller)
+                            @if ($seller->user != null && $seller->user->shop != null)
+                                <option value="{{ $seller->user->id }}" @if(request()->has('user_id') && request()->filled('user_id') && request()->get('user_id') == $seller->id) selected @endif>{{ $seller->user->shop->name }} ({{ $seller->user->name }})</option>
+                            @endif
+                        @endforeach
+                    </select>
+                    @endif
+                    @if($type == 'All')
+                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id">
+                        <option value="" selected disabled hidden>{{ translate('All Sellers') }}</option>
+                            @foreach (App\Models\User::where('user_type', '=', 'admin')->orWhere('user_type', '=', 'seller')->get() as $key => $seller)
+                                <option value="{{ $seller->id }}"@if(request()->has('user_id') && request()->filled('user_id') && request()->get('user_id') == $seller->id) selected @endif>{{ $seller->name }}</option>
+                            @endforeach
+                    </select>
+                    @endif
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Sort By') }}</label>
+                     <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" name="type" id="type">
+                        <option value="" selected disabled hidden>{{ translate('Sort By') }}</option>
+                        <option value="rating,desc" @isset($col_name , $query) @if($col_name == 'rating' && $query == 'desc') selected @endif @endisset>{{translate('Rating (High > Low)')}}</option>
+                        <option value="rating,asc" @isset($col_name , $query) @if($col_name == 'rating' && $query == 'asc') selected @endif @endisset>{{translate('Rating (Low > High)')}}</option>
+                        <option value="num_of_sale,desc"@isset($col_name , $query) @if($col_name == 'num_of_sale' && $query == 'desc') selected @endif @endisset>{{translate('Num of Sale (High > Low)')}}</option>
+                        <option value="num_of_sale,asc"@isset($col_name , $query) @if($col_name == 'num_of_sale' && $query == 'asc') selected @endif @endisset>{{translate('Num of Sale (Low > High)')}}</option>
+                        <option value="unit_price,desc"@isset($col_name , $query) @if($col_name == 'unit_price' && $query == 'desc') selected @endif @endisset>{{translate('Base Price (High > Low)')}}</option>
+                        <option value="unit_price,asc"@isset($col_name , $query) @if($col_name == 'unit_price' && $query == 'asc') selected @endif @endisset>{{translate('Base Price (Low > High)')}}</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Category') }}</label>
+                    <select name="category" id="category" class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0">
+                        <option value="" selected disabled hidden>{{ translate('All Categories') }}</option>
+                        @foreach (App\Models\Category::select('id','name')->get() as $category)
+                            <option value="{{ $category->id }}" @if(request()->has('category') && request()->filled('category') && request()->get('category') == $category->id) selected @endif>{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Brand') }}</label>
+                    <select name="brand" id="brand" class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0">
+                        <option value="" selected disabled hidden>{{ translate('All Brands') }}</option>
+                        @foreach (App\Models\Brand::select('id','name')->get() as $brand)
+                            <option value="{{ $brand->id }}" @if(request()->has('brand') && request()->filled('brand') && request()->get('brand') == $brand->id) selected @endif>{{ $brand->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Product Name') }}</label>
+                    <input type="text" class="form-control form-control-sm" id="search" name="search" value="{{ request()->query('search') }}" placeholder="{{ translate('Type & Enter') }}">
+                </div>
+                 <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Published') }}</label>
+                    <div>
+                        <label class="aiz-switch aiz-switch-success mb-0">
+                        <input value="true" name="published" type="checkbox" @if(request()->query('published')) checked @endif>
+                        <span class="slider round"></span></label>
+                    </div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Featured') }}</label>
+                    <div>
+                        <label class="aiz-switch aiz-switch-success mb-0">
+                        <input value="true" name="featured" type="checkbox" @if(request()->query('featured')) checked @endif>
+                        <span class="slider round"></span></label>
+                    </div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label class="col-from-label">{{ translate('Todays Deal') }}</label>
+                    <div>
+                        <label class="aiz-switch aiz-switch-success mb-0">
+                        <input value="true" name="todays_deal" type="checkbox" @if(request()->query('todays_deal')) checked @endif>
+                        <span class="slider round"></span></label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group mb-0 float-right">
+                        <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
 <div class="aiz-titlebar text-left mt-2 mb-3">
     <div class="row align-items-center">
@@ -34,7 +140,7 @@
                 </div>
             </div>
             
-            @if($type == 'Seller')
+            {{-- @if($type == 'Seller')
             <div class="col-md-2 ml-auto">
                 <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id" onchange="sort_products()">
                     <option value="">{{ translate('All Sellers') }}</option>
@@ -71,7 +177,7 @@
                 <div class="form-group mb-0">
                     <input type="text" class="form-control form-control-sm" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type & Enter') }}">
                 </div>
-            </div>
+            </div> --}}
         </div>
     
         <div class="card-body">

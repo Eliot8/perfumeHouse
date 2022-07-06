@@ -127,8 +127,31 @@
 <div class="card">
     <form class="" id="sort_products" action="" method="GET">
         <div class="card-header row gutters-5">
-            <div class="col">
+            <div class="col-3">
                 <h5 class="mb-md-0 h6">{{ translate('All Product') }}</h5>
+            </div>
+
+            <div class="col table-links">
+                <a href="" class="export-to-csv btn btn-primary btn-sm mb-1"><i class="las la-file-csv fs-18 mr-2"></i>@lang('delegate::delivery.export_to_csv')</a>
+                <a href="" class="export-to-excel btn btn-primary btn-sm mb-1"><i class="las la-file-excel fs-18 mr-2"></i>@lang('delegate::delivery.export_to_excel')</a>
+                <a href="" class="print btn btn-primary btn-sm mb-1"><i class="las la-print fs-18 mr-2"></i>@lang('delegate::delivery.print')</a>
+                <div class="btn-group mb-1">
+                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                        <i class="las la-columns fs-18 mr-2"></i>
+                        @lang('delegate::delivery.column_visibility')
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item column_visibility" id="name" style="cursor: pointer;">{{ translate('Name') }}</li>
+                        <li class="dropdown-item column_visibility" id="added_by" style="cursor: pointer;">{{ translate('Added_by') }}</li>
+                        <li class="dropdown-item column_visibility" id="info" style="cursor: pointer;">{{ translate('Info') }}</li>
+                        <li class="dropdown-item column_visibility" id="total_stock" style="cursor: pointer;">{{ translate('Total Stock') }}</li>
+                        <li class="dropdown-item column_visibility" id="todays_deal" style="cursor: pointer;">{{ translate('Todays Deal') }}</li>
+                        <li class="dropdown-item column_visibility" id="published" style="cursor: pointer;">{{ translate('Published') }}</li>
+                        <li class="dropdown-item column_visibility" id="featured" style="cursor: pointer;">{{ translate('Featured') }}</li>
+                        <li class="dropdown-item column_visibility" id="options" style="cursor: pointer;">{{ translate('Options') }}</li>
+                    </ul>
+                </div>
+                <a href="" class="export-to-pdf btn btn-primary btn-sm mb-1"><i class="las la-file-pdf fs-18 mr-2"></i>@lang('delegate::delivery.export_to_pdf')</a>
             </div>
             
             <div class="dropdown mb-2 mb-md-0">
@@ -194,26 +217,24 @@
                                 </div>
                             </div>
                         </th>
-                        <!--<th data-breakpoints="lg">#</th>-->
-                        <th>{{translate('Name')}}</th>
+                        <th class="name">{{translate('Name')}}</th>
                         @if($type == 'Seller' || $type == 'All')
-                            <th data-breakpoints="lg">{{translate('Added By')}}</th>
+                        <th class="added_by" data-breakpoints="lg">{{translate('Added By')}}</th>
                         @endif
-                        <th data-breakpoints="sm">{{translate('Info')}}</th>
-                        <th data-breakpoints="md">{{translate('Total Stock')}}</th>
-                        <th data-breakpoints="lg">{{translate('Todays Deal')}}</th>
-                        <th data-breakpoints="lg">{{translate('Published')}}</th>
+                        <th class="info" data-breakpoints="sm">{{translate('Info')}}</th>
+                        <th class="total_stock" data-breakpoints="md">{{translate('Total Stock')}}</th>
+                        <th class="todays_deal" data-breakpoints="lg">{{translate('Todays Deal')}}</th>
+                        <th class="published" data-breakpoints="lg">{{translate('Published')}}</th>
                         @if(get_setting('product_approve_by_admin') == 1 && $type == 'Seller')
-                            <th data-breakpoints="lg">{{translate('Approved')}}</th>
+                        <th data-breakpoints="lg">{{translate('Approved')}}</th>
                         @endif
-                        <th data-breakpoints="lg">{{translate('Featured')}}</th>
-                        <th data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
+                        <th class="featured" data-breakpoints="lg">{{translate('Featured')}}</th>
+                        <th class="options" data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($products as $key => $product)
                     <tr>
-                        <!--<td>{{ ($key+1) + ($products->currentPage() - 1)*$products->perPage() }}</td>-->
                         <td>
                             <div class="form-group d-inline-block">
                                 <label class="aiz-checkbox">
@@ -222,7 +243,7 @@
                                 </label>
                             </div>
                         </td>
-                        <td>
+                        <td class="name">
                             <div class="row gutters-5 w-200px w-md-300px mw-100">
                                 <div class="col-auto">
                                     <img src="{{ uploaded_asset($product->thumbnail_img)}}" alt="Image" class="size-50px img-fit">
@@ -233,14 +254,14 @@
                             </div>
                         </td>
                         @if($type == 'Seller' || $type == 'All')
-                            <td>{{ $product->user->name ?? ''}}</td>
+                        <td class="added_by">{{ $product->user->name ?? ''}}</td>
                         @endif
-                        <td>
+                        <td class="info">
                             <strong>{{translate('Num of Sale')}}:</strong> {{ $product->num_of_sale }} {{translate('times')}} </br>
                             <strong>{{translate('Base Price')}}:</strong> {{ single_price($product->unit_price) }} </br>
                             <strong>{{translate('Rating')}}:</strong> {{ $product->rating }} </br>
                         </td>
-                        <td>
+                        <td class="total_stock">
                             @php
                                 $qty = 0;
                                 if($product->variant_product) {
@@ -259,17 +280,27 @@
                                 <span class="badge badge-inline badge-danger">Low</span>
                             @endif
                         </td>
-                        <td>
+                        <td class="todays_deal">
                             <label class="aiz-switch aiz-switch-success mb-0">
                                 <input onchange="update_todays_deal(this)" value="{{ $product->id }}" type="checkbox" <?php if ($product->todays_deal == 1) echo "checked"; ?> >
                                 <span class="slider round"></span>
                             </label>
+                            @if($product->todays_deal == 1)
+                            <span class="print-icons d-none">
+                                <i class="las la-check"></i>
+                            </span>
+                            @endif
                         </td>
-                        <td>
+                        <td class="published">
                             <label class="aiz-switch aiz-switch-success mb-0">
                                 <input onchange="update_published(this)" value="{{ $product->id }}" type="checkbox" <?php if ($product->published == 1) echo "checked"; ?> >
                                 <span class="slider round"></span>
                             </label>
+                            @if($product->published == 1)
+                            <span class="print-icons d-none">
+                                <i class="las la-check"></i>
+                            </span>
+                            @endif
                         </td>
                         @if(get_setting('product_approve_by_admin') == 1 && $type == 'Seller')
                             <td>
@@ -279,13 +310,18 @@
                                 </label>
                             </td>
                         @endif
-                        <td>
+                        <td class="featured">
                             <label class="aiz-switch aiz-switch-success mb-0">
                                 <input onchange="update_featured(this)" value="{{ $product->id }}" type="checkbox" <?php if ($product->featured == 1) echo "checked"; ?> >
                                 <span class="slider round"></span>
                             </label>
+                            @if($product->featured == 1)
+                            <span class="print-icons d-none">
+                                <i class="las la-check"></i>
+                            </span>
+                            @endif
                         </td>
-                        <td class="text-right">
+                        <td class="text-right options">
                             <a class="btn btn-soft-success btn-icon btn-circle btn-sm"  href="{{ route('product', $product->slug) }}" target="_blank" title="{{ translate('View') }}">
                                 <i class="las la-eye"></i>
                             </a>
@@ -439,6 +475,52 @@
                 }
             });
         }
+
+       
+
+        $(".export-to-excel").click(function(e) {
+            e.preventDefault();
+            $(".aiz-table").table2excel({
+                exclude: ".excludeThisClass",
+                name: "All Products",
+                filename: "products.xls", 
+                preserveColors: false 
+            });
+        });
+        $(".export-to-pdf").click(function(e) {
+            e.preventDefault();
+             html2canvas($('.aiz-table')[0], {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("products.pdf");
+                }
+            });
+        });
+
+        $(".export-to-csv").click(function(e) {
+            e.preventDefault();
+            $(".aiz-table").tableHTMLExport({
+                type:'csv',
+                filename: 'products.csv',
+                separator: ',',
+                newline: '\r\n',
+                trimContent: true,
+                quoteFields: true,
+                // CSS selector(s)
+                ignoreColumns: '',
+                ignoreRows: '',      
+                // your html table has html content?
+                htmlContent: true,
+                // debug
+                consoleLog: false,      
+            });
+        });
 
     </script>
 @endsection

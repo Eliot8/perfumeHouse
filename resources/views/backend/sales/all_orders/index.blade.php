@@ -379,11 +379,7 @@
             });
         }
 
-        $('.column_visibility').on('click', function(){
-            const id = $(this).attr('id');
-            $(this).toggleClass('bg-primary');
-            $(`.${id}`).toggleClass('d-none');
-        });
+        
 
         $('.print').on('click', function(e){
             e.preventDefault();

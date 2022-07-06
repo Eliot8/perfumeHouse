@@ -16,9 +16,14 @@ class ZonesController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $zones = Zone::paginate(8);
+        $zones = Zone::orderBy('id', 'asc');
+        
+        if($request->has('province')){
+            $zones = $zones->where('province_id', $request->get('province'));
+        }
+        $zones = $zones->paginate(8);
         return view('delegate::zones.index', compact('zones'));
     }
 

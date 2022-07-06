@@ -1050,3 +1050,30 @@ if(!function_exists('filterStock')){
         return $delegates;
     }
 }
+
+if(!function_exists('filterProvinces')){
+    function filterProvinces(Request $request, $provinces){
+        if ($request->has('delivery_man')) {
+            $arr = [];
+            foreach($provinces->get() as $province){
+                $delegates = $province->delegates->where('id', $request->get('delivery_man'));
+                if($delegates->count() > 0){
+                    array_push($arr, $province->id);
+                }
+            }
+            $provinces = $provinces->whereIn('id', $arr);
+        }
+        if ($request->has('province')) {
+            $provinces = $provinces->where('id', $request->get('province'));
+        }
+        if ($request->has('shipping_cost')) {
+            if($request->get('shipping_cost') == 'free'){
+                $provinces = $provinces->where('shipping_cost', null);
+            } else {
+                $provinces = $provinces->where('shipping_cost','!=', null);
+            }
+        }
+       
+        return $provinces;
+    }
+}

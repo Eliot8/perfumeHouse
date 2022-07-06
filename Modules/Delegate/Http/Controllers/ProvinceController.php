@@ -16,9 +16,12 @@ class ProvinceController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $provinces = Province::paginate(8);
+        $provinces = Province::orderBy('id', 'asc');
+        $provinces = filterProvinces($request, $provinces);
+        $provinces = $provinces->paginate(8);
+
         return view('delegate::provinces.index', compact('provinces'));
     }
 

@@ -1,6 +1,23 @@
 @extends('backend.layouts.app')
 
 @section('content')
+
+<div class="aiz-titlebar text-left mt-2 mb-3">
+    <div class="row align-items-center">
+        <div class="col-auto">
+            <h1 class="h3">{{translate('All products')}}</h1>
+        </div>
+        @if($type != 'Seller')
+        <div class="col text-right">
+            <a href="{{ route('products.create') }}" class="btn btn-circle btn-info">
+                <span>{{translate('Add New Product')}}</span>
+            </a>
+        </div>
+        @endif
+    </div>
+</div>
+<br>
+
 <div class="card filter-card">
     <div class="card-header row gutters-5" >
         <div class="col" data-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter">
@@ -107,22 +124,6 @@
         </form>
     </div>
 </div>
-
-<div class="aiz-titlebar text-left mt-2 mb-3">
-    <div class="row align-items-center">
-        <div class="col-auto">
-            <h1 class="h3">{{translate('All products')}}</h1>
-        </div>
-        @if($type != 'Seller')
-        <div class="col text-right">
-            <a href="{{ route('products.create') }}" class="btn btn-circle btn-info">
-                <span>{{translate('Add New Product')}}</span>
-            </a>
-        </div>
-        @endif
-    </div>
-</div>
-<br>
 
 <div class="card">
     <form class="" id="sort_products" action="" method="GET">

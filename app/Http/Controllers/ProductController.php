@@ -105,7 +105,7 @@ class ProductController extends Controller
         $sort_search = null;
         $products = Product::orderBy('created_at', 'desc')->where('auction_product', 0)->where('wholesale_product', 0);
         
-        $products = fitlerProducts($request, $products);
+        $products = filterProducts($request, $products);
        
 
         $products = $products->paginate(15);

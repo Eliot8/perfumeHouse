@@ -2,6 +2,7 @@
 #sort_products .card-header,
 .filter-card,
 .aiz-titlebar,
+.table-links,
 .aiz-content-wrapper .aiz-topbar,
 .options
  { display: none !important; }

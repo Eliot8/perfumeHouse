@@ -968,7 +968,7 @@ if(!function_exists('filterOrders')){
 }
 
 if(!function_exists('filterProducts')){
-    function fitlerProducts(Request $request, $products){
+    function filterProducts(Request $request, $products){
         if ($request->has('user_id')) {
             $products = $products->where('user_id', $request->get('user_id'));
         }
@@ -1006,5 +1006,21 @@ if(!function_exists('filterProducts')){
         }
 
         return $products;
+    }
+}
+if(!function_exists('filterDelivery_man')){
+    function filterDelivery_man(Request $request, $delegates){
+        if ($request->has('province')) {
+            $delegates = $delegates->where('province_id', $request->get('province'));
+        }
+        if ($request->search != null) {
+            $sort_search = $request->search;
+            $delegates = $delegates
+                ->where('full_name', 'like', '%' . $sort_search . '%')
+                ->orWhere('phone_number', 'like', '%' . $sort_search . '%')
+                ->orWhere('email', 'like', '%' . $sort_search . '%');
+        }
+       
+        return $delegates;
     }
 }

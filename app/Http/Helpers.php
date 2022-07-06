@@ -22,6 +22,7 @@ use App\Utility\SendSMSUtility;
 use App\Utility\NotificationUtility;
 use Illuminate\Http\Request;
 use Modules\Delegate\Entities\Delegate;
+use Modules\Delegate\Entities\Stock;
 
 //sensSMS function for OTP
 if (!function_exists('sendSMS')) {
@@ -1008,6 +1009,7 @@ if(!function_exists('filterProducts')){
         return $products;
     }
 }
+
 if(!function_exists('filterDelivery_man')){
     function filterDelivery_man(Request $request, $delegates){
         if ($request->has('province')) {
@@ -1019,6 +1021,30 @@ if(!function_exists('filterDelivery_man')){
                 ->where('full_name', 'like', '%' . $sort_search . '%')
                 ->orWhere('phone_number', 'like', '%' . $sort_search . '%')
                 ->orWhere('email', 'like', '%' . $sort_search . '%');
+        }
+       
+        return $delegates;
+    }
+}
+
+if(!function_exists('filterStock')){
+    function filterStock(Request $request, $delegates){
+        if ($request->has('delegate')) {
+            $delegates = $delegates->where('id', $request->get('delegate'));
+        }
+        if ($request->has('province')) {
+            $delegates = $delegates->where('province_id', $request->get('province'));
+        }
+        if ($request->has('stock')) {
+
+            $arr = [];
+            foreach($delegates->get() as $delegate){
+                $stock_status = getStockLevel($delegate->id);
+                if($request->get('stock') == $stock_status){
+                   array_push($arr, $delegate->id);
+                }
+            }
+            $delegates = $delegates->whereIn('id', $arr);
         }
        
         return $delegates;

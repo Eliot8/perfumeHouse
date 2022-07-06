@@ -20,9 +20,14 @@ class StockController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $delegates = Delegate::paginate(8);
+        $delegates = Delegate::latest();
+
+        $delegates = filterStock($request, $delegates);
+        
+        $delegates = $delegates->paginate(8);
+        
         return view('delegate::stock.index', compact('delegates'));
     }
     

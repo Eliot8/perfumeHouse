@@ -152,8 +152,8 @@
             e.preventDefault();
             $(".aiz-table").table2excel({
                 exclude: ".excludeThisClass",
-                name: "All Orders",
-                filename: "orders.xls", 
+                name: "All Delivery men",
+                filename: "deliver_men.xls", 
                 preserveColors: false 
             });
         });
@@ -168,7 +168,7 @@
                             width: 500
                         }]
                     };
-                    pdfMake.createPdf(docDefinition).download("orders.pdf");
+                    pdfMake.createPdf(docDefinition).download("deliver_men.pdf");
                 }
             });
         });
@@ -177,7 +177,7 @@
             e.preventDefault();
             $(".aiz-table").tableHTMLExport({
                 type:'csv',
-                filename: 'orders.csv',
+                filename: 'deliver_men.csv',
                 separator: ',',
                 newline: '\r\n',
                 trimContent: true,

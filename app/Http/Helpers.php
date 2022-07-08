@@ -16,6 +16,7 @@ use App\Models\Wallet;
 use App\Models\CombinedOrder;
 use App\Models\User;
 use App\Models\Addon;
+use App\Models\AffiliateUser;
 use App\Models\Product;
 use App\Models\Shop;
 use App\Utility\SendSMSUtility;
@@ -1103,5 +1104,52 @@ if(!function_exists('filterCoupon')){
         }
        
         return $coupons;
+    }
+}
+
+if(!function_exists('filterAffiliateUsers')){
+    function filterAffiliateUsers(Request $request, $affiliate_users){
+        
+        if ($request->has('affiliate_user')) {
+            $affiliate_users = $affiliate_users->where('id', $request->get('affiliate_user'));
+        }
+        if ($request->has('approval')) {
+            $affiliate_users = $affiliate_users->where('status', $request->get('approval') == true ? 1 : 0);
+        }
+        return $affiliate_users;
+    }
+}
+
+if(!function_exists('filterRefferalUsers')){
+    function filterRefferalUsers(Request $request, $refferal_users){
+        
+        if ($request->has('affiliate_user')) {
+            $user = AffiliateUser::find($request->get('affiliate_user'))->user;
+            // dd($user->id);
+            $refferal_users = $refferal_users->where('referred_by', $user->id);
+        }
+        // if ($request->has('search') && $request->get('search') != null) {
+        //     // dd($request->get('search'));
+        //     $refferal_users = $refferal_users->where('name', 'like', '%'.$request->get('search').'%')
+        //     ->orWhere('email', 'like', '%' . $request->get('search') . '%')
+        //     ->orWhere('phone', 'like', '%' . $request->get('search') . '%')->where('referred_by', '!=' , null);
+
+        //     // $refferal_users = $refferal_users->where('referred_by', '!=' , null);
+        // }
+        return $refferal_users;
+    }
+}
+
+if(!function_exists('filterAffiliateWithdrawRequests')){
+    function filterAffiliateWithdrawRequests(Request $request, $affiliate_withdraw_requests){
+        
+        if ($request->has('affiliate_user')) {
+            $user = AffiliateUser::find($request->get('affiliate_user'))->user;
+            $affiliate_withdraw_requests = $affiliate_withdraw_requests->where('user_id', $user->id);
+        }
+        if ($request->has('status')) {
+            $affiliate_withdraw_requests = $affiliate_withdraw_requests->where('status', $request->get('status') == 'approved' ? 1 : 0);
+        }
+        return $affiliate_withdraw_requests;
     }
 }

@@ -211,8 +211,13 @@ class AffiliateController extends Controller
         return back();
     }
 
-    public function users(){
-        $affiliate_users = AffiliateUser::paginate(12);
+    public function users(Request $request){
+        $affiliate_users = AffiliateUser::latest();
+
+        $affiliate_users = filterAffiliateUsers($request, $affiliate_users);
+
+        $affiliate_users = $affiliate_users->paginate(8);
+
         return view('affiliate.users', compact('affiliate_users'));
     }
 
@@ -479,9 +484,13 @@ class AffiliateController extends Controller
 //        }
     }
 
-    public function refferal_users()
+    public function refferal_users(Request $request)
     {
-        $refferal_users = User::where('referred_by', '!=' , null)->paginate(10);
+        $refferal_users = User::where('referred_by', '!=' , null);
+
+        $refferal_users = filterRefferalUsers($request, $refferal_users);
+
+        $refferal_users = $refferal_users->paginate(10);
         return view('affiliate.refferal_users', compact('refferal_users'));
     }
 
@@ -512,9 +521,14 @@ class AffiliateController extends Controller
         }
     }
 
-    public function affiliate_withdraw_requests()
+    public function affiliate_withdraw_requests(Request $request)
     {
-        $affiliate_withdraw_requests = AffiliateWithdrawRequest::orderBy('id', 'desc')->paginate(10);
+        $affiliate_withdraw_requests = AffiliateWithdrawRequest::orderBy('id', 'desc');
+
+        $affiliate_withdraw_requests = filterAffiliateWithdrawRequests($request, $affiliate_withdraw_requests);
+
+        $affiliate_withdraw_requests = $affiliate_withdraw_requests->paginate(8);
+
         return view('affiliate.affiliate_withdraw_requests', compact('affiliate_withdraw_requests'));
     }
 

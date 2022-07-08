@@ -16,9 +16,13 @@ class CouponController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $coupons = Coupon::where('user_id', User::where('user_type', 'admin')->first()->id)->orderBy('id','desc')->get();
+        // $coupons = Coupon::where('user_id', User::where('user_type', 'admin')->first()->id)->orderBy('id','desc')->get();
+        $coupons = Coupon::where('user_id', User::where('user_type', 'admin')->first()->id)->orderBy('id','desc');
+        $coupons = filterCoupon($request, $coupons);
+
+        $coupons = $coupons->paginate(8);
         return view('backend.marketing.coupons.index', compact('coupons'));
     }
 
@@ -169,7 +173,6 @@ class CouponController extends Controller
     }
 
     public function setCouponData($request, $coupon){
-        
         
         if ($request->coupon_type == "product_base") {
             $coupon->type = $request->coupon_type;

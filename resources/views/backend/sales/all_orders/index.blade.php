@@ -17,7 +17,7 @@
             <div class="row">
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Customer') }}</label>
-                    <select class="form-control aiz-selectpicker" name="customer">
+                    <select class="form-control aiz-selectpicker" name="customer" data-live-search="true">
                         <option value="" selected disabled hidden>{{ translate('customer') }}</option>
                         @foreach (\App\Models\User::where('user_type', 'customer')->get() as $customer)
                             <option value="{{ $customer->id }}" @if(request()->has('customer') && request()->filled('customer') && request()->get('customer') == $customer->id) selected @endif>
@@ -28,7 +28,7 @@
                 </div>
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Delivery Status') }}</label>
-                    <select class="form-control aiz-selectpicker" name="delivery_status">
+                    <select class="form-control aiz-selectpicker" name="delivery_status" data-live-search="true">
                         <option value="" selected disabled hidden>{{ translate('delivery status') }}</option>
                         @foreach (getDeliveryStatus() as $key => $value)
                             <option value="{{ $key }}" @if(request()->has('delivery_status') && request()->filled('delivery_status') && request()->get('delivery_status') == $key) selected @endif>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Payment Status') }}</label>
-                    <select class="form-control aiz-selectpicker" name="payment_status">
+                    <select class="form-control aiz-selectpicker" name="payment_status" data-live-search="true">
                         <option value="" selected disabled hidden>{{ translate('payment status') }}</option>
                         @foreach (getPaymentStatus() as $key => $value)
                             <option value="{{ $key }}" @if(request()->has('payment_status') && request()->filled('payment_status') && request()->get('payment_status') == $key) selected @endif> 
@@ -48,7 +48,7 @@
                 </div>
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Delivery man') }}</label>
-                    <select class="form-control aiz-selectpicker" name="delivery_man">
+                    <select class="form-control aiz-selectpicker" name="delivery_man" data-live-search="true">
                         <option value="" selected disabled hidden>{{ translate('Delivery man') }}</option>
                         @foreach (\Modules\Delegate\Entities\Delegate::select('id', 'full_name')->get() as $delivery_man)
                             <option value="{{ $delivery_man->id }}" @if(request()->has('delivery_man') && request()->filled('delivery_man') && request()->get('delivery_man') == $delivery_man->id) selected @endif>
@@ -69,7 +69,7 @@
                 </div>
                  <div class="col-lg-3 form-group">
                     <label class="col-from-label">@lang('delegate::delivery.affiliate_user')</label>
-                    <select class="form-control aiz-selectpicker" name="affiliate_user">
+                    <select class="form-control aiz-selectpicker" name="affiliate_user" data-live-search="true">
                         <option value="" selected disabled hidden>@lang('delegate::delivery.affiliate_user')</option>
                         @foreach (\App\Models\AffiliateUser::select('id', 'user_id')->get() as $affiliate_user)
                             <option value="{{ $affiliate_user->user_id }}" @if(request()->has('affiliate_user') && request()->filled('affiliate_user') && request()->get('affiliate_user') == $affiliate_user->user_id) selected @endif>

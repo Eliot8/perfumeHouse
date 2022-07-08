@@ -27,7 +27,7 @@
             <div class="row">
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">@lang('delegate::delivery.delegate')</label>
-                    <select class="form-control aiz-selectpicker" name="delegate">
+                    <select class="form-control aiz-selectpicker" name="delegate" data-live-search="true">
                         <option value="" selected disabled hidden>@lang('delegate::delivery.delegate')</option>
                         @foreach (\Modules\Delegate\Entities\Delegate::select('id', 'full_name')->get() as $delegate)
                             <option value="{{ $delegate->id }}" @if(request()->has('delegate') && request()->filled('delegate') && request()->get('delegate') == $delegate->id) selected @endif>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">@lang('delegate::delivery.province')</label>
-                    <select class="form-control aiz-selectpicker" name="province">
+                    <select class="form-control aiz-selectpicker" name="province" data-live-search="true">
                         <option value="" selected disabled hidden>@lang('delegate::delivery.province')</option>
                         @foreach (\Modules\Delegate\Entities\Province::select('id', 'name')->get() as $province)
                             <option value="{{ $province->id }}" @if(request()->has('province') && request()->filled('province') && request()->get('province') == $province->id) selected @endif>

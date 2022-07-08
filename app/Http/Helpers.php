@@ -1077,3 +1077,31 @@ if(!function_exists('filterProvinces')){
         return $provinces;
     }
 }
+
+if(!function_exists('filterCoupon')){
+    function filterCoupon(Request $request, $coupons){
+        
+        if ($request->has('affiliate_user')) {
+            $coupons = $coupons->where('affiliate_user_id', $request->get('affiliate_user'));
+        }
+        if ($request->has('commission_type')) {
+            $coupons = $coupons->where('commission_type', $request->get('commission_type'));
+        }
+
+        if ($request->get('start_date')) {
+            $start_date = $request->get('start_date');
+            $coupons = $coupons->where('start_date', '>=', date('Y-m-d', strtotime(explode(" to ", $start_date)[0])))->where('start_date', '<=', date('Y-m-d', strtotime(explode(" to ", $start_date)[1])));
+        }
+
+        // if ($request->get('end_date')) {
+        //     $end_date = $request->get('end_date');
+        //     $coupons = $coupons->where('end_date', '>=', date('Y-m-d', strtotime(explode(" to ", $end_date)[0])))->where('end_date', '<=', date('Y-m-d', strtotime(explode(" to ", $end_date)[1])));
+        // }
+        if ($request->get('search')) {
+            $coupons = $coupons->where('code', 'like', '%'.$request->get('search').'%')->orWhere('type', 'like', '%' . $request->get('search') . '%');
+           
+        }
+       
+        return $coupons;
+    }
+}

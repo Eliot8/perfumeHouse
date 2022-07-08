@@ -35,7 +35,7 @@
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Added By') }}</label>
                     @if($type == 'Seller')
-                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id">
+                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id" data-live-search="true">
                         <option value="">{{ translate('All Sellers') }}</option>
                         @foreach (App\Models\Seller::all() as $key => $seller)
                             @if ($seller->user != null && $seller->user->shop != null)
@@ -45,7 +45,7 @@
                     </select>
                     @endif
                     @if($type == 'All')
-                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id">
+                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id" data-live-search="true">
                         <option value="" selected disabled hidden>{{ translate('All Sellers') }}</option>
                             @foreach (App\Models\User::where('user_type', '=', 'admin')->orWhere('user_type', '=', 'seller')->get() as $key => $seller)
                                 <option value="{{ $seller->id }}"@if(request()->has('user_id') && request()->filled('user_id') && request()->get('user_id') == $seller->id) selected @endif>{{ $seller->name }}</option>
@@ -67,7 +67,7 @@
                 </div>
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Category') }}</label>
-                    <select name="category" id="category" class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0">
+                    <select name="category" id="category" class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" data-live-search="true">
                         <option value="" selected disabled hidden>{{ translate('All Categories') }}</option>
                         @foreach (App\Models\Category::select('id','name')->get() as $category)
                             <option value="{{ $category->id }}" @if(request()->has('category') && request()->filled('category') && request()->get('category') == $category->id) selected @endif>{{ $category->name }}</option>
@@ -76,7 +76,7 @@
                 </div>
                 <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Brand') }}</label>
-                    <select name="brand" id="brand" class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0">
+                    <select name="brand" id="brand" class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" data-live-search="true">
                         <option value="" selected disabled hidden>{{ translate('All Brands') }}</option>
                         @foreach (App\Models\Brand::select('id','name')->get() as $brand)
                             <option value="{{ $brand->id }}" @if(request()->has('brand') && request()->filled('brand') && request()->get('brand') == $brand->id) selected @endif>{{ $brand->name }}</option>

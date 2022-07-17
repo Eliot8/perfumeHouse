@@ -110,4 +110,8 @@ return [
     'print' => 'مطبعة',
     'column_visibility' => 'رؤية العمود',
 
+    'sell​_for_another_price' => 'بيع بسعر اخر',
+    'reduce_price_error' => 'لا يمكنك تخفيض السعر باكثر من عمولتك',
+    'setp_price_success' => 'تم تغيير السعر بنجاح'
+
 ];

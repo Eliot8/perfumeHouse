@@ -1125,17 +1125,8 @@ if(!function_exists('filterRefferalUsers')){
         
         if ($request->has('affiliate_user')) {
             $user = AffiliateUser::find($request->get('affiliate_user'))->user;
-            // dd($user->id);
             $refferal_users = $refferal_users->where('referred_by', $user->id);
         }
-        // if ($request->has('search') && $request->get('search') != null) {
-        //     // dd($request->get('search'));
-        //     $refferal_users = $refferal_users->where('name', 'like', '%'.$request->get('search').'%')
-        //     ->orWhere('email', 'like', '%' . $request->get('search') . '%')
-        //     ->orWhere('phone', 'like', '%' . $request->get('search') . '%')->where('referred_by', '!=' , null);
-
-        //     // $refferal_users = $refferal_users->where('referred_by', '!=' , null);
-        // }
         return $refferal_users;
     }
 }
@@ -1153,3 +1144,24 @@ if(!function_exists('filterAffiliateWithdrawRequests')){
         return $affiliate_withdraw_requests;
     }
 }
+
+if(!function_exists('checkNewPriceProduct')){
+    function checkNewPriceProduct(Request $request, $id, $coupon){
+
+        $product_price = Product::find($id)->unit_price;
+
+        if($coupon->commission_type == 'percent'){
+            $max_price = $product_price - ($product_price * ($coupon->commission / 100));
+        } else {
+            $max_price = $product_price - ($coupon->commission / 100);
+        }
+
+        if($max_price > $request->get('unit_price')) {
+            return false;
+        }
+        
+        return true;
+    }
+}
+
+

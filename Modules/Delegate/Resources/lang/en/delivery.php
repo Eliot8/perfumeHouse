@@ -110,4 +110,7 @@ return [
     'print' => 'Print',
     'column_visibility' => 'Column visibility',
 
+    'sell​_for_another_price' => 'Sell ​​for another price',
+    'reduce_price_error' => 'You cannot reduce the price by more than your commission',
+    'setp_price_success' => 'Price changed successfully',
 ];

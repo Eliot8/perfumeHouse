@@ -42,7 +42,6 @@ Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin']], function()
     Route::get('/affiliate/logs', 'AffiliateController@affiliate_logs_admin')->name('affiliate.logs.admin');
 
 
-
 });
 
 //FrontEnd
@@ -60,4 +59,8 @@ Route::middleware(['auth', 'user'])->group(function() {
     Route::post('/affiliate/withdraw_request/store', 'AffiliateController@withdraw_request_store')->name('affiliate.withdraw_request.store');
     
     Route::get('/affiliate/coupon', 'AffiliateController@coupon')->name('affiliate.coupon');
+
+    
+    # SELL PRODUCT FOR ANOTHER PRICE
+    Route::post('/affiliate/product/{id}', 'AffiliateController@SetNewPriceToProduct')->name('affiliate.new_price');
 });

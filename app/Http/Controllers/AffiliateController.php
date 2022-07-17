@@ -11,12 +11,14 @@ use App\Models\AffiliateUser;
 use App\Models\AffiliatePayment;
 use App\Models\AffiliateWithdrawRequest;
 use App\Models\AffiliateLog;
+use App\Models\AffiliateProductPrice;
 use App\Models\AffiliateStats;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Customer;
 use App\Models\Category;
 use App\Models\Coupon;
+use App\Models\Product;
 use Auth;
 use DB;
 use Hash;
@@ -577,6 +579,39 @@ class AffiliateController extends Controller
         $affiliate_user_id = Auth::user()->affiliate_user->id;
         $coupons = Coupon::where('affiliate_user_id', $affiliate_user_id)->paginate(6);
         return view('affiliate.frontend.coupon', compact('coupons'));
+    }
+
+
+    public function SetNewPriceToProduct(Request $request, $id) {
+        $coupon = get_valid_coupon();
+
+        if (!$coupon) {
+            flash('you dont have a valid coupon')->error();
+            return back();
+        }
+        
+        if(!checkNewPriceProduct($request, $id, $coupon)){
+            flash(Lang::get('delegate::delivery.reduce_price_error'))->error();
+            return back();
+        }
+        
+        $over_price = AffiliateProductPrice::where(['affiliate_user_id' => Auth::user()->affiliate_user->id, 'product_id' => $id])->first();
+
+        if($over_price) {
+            $over_price->price = $request->get('unit_price');
+            $over_price->save();
+        } else {
+            $affiliate_product_price = new AffiliateProductPrice();
+            $affiliate_product_price->affiliate_user_id = Auth::user()->affiliate_user->id;
+            $affiliate_product_price->product_id = $id;
+            $affiliate_product_price->price = $request->get('unit_price');
+            $affiliate_product_price->save();
+        }
+
+        
+        flash(Lang::get('delegate::delivery.setp_price_success'))->success();
+        return back();
+        
     }
 
 }

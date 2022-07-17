@@ -26,6 +26,7 @@ use Session;
 use DB;
 use Mail;
 use App\Mail\InvoiceEmailManager;
+use App\Models\AffiliateProductPrice;
 use App\Utility\NotificationUtility;
 use CoreComponentRepository;
 use App\Utility\SmsUtility;
@@ -348,12 +349,26 @@ class OrderController extends Controller
             $tax = 0;
             $shipping = 0;
             $coupon_discount = 0;
-
+            $commission_status = true;
             //Order Details Storing
             foreach ($seller_product as $cartItem) {
                 $product = Product::find($cartItem['product_id']);
 
-                $subtotal += $cartItem['price'] * $cartItem['quantity'];
+
+                // CHECK IF PRODUCT PRICE CHANGED 
+                if(Auth::user()->affiliate_user != null) {
+                    $custom_price = AffiliateProductPrice::where(['affiliate_user_id' => Auth::user()->affiliate_user->id, 'product_id' => $product->id])->first();
+                }
+                if (isset($custom_price) && $custom_price) {
+                    $subtotal += $custom_price->price * $cartItem['quantity'];
+
+                    if($custom_price->price < $cartItem['price']){
+                        $commission_status = false;
+                    }
+                } else {
+                    $subtotal += $cartItem['price'] * $cartItem['quantity'];
+                }
+
                 $tax += $cartItem['tax'] * $cartItem['quantity'];
                 $coupon_discount += $cartItem['discount'];
 
@@ -377,7 +392,11 @@ class OrderController extends Controller
                 $order_detail->variation = $product_variation;
 
                 if(Auth::check() && has_coupon(Auth::user()) && get_valid_coupon()) {
-                    $order_detail->price = get_discounted_price($cartItem['price']) * $cartItem['quantity'];
+                    if (isset($custom_price) && $custom_price){
+                        $order_detail->price = get_discounted_price($custom_price->price) * $cartItem['quantity'];
+                    } else {
+                        $order_detail->price = get_discounted_price($cartItem['price']) * $cartItem['quantity'];
+                    }
                 } else {
                     $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
                 }
@@ -418,6 +437,7 @@ class OrderController extends Controller
             $user = Auth::user();
             if (Auth::check() && has_coupon($user) && get_valid_coupon()) {
                 $coupon = get_valid_coupon();
+
                 $order->grand_total = get_discounted_price($subtotal) + $tax + $address->province->shipping_cost ?? 0;
 
                 // SET COUPON ID
@@ -426,20 +446,23 @@ class OrderController extends Controller
                 $affiliateController = new AffiliateController;
                 $affiliateController->processAffiliateStats($user->id, 0, $order_detail->quantity, 0, 0);
 
-                // CALCUL COMMISSION
-                if ($coupon->commission_type == 'percent') {
-                    $calculate_comission = $subtotal * ($coupon->commission / 100);
-                } else {
-                    $calculate_comission = $coupon->commission;
+                if($commission_status == true){
+                    // CALCUL COMMISSION
+                    if ($coupon->commission_type == 'percent') {
+                        $calculate_comission = $subtotal * ($coupon->commission / 100);
+                    } else {
+                        $calculate_comission = $coupon->commission;
+                    }
+                    $user->affiliate_user->balance_pending += $calculate_comission;
+                    $user->affiliate_user->save();
                 }
-                $user->affiliate_user->balance_pending += $calculate_comission;
-                $user->affiliate_user->save();
+
 
                 $coupon_usage = new CouponUsage;
                 $coupon_usage->user_id = $user->id;
                 $coupon_usage->coupon_id = $coupon->id;
                 $coupon_usage->order_id = $order->id;
-                $coupon_usage->commission = $calculate_comission;
+                $coupon_usage->commission = isset($calculate_comission) ? $calculate_comission : 0;
                 $coupon_usage->save();
             } else {
                 $order->grand_total = $subtotal + $tax + $address->province->shipping_cost ?? 0;

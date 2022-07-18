@@ -13,19 +13,19 @@ class CreateAffiliateProductPrice extends Migration
      */
     public function up()
     {
-        Schema::create('affiliate_product_price', function (Blueprint $table) {
-            $table->id();
-            $table->integer('affiliate_user_id')->unsigned();
-            $table->integer('product_id')->unsigned();
+//         Schema::create('affiliate_product_price', function (Blueprint $table) {
+//             $table->id();
+//             $table->integer('affiliate_user_id')->unsigned();
+//             $table->integer('product_id')->unsigned();
             
-            $table->foreign('affiliate_user_id')->references('id')->on('affiliate_users')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('products')->onUpdate('cascade')->onDelete('cascade');
+//             $table->foreign('affiliate_user_id')->references('id')->on('affiliate_users')->onUpdate('cascade')->onDelete('cascade');
+//             $table->foreign('product_id')->references('id')->on('products')->onUpdate('cascade')->onDelete('cascade');
 
-            // $table->foreignId('affiliate_user_id')->constrained('affiliate_users')->onUpdate('cascade')->onDelete('cascade');
-            // $table->foreignId('product_id')->constrained('products')->onUpdate('cascade')->onDelete('cascade');
-            $table->decimal('price', 2);
-            $table->timestamps();
-        });
+//             // $table->foreignId('affiliate_user_id')->constrained('affiliate_users')->onUpdate('cascade')->onDelete('cascade');
+//             // $table->foreignId('product_id')->constrained('products')->onUpdate('cascade')->onDelete('cascade');
+//             $table->decimal('price', 2);
+//             $table->timestamps();
+//         });
     }
 
     /**
@@ -35,6 +35,6 @@ class CreateAffiliateProductPrice extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('affiliate_product_price');
+//         Schema::dropIfExists('affiliate_product_price');
     }
 }

@@ -457,7 +457,6 @@
                     url: '{{ route('cart.addToCart') }}',
                     data: $('#option-choice-form').serializeArray(),
                     success: function(data){
-
                        $('#addToCart-modal-body').html(null);
                        $('.c-preloader').hide();
                        $('#modal-size').removeClass('modal-lg');
@@ -465,6 +464,11 @@
                        AIZ.extra.plusMinus();
                        AIZ.plugins.slickCarousel();
                        updateNavCart(data.nav_cart_view,data.cart_count);
+                    },
+                    error:function(response) {
+                        $('.c-preloader').hide();
+                        $('#addToCart').modal('hide');
+                        AIZ.plugins.notify('danger', response.responseJSON.error);
                     }
                 });
             }

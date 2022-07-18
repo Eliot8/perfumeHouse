@@ -40,6 +40,10 @@
                     $shipping = 0;
                     $product_shipping_cost = 0;
                     $shipping_region = $shipping_info['city'];
+
+                    $commission = 0;
+                    $discount = 0;
+                    $over_price = 0;
                 @endphp
                 @foreach ($carts as $key => $cartItem)
                     @php
@@ -56,6 +60,14 @@
                         }
                         $shipping = \App\Models\Address::find($cartItem->address_id)->province->shipping_cost;
                         $cartItem['shipping_cost'] = $shipping ?? '0';
+
+                        $commission += $cartItem['commission'];
+                        if($cartItem['affiliate_price_type'] == 'discount'){
+                            $discount += $cartItem['affiliate_price'];
+                        }
+                        if($cartItem['affiliate_price_type'] == 'over_price'){
+                            $over_price += $cartItem['affiliate_price'];
+                        }
                     @endphp
                     <tr class="cart_item">
                         <td class="product-name">
@@ -65,14 +77,6 @@
                             </strong>
                         </td>
                         <td class="product-total text-right">
-                            {{-- @if(Auth::check() && has_coupon(Auth::user()))
-                                @php
-                                    $discounted_price = get_discounted_price($cartItem['price']); 
-                                @endphp
-                                <span class="pl-4 pr-0">{{ single_price(($discounted_price + $cartItem['tax']) * $cartItem['quantity']) }}</span>
-                            @else
-                                <span class="pl-4 pr-0">{{ single_price(($cartItem['price'] + $cartItem['tax']) * $cartItem['quantity']) }}</span>
-                            @endif --}}
                             <span class="pl-4 pr-0">{{ single_price(($cartItem['price'] + $cartItem['tax']) * $cartItem['quantity']) }}</span>
                         </td>
                     </tr>
@@ -86,17 +90,30 @@
                 <tr class="cart-subtotal">
                     <th>{{translate('Subtotal')}}</th>
                     <td class="text-right">
-                        {{-- @if(Auth::check() && has_coupon(Auth::user()))
-                            @php
-                                $subtotal_price = get_discounted_price($subtotal); 
-                            @endphp
-                            <span class="fw-600">{{ single_price($subtotal_price) }}</span>
-                        @else
-                            <span class="fw-600">{{ single_price($subtotal) }}</span>
-                        @endif --}}
                         <span class="fw-600">{{ single_price($subtotal) }}</span>
                     </td>
                 </tr>
+
+                {{--  --}}
+                <tr class="cart-shipping">
+                    <th>{{translate('Commission')}}</th>
+                    <td class="text-right">
+                        <span class="font-italic">{{ single_price($commission) }}</span>
+                    </td>
+                </tr>
+                <tr class="cart-shipping">
+                    <th>@lang('delegate::delivery.discount')</th>
+                    <td class="text-right">
+                        <span class="font-italic">{{ single_price($discount) }} -</span>
+                    </td>
+                </tr>
+                <tr class="cart-shipping">
+                    <th>@lang('delegate::delivery.over_price')</th>
+                    <td class="text-right">
+                        <span class="font-italic">{{ single_price($over_price) }} +</span>
+                    </td>
+                </tr>
+                {{--  --}}
 
                 <tr class="cart-shipping">
                     <th>{{translate('Tax')}}</th>
@@ -131,7 +148,8 @@
                 @endif
 
                 @php
-                    $total = $subtotal+$tax+$shipping;
+                    $total = $subtotal + $tax + $shipping;
+                    $total = $total + $over_price - $discount;
                     if(Session::has('club_point')) {
                         $total -= Session::get('club_point');
                     }
@@ -143,11 +161,6 @@
                 <tr class="cart-total">
                     <th><span class="strong-600">{{translate('Total')}}</span></th>
                     <td class="text-right">
-                        {{-- @if(Auth::check() && has_coupon(Auth::user()))
-                        <strong><span>{{ single_price($subtotal_price + $shipping) }}</span></strong>
-                        @else 
-                        <strong><span>{{ single_price($total) }}</span></strong>
-                        @endif --}}
                         <strong><span>{{ single_price($total) }}</span></strong>
                     </td>
                 </tr>

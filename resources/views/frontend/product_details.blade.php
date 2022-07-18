@@ -353,7 +353,47 @@
                                     </div>
                                 </div>
 
+                                @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
+                                <div class="row no-gutters mt-4">
+                                    <div class="col-sm-2">
+                                        <div class="opacity-50 my-2">{{ translate('سعر البيع') }}:</div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <select class="form-control aiz-selectpicker" name="affiliate_price_type">
+                                            <option value="nothing" selected  >@lang('delegate::delivery.nothing')</option>
+                                            <option value="discount">@lang('delegate::delivery.discount')</option>
+                                            <option value="over_price">@lang('delegate::delivery.over_price')</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="number" name="affiliate_price" min="0" step="0.01" placeholder="السعر" class="form-control mx-2">
+                                    </div>
+                                </div>
+    
+                                <div class="row no-gutters mt-4">
+                                    <div class="col-sm-2">
+                                        <div class="opacity-50 my-2">العمولة :</div>
+                                    </div>
+                                    @php
+                                        $coupon = get_valid_coupon();
+                                    @endphp
+                                    @if($coupon)
+                                    <div class="col-sm-5">
+                                        <strong class="h5 fw-600 text-primary">
+                                            {{ single_price($detailedProduct->unit_price * ($coupon->commission / 100)) }}
+                                        </strong>
+                                        <input type="hidden" name="commission" value="{{ $detailedProduct->unit_price * ($coupon->commission / 100 )}}">
+                                    </div>
+                                    @endif
+                                </div>
+                                @endif
+
                             </form>
+
+
+
+
+
 
                             <div class="mt-3">
                                 @if ($detailedProduct->external_link != null)
@@ -410,45 +450,7 @@
                                 </div>
                             </div>
 
-                            @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
-                            <div class="row no-gutters mt-4">
-                                <div class="col-sm-2">
-                                    <div class="opacity-50 my-2">{{ translate('سعر البيع') }}:</div>
-                                </div>
-                                @php
-                                    $over_price = \App\Models\AffiliateProductPrice::where(['affiliate_user_id' => Auth::user()->affiliate_user->id, 'product_id' => $detailedProduct->id])->first();
-                                @endphp
-                                @if($over_price)
-                                <div class="col-sm-5">
-                                    <strong class="h2 fw-600 text-primary">
-                                        {{ single_price($over_price->price) }}
-                                    </strong>
-                                    @if ($detailedProduct->unit != null)
-                                        <span class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
-                                    @endif
-                                </div>
-                                @endif
-                                <div class="col-sm-3">
-                                    <button class="btn btn-sm btn-soft-primary" onclick="show_set_price_for_affiliate_modal()">@lang('delegate::delivery.sell​_for_another_price')</button>
-                                </div>
-                            </div>
-
-                            <div class="row no-gutters mt-4">
-                                <div class="col-sm-2">
-                                    <div class="opacity-50 my-2">العمولة :</div>
-                                </div>
-                                @php
-                                    $coupon = get_valid_coupon();
-                                @endphp
-                                @if($coupon)
-                                <div class="col-sm-5">
-                                    <strong class="h2 fw-600 text-primary">
-                                        {{ single_price($detailedProduct->unit_price * ($coupon->commission) / 100) }}
-                                    </strong>
-                                </div>
-                                @endif
-                            </div>
-                            @endif
+                            
 
                             @php
                                 $refund_sticker = get_setting('refund_sticker');
@@ -991,31 +993,6 @@
         </div>
     </div>
 
-    <div id="new_price_affiliate" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title h6">@lang('delegate::delivery.sell​_for_another_price')</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <form action="{{ route('affiliate.new_price', $detailedProduct->id) }}" method="POST">
-                        @csrf
-
-                        <div class="form-group row">
-                            <label class="col-md-3 col-from-label">{{ translate('Unit Price') }} <span class="text-danger">*</span></label>
-                            <div class="col-md-8">
-                                <input type="number" class="form-control" name="unit_price" min="0" value="0" step="0.01" placeholder="0" required>
-                            </div>
-                        </div>
-
-                        <button type="button" class="btn btn-link mt-2" data-dismiss="modal">{{ translate('Cancel') }}</button>
-                        <button type="submit" class="btn btn-soft-primary mt-2">{{ translate('Save') }}</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @section('script')
@@ -1062,8 +1039,5 @@
             @endif
         }
 
-        window.show_set_price_for_affiliate_modal = function show_set_price_for_affiliate_modal() {
-            $('#new_price_affiliate').modal();
-        }
     </script>
 @endsection

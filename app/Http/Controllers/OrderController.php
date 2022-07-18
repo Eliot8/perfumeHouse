@@ -349,25 +349,16 @@ class OrderController extends Controller
             $tax = 0;
             $shipping = 0;
             $coupon_discount = 0;
-            $commission_status = true;
+            
+            $commission = 0;
+            $discount = 0;
+            $over_price = 0;
+
             //Order Details Storing
             foreach ($seller_product as $cartItem) {
                 $product = Product::find($cartItem['product_id']);
-
-
-                // CHECK IF PRODUCT PRICE CHANGED 
-                if(Auth::user()->affiliate_user != null) {
-                    $custom_price = AffiliateProductPrice::where(['affiliate_user_id' => Auth::user()->affiliate_user->id, 'product_id' => $product->id])->first();
-                }
-                if (isset($custom_price) && $custom_price) {
-                    $subtotal += $custom_price->price * $cartItem['quantity'];
-
-                    if($custom_price->price < $cartItem['price']){
-                        $commission_status = false;
-                    }
-                } else {
-                    $subtotal += $cartItem['price'] * $cartItem['quantity'];
-                }
+                
+                $subtotal += $cartItem['price'] * $cartItem['quantity'];
 
                 $tax += $cartItem['tax'] * $cartItem['quantity'];
                 $coupon_discount += $cartItem['discount'];
@@ -391,19 +382,30 @@ class OrderController extends Controller
                 $order_detail->product_id = $product->id;
                 $order_detail->variation = $product_variation;
 
+                $order_detail->commission = $cartItem['commission'];
+                $order_detail->affiliate_price_type = $cartItem['affiliate_price_type'];
+                $order_detail->affiliate_price = $cartItem['affiliate_price'];
+                
                 if(Auth::check() && has_coupon(Auth::user()) && get_valid_coupon()) {
-                    if (isset($custom_price) && $custom_price){
-                        $order_detail->price = get_discounted_price($custom_price->price) * $cartItem['quantity'];
-                    } else {
-                        $order_detail->price = get_discounted_price($cartItem['price']) * $cartItem['quantity'];
-                    }
+                    $order_detail->price = get_discounted_price($cartItem['price']) * $cartItem['quantity'];
                 } else {
                     $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
                 }
 
+                //
                 $order_detail->tax = $cartItem['tax'] * $cartItem['quantity'];
                 $order_detail->shipping_type = $cartItem['shipping_type'];
                 $order_detail->product_referral_code = $cartItem['product_referral_code'];
+
+                $commission += $cartItem['commission'];
+                if($cartItem['affiliate_price_type'] == 'discount'){
+                    $discount += $cartItem['affiliate_price'];
+                }
+                if($cartItem['affiliate_price_type'] == 'over_price'){
+                    $over_price += $cartItem['affiliate_price'];
+                }
+                //
+
                 // $order_detail->shipping_cost = $cartItem['shipping_cost'];
                 $order_detail->shipping_cost = $address->province->shipping_cost ?? 0;
 
@@ -446,7 +448,7 @@ class OrderController extends Controller
                 $affiliateController = new AffiliateController;
                 $affiliateController->processAffiliateStats($user->id, 0, $order_detail->quantity, 0, 0);
 
-                if($commission_status == true){
+                // if($commission_status == true){
                     // CALCUL COMMISSION
                     if ($coupon->commission_type == 'percent') {
                         $calculate_comission = $subtotal * ($coupon->commission / 100);
@@ -455,7 +457,7 @@ class OrderController extends Controller
                     }
                     $user->affiliate_user->balance_pending += $calculate_comission;
                     $user->affiliate_user->save();
-                }
+                // }
 
 
                 $coupon_usage = new CouponUsage;
@@ -490,6 +492,7 @@ class OrderController extends Controller
                 $order->coupon_id = $coupon->id;
             }
 
+            $order->grand_total = $order->grand_total + $over_price - $discount;
             $combined_order->grand_total += $order->grand_total;
             // $combined_order->grand_total = $address->province->shipping_cost ?? '0';
 

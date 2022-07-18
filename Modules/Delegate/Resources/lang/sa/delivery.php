@@ -112,6 +112,9 @@ return [
 
     'sell​_for_another_price' => 'بيع بسعر اخر',
     'reduce_price_error' => 'لا يمكنك تخفيض السعر باكثر من عمولتك',
-    'setp_price_success' => 'تم تغيير السعر بنجاح'
+    'setp_price_success' => 'تم تغيير السعر بنجاح',
 
+    'nothing' => 'لا شيء',
+    'discount' => 'خصم',
+    'over_price' => 'زيادة السعر',
 ];

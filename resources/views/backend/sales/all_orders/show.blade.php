@@ -173,6 +173,30 @@
                     </tr>
                     <tr>
                         <td>
+                            <strong class="text-muted">{{translate('Commission')}} :</strong>
+                        </td>
+                        <td>
+                            {{ single_price($order->orderDetails->sum('commission')) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong class="text-muted">@lang('delegate::delivery.discount') :</strong>
+                        </td>
+                        <td>
+                            {{ single_price($order->orderDetails->where('affiliate_price_type', 'discount')->sum('affiliate_price')) }} -
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong class="text-muted">@lang('delegate::delivery.over_price') :</strong>
+                        </td>
+                        <td>
+                            {{ single_price($order->orderDetails->where('affiliate_price_type', 'over_price')->sum('affiliate_price')) }} +
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <strong class="text-muted">{{translate('Tax')}} :</strong>
                         </td>
                         <td>

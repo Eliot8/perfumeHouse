@@ -11,6 +11,7 @@
 |
 */
 
+use App\Models\Cart;
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
     Route::resource('delegates', 'DelegatesController')->except(['destroy']);
@@ -39,6 +40,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
 // AJAX
 Route::get('/province/{id}/zone', 'DelegatesController@getZone');
+
 
 
 

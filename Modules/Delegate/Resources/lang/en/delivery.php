@@ -113,4 +113,8 @@ return [
     'sell​_for_another_price' => 'Sell ​​for another price',
     'reduce_price_error' => 'You cannot reduce the price by more than your commission',
     'setp_price_success' => 'Price changed successfully',
+    
+    'nothing' => 'Nothing',
+    'discount' => 'Discount',
+    'over_price' => 'Over Price',
 ];

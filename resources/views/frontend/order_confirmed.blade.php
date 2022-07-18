@@ -47,7 +47,6 @@
                 <div class="col-xl-8 mx-auto">
                     @php
                         $first_order = $combined_order->orders->first();
-                        // dd($combined_order);
                     @endphp
                     <div class="text-center py-4 mb-4">
                         <i class="la la-check-circle la-3x text-success mb-3"></i>
@@ -73,7 +72,6 @@
                                     </tr>
                                     <tr>
                                         <td class="w-50 fw-600">{{ translate('Shipping address')}}:</td>
-                                        {{-- <td>{{ json_decode($first_order->shipping_address)->address }}, {{ json_decode($first_order->shipping_address)->city }}, {{ json_decode($first_order->shipping_address)->country }}</td> --}}
                                         <td>{{ json_decode($first_order->shipping_address)->address }}, {{ json_decode($first_order->shipping_address)->province }}, {{ json_decode($first_order->shipping_address)->zone }}</td>
                                     </tr>
                                 </table>
@@ -170,6 +168,24 @@
                                                         <th>{{ translate('Subtotal')}}</th>
                                                         <td class="text-right">
                                                             <span class="fw-600">{{ single_price($order->orderDetails->sum('price')) }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>{{ translate('Commission')}}</th>
+                                                        <td class="text-right">
+                                                            <span class="font-italic">{{ single_price($order->orderDetails->sum('commission')) }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>@lang('delegate::delivery.discount')</th>
+                                                        <td class="text-right">
+                                                            <span class="font-italic">{{ single_price($order->orderDetails->where('affiliate_price_type', 'discount')->sum('affiliate_price')) }} -</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>@lang('delegate::delivery.over_price')</th>
+                                                        <td class="text-right">
+                                                            <span class="font-italic">{{ single_price($order->orderDetails->where('affiliate_price_type', 'over_price')->sum('affiliate_price')) }} +</span>
                                                         </td>
                                                     </tr>
                                                     <tr>

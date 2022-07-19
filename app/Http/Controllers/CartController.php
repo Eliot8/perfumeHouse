@@ -51,7 +51,7 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
-        if($request->get('affiliate_price_type') != 'nothing' && $request->get('affiliate_price') > $request->get('commission')){
+        if($request->get('affiliate_price_type') == 'discount' && $request->get('affiliate_price') > $request->get('commission')){
             return response()->json(['error' => 'لا يمكن خصم اكثر من عمولتك'], 401);
         }
         $product = Product::find($request->id);

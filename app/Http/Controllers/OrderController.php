@@ -27,6 +27,7 @@ use DB;
 use Mail;
 use App\Mail\InvoiceEmailManager;
 use App\Models\AffiliateProductPrice;
+use App\Models\AffiliateUser;
 use App\Utility\NotificationUtility;
 use CoreComponentRepository;
 use App\Utility\SmsUtility;
@@ -448,17 +449,19 @@ class OrderController extends Controller
                 $affiliateController = new AffiliateController;
                 $affiliateController->processAffiliateStats($user->id, 0, $order_detail->quantity, 0, 0);
 
-                // if($commission_status == true){
-                    // CALCUL COMMISSION
-                    if ($coupon->commission_type == 'percent') {
-                        $calculate_comission = $subtotal * ($coupon->commission / 100);
-                    } else {
-                        $calculate_comission = $coupon->commission;
-                    }
-                    $user->affiliate_user->balance_pending += $calculate_comission;
-                    $user->affiliate_user->save();
-                // }
+                
+                // CALCUL COMMISSION
+                if ($coupon->commission_type == 'percent') {
+                    $calculate_comission = $subtotal * ($coupon->commission / 100);
+                } else {
+                    $calculate_comission = $coupon->commission;
+                }
 
+                $calculate_comission = $calculate_comission - $discount + $over_price;
+
+                $user->affiliate_user->balance_pending += $calculate_comission;
+                $user->affiliate_user->save();
+                
 
                 $coupon_usage = new CouponUsage;
                 $coupon_usage->user_id = $user->id;
@@ -558,8 +561,20 @@ class OrderController extends Controller
 
                 // }
 
+                // DECREASE AFFILIATE BALANCE
+                
                 $orderDetail->delete();
             }
+            
+            
+                $coupon_usage = CouponUsage::where('order_id', $id)->first();
+                
+                if($coupon_usage){
+                    $affiliate_user = AffiliateUser::where('user_id', $coupon_usage->user_id)->first();
+                    $affiliate_user->balance_pending -= $coupon_usage->commission;
+                    $affiliate_user->save();
+                }
+            
             $order->delete();
             flash(translate('Order has been deleted successfully'))->success();
         } else {

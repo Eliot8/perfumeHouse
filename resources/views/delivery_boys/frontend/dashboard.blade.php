@@ -245,7 +245,7 @@ $delegate = \Modules\Delegate\Entities\Delegate::where('user_id', Auth::user()->
                 <i class="las la-comment-dollar la-4x"></i>
                 <div class="opacity-50">@lang('delegate::delivery.weekly_system_earnings')</div>
                  <div class="h3 fw-700">
-                  {{  substr($week_orders->system_earnings, 0, -3) ?? 0 }}
+                  {{  $week_orders ? substr($week_orders->system_earnings, 0, -3) : 0 }}
                 </div>
             </div>
         </div>
@@ -256,7 +256,7 @@ $delegate = \Modules\Delegate\Entities\Delegate::where('user_id', Auth::user()->
                 <i class="las la-dollar-sign la-4x"></i>
                 <div class="opacity-50">@lang('delegate::delivery.weekly_personal_earnings')</div>
                  <div class="h3 fw-700">
-                   {{  substr($week_orders->personal_earnings, 0, -3) ?? 0 }}
+                   {{ $week_orders ? substr($week_orders->personal_earnings, 0, -3) : 0 }}
                 </div>
             </div>
         </div>

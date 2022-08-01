@@ -117,4 +117,9 @@ return [
     'nothing' => 'Nothing',
     'discount' => 'Discount',
     'over_price' => 'Over Price',
+
+    'weekly_system_earnings' => 'Weekly System Earnings',
+    'weekly_personal_earnings' => 'Weekly Personal Earnings',
+    'payment_request_success' => 'Payment has been requested successfully',
+
 ];

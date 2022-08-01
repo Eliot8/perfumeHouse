@@ -80,6 +80,8 @@
                     <li class="dropdown-item column_visibility" id="email" style="cursor: pointer;">{{ translate('Email') }}</li>
                     <li class="dropdown-item column_visibility" id="province" style="cursor: pointer;">@lang('delegate::delivery.province')</li>
                     <li class="dropdown-item column_visibility" id="earnings" style="cursor: pointer;">@lang('delegate::delivery.earnings')</li>
+                    <li class="dropdown-item column_visibility" id="personal_earnings" style="cursor: pointer;">@lang('delegate::delivery.weekly_personal_earnings')</li>
+                    <li class="dropdown-item column_visibility" id="earnisystem_earningsngs" style="cursor: pointer;">@lang('delegate::delivery.weekly_system_earnings')</li>
                     <li class="dropdown-item column_visibility" id="orders_count" style="cursor: pointer;">@lang('delegate::delivery.orders_count')</li>
                     <li class="dropdown-item column_visibility" id="options" style="cursor: pointer;">{{translate('Options')}}</li>
                 </ul>
@@ -99,6 +101,8 @@
                         <th class="email" data-breakpoints="md">{{ translate('Email') }}</th>
                         <th class="province" data-breakpoints="md">@lang('delegate::delivery.province')</th>
                         <th class="earnings" data-breakpoints="md">@lang('delegate::delivery.earnings')</th>
+                        <th class="personal_earnings" data-breakpoints="md">@lang('delegate::delivery.weekly_personal_earnings')</th>
+                        <th class="system_earnings" data-breakpoints="md">@lang('delegate::delivery.weekly_system_earnings')</th>
                         <th class="orders_count" data-breakpoints="md">@lang('delegate::delivery.orders_count')</th>
                         <th class="options" data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
                     </tr>
@@ -120,12 +124,23 @@
                             <strong class="btn-soft-info btn-circle btn-sm" style="transition: all 0.3s ease;">{{ \DB::table('provinces')->where('id', $delegate->province_id)->first()->name }}</strong>
                         </td>
                         @php 
-                        $ordersCount = ordersCount($delegate->user_id);
-                        $price = $delegate->province->delegate_cost * $ordersCount;
+                            $ordersCount = ordersCount($delegate->user_id);
+                            $price = $delegate->province->delegate_cost * $ordersCount;
+                            $today = date('d-m-Y');
+                            $week_orders = \Modules\Delegate\Entities\WeekOrders::where('delivery_man_id', $delegate->id)
+                                ->where('week_end', '>', $today)
+                                ->first();
                         @endphp
                         <td class="earnings">{{ single_price($price) }} </td>
+                        <td class="personal_earnings">{{ single_price($week_orders->personal_earnings ?? 0)}} </td>
+                        <td class="system_earnings">{{ single_price($week_orders->system_earnings ?? 0)}} </td>
                         <td class="orders_count"><span class="badge badge-inline badge-success">{{ $ordersCount }}</span></td>
                         <td class="options text-right">
+                            @if($week_orders)
+                            <a class="btn btn-soft-success btn-icon btn-circle btn-sm" href="{{ route('week.payment.request', [$delegate->id, $week_orders->week_end]) }}" title="@lang('delegate::delivery.payment_request')">
+                               <i class="las la-hand-holding-usd"></i>
+                            </a>
+                            @endif
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{ route('delegates.edit', $delegate->id) }}" title="{{ translate('Edit') }}">
                                 <i class="las la-edit"></i>
                             </a>

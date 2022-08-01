@@ -673,6 +673,9 @@ class OrderController extends Controller
             }
             $order->grand_total -= $order->province->delegate_cost;
 
+            // WEEK BALANCE
+            insertIntoWeekOrders($delegate->id, $order->grand_total, $order->province->delegate_cost);
+
             // TRANSFORM COMMISSION FROM AFFILIATE BALANCE PENDING TO AFFILIATE BALANCE
             if($order->coupon_id != null){
                 $affiliate_user = Coupon::find($order->coupon_id)->affiliate_user;

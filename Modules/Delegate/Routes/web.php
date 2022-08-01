@@ -36,6 +36,20 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::post('/delegate/deleteModal', 'DelegatesController@getModalDeleteByAjax');
     Route::get('/product/{id}/colors', 'StockController@getColors')->name('product.colors');
     Route::get('/product/{id}/attributes', 'StockController@getAttributes')->name('product.attributes');
+
+
+    # payment reuqest
+    Route::get('/week-payment-request/{delegate_id}/{week_end}', function($delegate_id, $week_end){
+        $week_orders = \Modules\Delegate\Entities\WeekOrders::where('delivery_man_id', $delegate_id)
+            ->where('week_end', $week_end)
+            ->first();
+        $week_orders->personal_earnings = 0;
+        $week_orders->system_earnings = 0;
+        $week_orders->save();
+
+        flash(Lang::get('delegate::delivery.payment_request_success'), 'success');
+        return back();
+    })->name('week.payment.request');
 });
 
 // AJAX

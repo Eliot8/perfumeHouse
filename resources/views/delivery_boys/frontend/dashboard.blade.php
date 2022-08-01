@@ -6,13 +6,16 @@
         background-image: linear-gradient(315deg, #eb4786 0%, #b854a6 74%);
     }
     .bg-grad-5 {
-        background-color: #8c64dd; 
-        background-image: linear-gradient(315deg, #8c64dd 0%, #7764dd 74%);
+        /* background-color: #8c64dd; 
+        background-image: linear-gradient(315deg, #8c64dd 0%, #7764dd 74%); */
+        /* background-image: linear-gradient(to right top, #b91c1c, #bc2719, #be3015, #c03911, #c2410c); */
+        background-image: linear-gradient(to right top, #991b1b, #a91e1e, #ba2021, #cb2323, #dc2626);
     }
     .bg-grad-6 {
-        background-color: #fdce4b; 
-        /* background-image: linear-gradient(315deg, #fdce4b 0%, #977914 74%); */
-        background-image: linear-gradient(315deg, #ecdc65 0%, #bd9e49 74%);
+        /* background-color: #fdce4b; 
+        background-image: linear-gradient(315deg, #ecdc65 0%, #bd9e49 74%); */
+        /* background-image: linear-gradient(to right top, #ca8a04, #ce8602, #d28102, #d57c03, #d97706); */
+        background-image: linear-gradient(to right top, #d97706, #d57c03, #d28102, #ce8602, #ca8a04);
     }
     .bg-grad-7 {
         /* background-color: #767676;
@@ -21,16 +24,23 @@
         background-image: linear-gradient(315deg, #4473b7 0%, #114781 74%);
     }
     .bg-grad-8 {
-        background-color: #56bb78; 
-        background-image: linear-gradient(315deg, #56bb78 0%, #4f996a 74%);
+        /* background-color: #56bb78; 
+        background-image: linear-gradient(315deg, #56bb78 0%, #4f996a 74%); */
+         background-image: linear-gradient(to right top, #065f46, #076142, #0a623e, #106439, #166534);
     }
     .bg-grad-9 {
-        background-color: #00c896; 
-        background-image: linear-gradient(315deg, #00c896 0%, #325e9f 74%);
+        /* background-color: #00c896; 
+        background-image: linear-gradient(315deg, #00c896 0%, #325e9f 74%); */
+        background-image: linear-gradient(to right top, #0f766e, #007678, #007681, #007589, #0e7490);
     }
     .bg-grad-10 {
-        background-color: #00c896; 
-        background-image: linear-gradient(315deg, #00c896 0%, #325e9f 74%);
+        /* background-color: #00c896; 
+        background-image: linear-gradient(315deg, #00c896 0%, #325e9f 74%); */
+         background-image: linear-gradient(to right top, #155e75, #065f6f, #005f69, #055f61, #115e59);  
+    }
+    
+    .bg-grad-11 {
+      background-image: linear-gradient(to right top, #3730a3, #3234a6, #2c38a9, #263cac, #1e40af);
     }
     
 </style>
@@ -212,12 +222,41 @@ $delegate = \Modules\Delegate\Entities\Delegate::where('user_id', Auth::user()->
         </div>
     </div>
     <div class="col-md-3">
-        <div class="bg-grad-10 text-white rounded-lg mb-4 overflow-hidden">
+        <div class="bg-grad-9 text-white rounded-lg mb-4 overflow-hidden">
             <div class="px-3 pt-3 text-center">
                 <i class="las la-dollar-sign la-4x"></i>
                 <div class="opacity-50">@lang('delegate::delivery.personal_earnings')</div>
                  <div class="h3 fw-700">
                     {{  $personal_earnigns }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @php 
+        $today = date('d-m-Y');
+        $week_orders = \Modules\Delegate\Entities\WeekOrders::where('delivery_man_id', $delegate->id)
+            ->where('week_end', '>', $today)
+            ->first();
+    @endphp
+    <div class="col-md-3">
+        <div class="bg-grad-11 text-white rounded-lg mb-4 overflow-hidden">
+            <div class="px-3 pt-3 text-center">
+                <i class="las la-comment-dollar la-4x"></i>
+                <div class="opacity-50">@lang('delegate::delivery.weekly_system_earnings')</div>
+                 <div class="h3 fw-700">
+                  {{  substr($week_orders->system_earnings, 0, -3) ?? 0 }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="bg-grad-11 text-white rounded-lg mb-4 overflow-hidden">
+            <div class="px-3 pt-3 text-center">
+                <i class="las la-dollar-sign la-4x"></i>
+                <div class="opacity-50">@lang('delegate::delivery.weekly_personal_earnings')</div>
+                 <div class="h3 fw-700">
+                   {{  substr($week_orders->personal_earnings, 0, -3) ?? 0 }}
                 </div>
             </div>
         </div>

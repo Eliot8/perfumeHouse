@@ -21,9 +21,11 @@ use App\Models\Product;
 use App\Models\Shop;
 use App\Utility\SendSMSUtility;
 use App\Utility\NotificationUtility;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Delegate\Entities\Delegate;
 use Modules\Delegate\Entities\Stock;
+use Modules\Delegate\Entities\WeekOrders;
 
 //sensSMS function for OTP
 if (!function_exists('sendSMS')) {
@@ -1173,4 +1175,32 @@ if (!function_exists('checkNewPriceProduct')) {
 
         return true;
     }
+}
+
+if(!function_exists('insertIntoWeekOrders')){
+    function insertIntoWeekOrders($delivery_man_id, $system_earnings, $personal_earnings){
+        
+        $day = date('w');
+        $week_start = date('d-m-Y', strtotime('-' . $day . ' days'));
+        $week_end = date('d-m-Y', strtotime('+' . (6 - $day) . ' days'));
+        $today = date('d-m-Y');
+
+        // dd(Carbon::createFromFormat('d-m-Y', $week_start), $week_end);
+        $week = WeekOrders::where('delivery_man_id', $delivery_man_id)->where('week_end', '>', $today)->first();
+        if($week){
+            $week->system_earnings += $system_earnings;
+            $week->personal_earnings += $personal_earnings;
+        } else {
+            $week = new WeekOrders();
+            $week->delivery_man_id = $delivery_man_id;
+            $week->week_start = Carbon::createFromFormat('d-m-Y', $week_start);
+            $week->week_end = Carbon::createFromFormat('d-m-Y', $week_end);
+            $week->system_earnings = $system_earnings;
+            $week->personal_earnings = $personal_earnings;
+        }
+        $week->save();
+
+        return true;
+    }
+
 }

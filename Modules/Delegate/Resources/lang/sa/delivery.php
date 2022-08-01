@@ -117,4 +117,9 @@ return [
     'nothing' => 'لا شيء',
     'discount' => 'خصم',
     'over_price' => 'زيادة السعر',
+
+    'weekly_system_earnings' => 'أرباح النظام الأسبوعية',
+    'weekly_personal_earnings' => 'أرباح شخصية أسبوعية',
+    'payment_request' => 'طلب سداد',
+    'payment_request_success' => 'تم طلب السداد بنجاح',
 ];

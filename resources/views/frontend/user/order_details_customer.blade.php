@@ -48,22 +48,35 @@
                             <td class="w-50 fw-600">{{ translate('Order Code')}}:</td>
                             <td>{{ $order->code }}</td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <td class="w-50 fw-600">{{ translate('Customer')}}:</td>
                             <td>{{ json_decode($order->shipping_address)->name }}</td>
-                        </tr>
-                        <tr>
+                        </tr> --}}
+                        {{-- <tr>
                             <td class="w-50 fw-600">{{ translate('Email')}}:</td>
                             @if ($order->user_id != null)
                                 <td>{{ $order->user->email }}</td>
                             @endif
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <td class="w-50 fw-600">{{ translate('Shipping address')}}:</td>
-                            <td>{{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->zone }}, {{ json_decode($order->shipping_address)->province }}</td>
+                            <td>
+                                {{ json_decode($order->shipping_address)->name }} <br>
+                                {{ json_decode($order->shipping_address)->address }}, 
+                                {{-- @lang('delegate::delivery.zone'): {{ json_decode($order->shipping_address)->zone }}, <br>
+                                @lang('delegate::delivery.province'): {{ json_decode($order->shipping_address)->province }} --}}
+                            </td>
                         </tr>
                         <tr>
-                            <td class="w-50 fw-600">@lang('delegate::delivery.customer_phone_number'):</td>
+                            <td class="w-50 fw-600">@lang('delegate::delivery.province'):</td>
+                            <td>{{ json_decode($order->shipping_address)->province }}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-50 fw-600">@lang('delegate::delivery.zone'):</td>
+                            <td>{{ json_decode($order->shipping_address)->zone }}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-50 fw-600">{{ translate('phone_number') }}:</td>
                             <td>{{ $order->user->phone }}</td>
                         </tr>
                         @if($order->coupon_id != null)

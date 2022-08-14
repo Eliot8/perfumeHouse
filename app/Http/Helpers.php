@@ -956,7 +956,11 @@ if(!function_exists('filterOrders')){
         }
         if ($request->get('date')) {
             $date = $request->get('date');
-            $orders = $orders->where('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+
+            $start_date = date('Y-m-d', strtotime(explode(" to ", $date)[0]));
+            $end_date = date('Y-m-d', strtotime(explode(" to ", $date)[1]));
+
+            $orders = $orders->whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date);
         }
         if ($request->has('order_code')) {
             $orders = $orders->where('code', 'like', '%' . $request->get('order_code') . '%');
@@ -1093,7 +1097,7 @@ if(!function_exists('filterCoupon')){
 
         if ($request->get('start_date')) {
             $start_date = $request->get('start_date');
-            $coupons = $coupons->where('start_date', '>=', date('Y-m-d', strtotime(explode(" to ", $start_date)[0])))->where('start_date', '<=', date('Y-m-d', strtotime(explode(" to ", $start_date)[1])));
+            $coupons = $coupons->whereDate('start_date', '>=', date('Y-m-d', strtotime(explode(" to ", $start_date)[0])))->whereDate('start_date', '<=', date('Y-m-d', strtotime(explode(" to ", $start_date)[1])));
         }
 
         // if ($request->get('end_date')) {

@@ -138,6 +138,9 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="aiz-pagination">
+            {{ $coupons->appends(request()->input())->links() }}
+        </div>
     </div>
 </div>
 

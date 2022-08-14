@@ -61,7 +61,7 @@
                                 </td>
                                 <td class="text-right">
                                     <div class="dropdown">
-                                        <button class="btn btn-soft-secondary btn-icon btn-circle btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                                        <button style="padding: 0.516rem !important;" class="btn btn-soft-secondary btn-icon btn-circle btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
                                         </button>
                                         <div class="dropdown-menu">
                                             <div style="display: flex; justify-content: space-around;">

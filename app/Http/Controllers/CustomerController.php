@@ -123,7 +123,14 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-        User::destroy($id);
+        $user = User::find($id);
+        
+        foreach ($user->affiliate_user->coupon as $coupon) {
+            # code...
+            $coupon->delete();
+        }
+        $user->affiliate_user->delete();
+        $user->delete();
         flash(translate('Customer has been deleted successfully'))->success();
         return redirect()->route('customers.index');
     }

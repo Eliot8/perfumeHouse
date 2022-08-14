@@ -77,7 +77,7 @@
                         </tr>
                         <tr>
                             <td class="w-50 fw-600">{{ translate('phone_number') }}:</td>
-                            <td>{{ $order->user->phone }}</td>
+                            <td>{{ json_decode($order->shipping_address)->phone }}</td>
                         </tr>
                         @if($order->coupon_id != null)
                         <tr>

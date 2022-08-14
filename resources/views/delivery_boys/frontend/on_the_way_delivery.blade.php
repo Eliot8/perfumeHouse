@@ -58,15 +58,32 @@
                                     </label>
                                 </td>
                                 <td class="text-right">
-                                    <a href="javascript:void(0)" class="btn btn-soft-danger btn-icon btn-circle btn-sm" onclick="confirm_cancel_request('{{route('cancel-request', $delivery->id)}}')" title="{{ translate('Cancel') }}">
-                                        <i class="las la-times"></i>
-                                    </a>
-                                    <a href="javascript:void(0)" class="btn btn-soft-info btn-icon btn-circle btn-sm" onclick="show_purchase_history_details({{ $delivery->id }})" title="{{ translate('Order Details') }}">
-                                        <i class="las la-eye"></i>
-                                    </a>
-                                    <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $delivery->id) }}" title="{{ translate('Download Invoice') }}">
-                                        <i class="las la-download"></i>
-                                    </a>
+                                    
+                                    <div class="dropdown">
+                                        <button class="btn btn-soft-secondary btn-icon btn-circle btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <div style="display: flex; justify-content: space-around;">
+                                                <a href="javascript:void(0)" class="btn btn-soft-danger btn-icon btn-circle btn-sm" onclick="confirm_cancel_request('{{route('cancel-request', $delivery->id)}}')" title="{{ translate('Cancel') }}">
+                                                    <i class="las la-times"></i>
+                                                </a>
+                                                <a href="javascript:void(0)" class="btn btn-soft-info btn-icon btn-circle btn-sm" onclick="show_purchase_history_details({{ $delivery->id }})" title="{{ translate('Order Details') }}">
+                                                    <i class="las la-eye"></i>
+                                                </a>
+                                                <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $delivery->id) }}" title="{{ translate('Download Invoice') }}">
+                                                    <i class="las la-download"></i>
+                                                </a>
+                                                <a href="tel:{{ json_decode($delivery->shipping_address)->phone }}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="اتصال بالعميل">
+                                                    <i class="las la-phone"></i>
+                                                </a>
+                                                @if($delivery->coupon_id != null)
+                                                <a href="tel:{{ \App\Models\Coupon::find($delivery->coupon_id)->affiliate_user->user->phone }}" class="btn btn-soft-success btn-icon btn-circle btn-sm" title="اتصال بالمسوق">
+                                                    <i class="las la-phone"></i>
+                                                </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

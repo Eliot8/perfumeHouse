@@ -122,4 +122,7 @@ return [
     'weekly_personal_earnings' => 'أرباح شخصية يومية',
     'payment_request' => 'طلب سداد',
     'payment_request_success' => 'تم طلب السداد بنجاح',
+
+    'valid' => 'صالح',
+    'expired' => 'منتهية الصلاحية',
 ];

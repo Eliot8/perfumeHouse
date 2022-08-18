@@ -880,7 +880,7 @@ if(!function_exists('has_coupon')){
 
 if(!function_exists('coupon_has_expired')){
     function coupon_has_expired($end_date) {
-        if(date('m/d/Y', $end_date) <= date('m/d/Y')){
+        if($end_date <= strtotime(date('m/d/Y'))){
             return true;
         }
         return false;

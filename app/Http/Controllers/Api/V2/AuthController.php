@@ -139,9 +139,9 @@ class AuthController extends Controller
         if ($user != null) {
             if (Hash::check($request->password, $user->password)) {
 
-                if ($user->email_verified_at == null) {
-                    return response()->json(['message' => translate('Please verify your account'), 'user' => null], 401);
-                }
+                // if ($user->email_verified_at == null) {
+                //     return response()->json(['message' => translate('Please verify your account'), 'user' => null], 401);
+                // }
                 return $this->loginSuccess($user);
             } else {
                 return response()->json(['result' => false, 'message' => translate('Unauthorized'), 'user' => null], 401);

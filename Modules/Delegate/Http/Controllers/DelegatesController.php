@@ -64,6 +64,8 @@ class DelegatesController extends Controller
         $user->user_type = 'delivery_boy';
         $user->name = $request->input('name');
         $user->email = $request->input('email');
+        $user->email_verified_at = date('Y-m-d H:i:s');
+        $user->verification_code = null;
         $user->password = Hash::make($request->input('password'));
         $request->filled('address') ? $user->address = $request->input('address') : null;
         $user->save();

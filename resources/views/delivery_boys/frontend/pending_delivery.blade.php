@@ -63,7 +63,7 @@
                                                     <a href="tel:{{ json_decode($order->shipping_address)->phone }}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="اتصال بالعميل">
                                                         <i class="las la-phone"></i>
                                                     </a>
-                                                    @if($order->coupon_id != null)
+                                                    @if($order->coupon_id != null && \App\Models\Coupon::find($order->coupon_id))
                                                     <a href="tel:{{ \App\Models\Coupon::find($order->coupon_id)->affiliate_user->user->phone }}" class="btn btn-soft-success btn-icon btn-circle btn-sm" title="اتصال بالمسوق">
                                                         <i class="las la-phone"></i>
                                                     </a>

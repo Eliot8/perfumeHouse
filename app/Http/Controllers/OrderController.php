@@ -680,8 +680,14 @@ class OrderController extends Controller
             if($order->coupon_id != null){
                 $affiliate_user = Coupon::find($order->coupon_id)->affiliate_user;
                 $coupon_usage = CouponUsage::where('order_id', $order->id)->first();
+
                 $affiliate_user->balance_pending    -= $coupon_usage->commission;
                 $affiliate_user->balance            += $coupon_usage->commission;
+
+                if($affiliate_user->balance_pending < 0 ) {
+                    $affiliate_user->balance_pending = 0;
+                }
+                
                 $affiliate_user->save();
             }
 

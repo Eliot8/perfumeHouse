@@ -60,11 +60,11 @@
                                                     <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $order->id) }}" title="{{ translate('Download Invoice') }}">
                                                         <i class="las la-download"></i>
                                                     </a>
-                                                    <a href="tel:{{ json_decode($delivery->shipping_address)->phone }}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="اتصال بالعميل">
+                                                    <a href="tel:{{ json_decode($order->shipping_address)->phone }}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="اتصال بالعميل">
                                                         <i class="las la-phone"></i>
                                                     </a>
-                                                    @if($delivery->coupon_id != null)
-                                                    <a href="tel:{{ \App\Models\Coupon::find($delivery->coupon_id)->affiliate_user->user->phone }}" class="btn btn-soft-success btn-icon btn-circle btn-sm" title="اتصال بالمسوق">
+                                                    @if($order->coupon_id != null)
+                                                    <a href="tel:{{ \App\Models\Coupon::find($order->coupon_id)->affiliate_user->user->phone }}" class="btn btn-soft-success btn-icon btn-circle btn-sm" title="اتصال بالمسوق">
                                                         <i class="las la-phone"></i>
                                                     </a>
                                                     @endif

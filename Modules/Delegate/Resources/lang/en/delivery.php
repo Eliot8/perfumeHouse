@@ -125,5 +125,8 @@ return [
     'valid' => 'Valid',
     'expired' => 'Expired',
 
+    'commission_error' => 'You cannot deduct more than your commission',
+    'selling_price' => 'Selling Price',
+    'select_coupon' => 'Select Coupon'
 
 ];

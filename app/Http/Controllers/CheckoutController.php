@@ -271,6 +271,8 @@ class CheckoutController extends Controller
         $coupon = Coupon::where('code', $request->code)->first();
         $response_message = array();
 
+        // dd($coupon);
+
         if ($coupon != null) {
             if (strtotime(date('d-m-Y')) >= $coupon->start_date && strtotime(date('d-m-Y')) <= $coupon->end_date) {
                 // if (CouponUsage::where('user_id', Auth::user()->id)->where('coupon_id', $coupon->id)->first() == null) {
@@ -284,12 +286,16 @@ class CheckoutController extends Controller
                         $subtotal = 0;
                         $tax = 0;
                         $shipping = 0;
+
                         foreach ($carts as $key => $cartItem) {
                             $subtotal += $cartItem['price'] * $cartItem['quantity'];
                             $tax += $cartItem['tax'] * $cartItem['quantity'];
                             $shipping += $cartItem['shipping_cost'];
                         }
+
                         $sum = $subtotal + $tax + $shipping;
+
+                        
 
                         if ($sum >= $coupon_details->min_buy) {
                             if ($coupon->discount_type == 'percent') {

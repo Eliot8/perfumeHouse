@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Cart;
+use App\Models\Coupon;
 use Auth;
 use Session;
 use Cookie;
+use Lang;
 
 class CartController extends Controller
 {
@@ -51,10 +53,21 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
-        if($request->get('affiliate_price_type') == 'discount' && $request->get('affiliate_price') > $request->get('commission')){
-            return response()->json(['error' => 'لا يمكن خصم اكثر من عمولتك'], 401);
-        }
+        // dd($request->request);
         $product = Product::find($request->id);
+        // $coupon = get_valid_coupon();
+        $coupon = Coupon::find($request->input('coupon'));
+
+        if($coupon->discount_type == 'percent') {
+            $commission = $product->unit_price * ($coupon->commission / 100);
+        } else {
+            $commission = $product->unit_price - $coupon->commission;
+        }
+
+        if($request->get('affiliate_price_type') == 'discount' && $request->get('affiliate_price') > $commission){
+            return response()->json(['error' => Lang::get('delegate::delivery.commission_error')], 401);
+        }
+
         $carts = array();
         $data = array();
 
@@ -74,10 +87,12 @@ class CartController extends Controller
         }
 
         //
-        $data['commission'] = $request->get('commission');
+       
+        $data['commission'] = $commission;
+
+        // $data['commission'] = $request->get('commission');
         $data['affiliate_price_type'] = $request->get('affiliate_price_type');
         $data['affiliate_price'] = $request->get('affiliate_price');
-
        
         //
 
@@ -117,6 +132,7 @@ class CartController extends Controller
 
             $product_stock = $product->stocks->where('variant', $str)->first();
             $price = $product_stock->price;
+            
 
             if($product->wholesale_product){
                 $wholesalePrice = $product_stock->wholesalePrices->where('min_qty', '<=', $request->quantity)->where('max_qty', '>=', $request->quantity)->first();
@@ -124,6 +140,7 @@ class CartController extends Controller
                     $price = $wholesalePrice->price;
                 }
             }
+            
 
             $quantity = $product_stock->qty;
 
@@ -165,7 +182,7 @@ class CartController extends Controller
                     $tax += $product_tax->tax;
                 }
             }
-
+            
             $data['quantity'] = $request['quantity'];
             $data['price'] = $price;
             $data['tax'] = $tax;
@@ -174,7 +191,6 @@ class CartController extends Controller
             $data['product_referral_code'] = null;
             $data['cash_on_delivery'] = $product->cash_on_delivery;
             $data['digital'] = $product->digital;
-
             if ($request['quantity'] == null){
                 $data['quantity'] = 1;
             }
@@ -218,7 +234,7 @@ class CartController extends Controller
                                 if($wholesalePrice){
                                     $price = $wholesalePrice->price;
                                 }
-                            }
+                            }   
 
                             $cartItem['price'] = $price;
 
@@ -260,7 +276,7 @@ class CartController extends Controller
                     $tax += $product_tax->tax;
                 }
             }
-
+            
             $data['quantity'] = 1;
             $data['price'] = $price;
             $data['tax'] = $tax;

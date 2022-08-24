@@ -909,11 +909,48 @@ if(!function_exists('get_discounted_price')){
 if(!function_exists('get_valid_coupon')){
     function get_valid_coupon(){
         $coupons = Auth::user()->affiliate_user->coupon;
-        $coupon = $coupons->where('end_date', '>=', strtotime(date('m/d/Y')));
-        if($coupon->count() > 1 || $coupon->count() == 0){
+        $coupons = $coupons->where('end_date', '>=', strtotime(date('m/d/Y')));
+
+        if($coupons->count() == 0){
             return false;
         }
-         return array_values(reset($coupon))[0];
+        
+        return getHighestCommission($coupons);
+    }
+}
+
+if (!function_exists('get_coupons')) {
+    function get_coupons()
+    {
+        $coupons = Auth::user()->affiliate_user->coupon;
+        $coupons = $coupons->where('end_date', '>=', strtotime(date('m/d/Y')));
+
+        if ($coupons->count() == 0) {
+            return false;
+        }
+
+        return array_values(reset($coupons));
+    }
+}
+
+
+if(!function_exists('getHighestCommission')) {
+    function getHighestCommission($coupons) {
+        $coupon = [
+            'id' => null,
+            'commission' => 0,
+        ];
+
+        foreach ($coupons as $coupon) {
+            if ($coupon->commission > $coupon['commission']) {
+                $coupon = [
+                    'id' => $coupon->id,
+                    'commission' => $coupon->commission,
+                ];
+            }
+        }
+        $coupon = $coupons->where('id', $coupon['id']);
+        return array_values(reset($coupon))[0];
     }
 }
 

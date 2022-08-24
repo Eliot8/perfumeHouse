@@ -125,4 +125,8 @@ return [
 
     'valid' => 'صالح',
     'expired' => 'منتهية الصلاحية',
+
+    'commission_error' => 'لا يمكن خصم اكثر من عمولتك',
+    'selling_price' => 'سعر البيع',
+    'select_coupon' => 'حدد القسيمة',
 ];

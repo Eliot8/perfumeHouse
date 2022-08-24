@@ -129,4 +129,6 @@ return [
     'commission_error' => 'لا يمكن خصم اكثر من عمولتك',
     'selling_price' => 'سعر البيع',
     'select_coupon' => 'حدد القسيمة',
+    
+    'please_select_coupon' => 'الرجاء تحديد قسيمة',
 ];

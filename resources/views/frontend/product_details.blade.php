@@ -1068,12 +1068,17 @@
             let discount = option.attr('data-value');
             let commission = `{{ $detailedProduct->unit_price }}`;
 
-            if(discount_type == 'percent') {
-                commission *= discount / 100;
-                discount = `${parseFloat(discount).toFixed(0)}%`;
+            if(typeof discount == 'undefined') {
+                discount = 0;
+                commission = 0;
             } else {
-                commission -= discount;
-                discount = `-${parseFloat(discount).toFixed(0)}`;
+                if(discount_type == 'percent') {
+                    commission *= discount / 100;
+                    discount = `${parseFloat(discount).toFixed(0)}%`;
+                } else {
+                    commission -= discount;
+                    discount = `-${parseFloat(discount).toFixed(0)}`;
+                }
             }
 
             $('#coupon_discount').val(discount);

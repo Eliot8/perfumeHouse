@@ -53,20 +53,27 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
-        // dd($request->request);
         $product = Product::find($request->id);
-        // $coupon = get_valid_coupon();
-        $coupon = Coupon::find($request->input('coupon'));
+        $commission = 0;
+        if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status){
+            if(!$request->input('coupon')) {
+                return response()->json(['error' => Lang::get('delegate::delivery.please_select_coupon')], 401);
+            }
 
-        if($coupon->discount_type == 'percent') {
-            $commission = $product->unit_price * ($coupon->commission / 100);
-        } else {
-            $commission = $product->unit_price - $coupon->commission;
+            $coupon = Coupon::find($request->input('coupon'));
+    
+            if($coupon->discount_type == 'percent') {
+                $commission = $product->unit_price * ($coupon->commission / 100);
+            } else {
+                $commission = $product->unit_price - $coupon->commission;
+            }
+    
+            if($request->get('affiliate_price_type') == 'discount' && $request->get('affiliate_price') > $commission){
+                return response()->json(['error' => Lang::get('delegate::delivery.commission_error')], 401);
+            }
         }
-
-        if($request->get('affiliate_price_type') == 'discount' && $request->get('affiliate_price') > $commission){
-            return response()->json(['error' => Lang::get('delegate::delivery.commission_error')], 401);
-        }
+        // dd($request->request);
+        
 
         $carts = array();
         $data = array();

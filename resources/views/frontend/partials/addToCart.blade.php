@@ -239,6 +239,63 @@
                         </div>
                     </div>
 
+                     @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
+                    <hr>
+                    <h5>Affiliate</h5>
+                    <div class="row no-gutters mt-4">
+                        <div class="col-sm-2">
+                            <div class="opacity-50 my-2">@lang('delegate::delivery.selling_price')</div>
+                        </div>
+                        <div class="col-sm-5">
+                            <select class="form-control aiz-selectpicker" name="affiliate_price_type">
+                                <option value="nothing" selected  >@lang('delegate::delivery.nothing')</option>
+                                <option value="discount">@lang('delegate::delivery.discount')</option>
+                                <option value="over_price">@lang('delegate::delivery.over_price')</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="number" name="affiliate_price" min="0" step="0.01" placeholder="{{ Translate('price') }}" class="form-control mx-2">
+                        </div>
+                    </div>
+
+                    <div class="row no-gutters mt-4">
+                        <div class="col-sm-2">
+                            <div class="opacity-50 my-2">{{ Translate('Coupon') }}</div>
+                        </div>
+                        @php
+                            $coupons = get_coupons();
+                        @endphp
+                        <div class="col-sm-5">
+                            <select class="form-control aiz-selectpicker" name="coupon" id="coupons">
+                                <option value="nothing" selected disabled>@lang('delegate::delivery.select_coupon')</option>
+                                @foreach($coupons as $coupon)
+                                <option value="{{ $coupon->id }}" data-type="{{ $coupon->discount_type }}" data-value="{{ $coupon->commission }}" style="text-transform: uppercase;">{{ $coupon->code }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" id="coupon_discount"  placeholder="{{ Translate('Discount') }}" class="form-control mx-2" value="" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row no-gutters mt-4">
+                        <div class="col-sm-3">
+                            <div class="opacity-50 my-2">{{ Translate('Commission') }}</div>
+                        </div>
+                        @php
+                            $coupon = get_valid_coupon();
+                        @endphp
+                        @if($coupon)
+                        <div class="col-sm-5">
+                            <strong class="h5 fw-600 text-primary" id="commission">
+                                {{-- {{ single_price($detailedProduct->unit_price * ($coupon->commission / 100)) }} --}}
+                            </strong>
+                        </div>
+                        @endif
+                    </div>
+                    <hr>
+                    @endif
+
                 </form>
                 <div class="mt-3">
                     @if ($product->digital == 1)
@@ -276,4 +333,35 @@
     $('#option-choice-form input').on('change', function() {
         getVariantPrice();
     });
+
+    @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
+
+        $('#coupons').on('change', function() {
+            set_affiliate_price();
+        });
+        set_affiliate_price();
+        
+        function set_affiliate_price () {
+            const option = $('#coupons').find(':selected');
+            const discount_type = option.attr('data-type');
+            let discount = option.attr('data-value');
+            let commission = `{{ $product->unit_price }}`;
+
+            if(typeof discount == 'undefined') {
+                discount = 0;
+                commission = 0;
+            } else {
+                if(discount_type == 'percent') {
+                    commission *= discount / 100;
+                    discount = `${parseFloat(discount).toFixed(0)}%`;
+                } else {
+                    commission -= discount;
+                    discount = `-${parseFloat(discount).toFixed(0)}`;
+                }
+            }
+
+            $('#coupon_discount').val(discount);
+            $('#commission').text(commission);
+        }
+        @endif
 </script>

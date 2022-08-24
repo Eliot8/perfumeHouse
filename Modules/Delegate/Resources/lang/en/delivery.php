@@ -127,6 +127,7 @@ return [
 
     'commission_error' => 'You cannot deduct more than your commission',
     'selling_price' => 'Selling Price',
-    'select_coupon' => 'Select Coupon'
+    'select_coupon' => 'Select Coupon',
+    'please_select_coupon' => 'Please select a coupon',
 
 ];

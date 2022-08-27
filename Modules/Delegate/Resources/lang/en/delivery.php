@@ -129,5 +129,9 @@ return [
     'selling_price' => 'Selling Price',
     'select_coupon' => 'Select Coupon',
     'please_select_coupon' => 'Please select a coupon',
+    
+    'public_commission' => 'Commission for all affiliates',
+    'set_global_commission_success' => 'Commission has been saved.',
+
 
 ];

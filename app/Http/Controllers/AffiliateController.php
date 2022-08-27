@@ -614,4 +614,23 @@ class AffiliateController extends Controller
         
     }
 
+
+
+
+    //
+    public function setGlobalCommission(Request $request) {
+        // dd($request->request);
+        $coupons = Coupon::all();
+        $new_commission = $request->input('percentage');
+        foreach($coupons as $coupon) {
+            if($coupon->commission < $new_commission) {
+                $coupon->commission = $new_commission;
+                $coupon->save();
+            }
+        }
+
+        flash(Lang::get('delegate::delivery.set_global_commission_success'))->success();
+        return back();
+    }
+
 }

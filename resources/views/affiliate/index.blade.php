@@ -105,6 +105,77 @@
 </div>
 <div class="row">
     <div class="col-lg-6">
+      
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0 h6">@lang('delegate::delivery.public_commission')</h6>
+            </div>
+            <div class="card-body">
+                <form class="form-horizontal" action="{{ route('affiliate.global_commission') }}" method="POST">
+                    @csrf
+                    <div class="form-group row">
+                        <div class="col-lg-4">
+                            <label class="control-label">@lang('delegate::delivery.public_commission')</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <input type="number" min="0" step="0.01" max="100" class="form-control" name="percentage" value="0" placeholder="Percentage of Order Amount" required>
+                        </div>
+                        <div class="col-lg-2">
+                            <label class="control-label">%</label>
+                        </div>
+                    </div>
+                    <div class="form-group mb-0 text-right">
+                        <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card bg-gray-light">
+            <div class="card-header">
+                <h3 class="mb-0 h6">{{ translate('Affiliate Link Validatin Time (Days)')}}</h3>
+            </div>
+            <div class="card-body">
+                <form class="form-horizontal" action="{{ route('affiliate.configs.store') }}" method="POST">
+                    @csrf
+                    @php
+                        $validation_time_info = \App\Models\AffiliateConfig::where('type', 'validation_time')->first();
+                        $validation_time = '';
+                        if($validation_time_info) {
+                            $validation_time = $validation_time_info->value;
+                        }
+                    @endphp
+                    <div class="form-group row">
+                        <div class="col-lg-4">
+                            <input type="hidden" class="form-control" name="type" value="validation_time">
+                            <label class="control-label">{{ translate('Validation Time')}}</label>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="No of Days" name="validation_time" value="{{$validation_time}}">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Days</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-0 text-right">
+                        <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card bg-gray-light">
+            <div class="card-header">
+                <h5 class="mb-0 h6">
+                    <i>{{ translate('N:B: You can not enable Single Product Sharing Affiliate and Category Wise Affiliate at a time.') }}</i>
+                </h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
         <div class="card">
             <div class="card-header">
                 <h3 class="mb-0 h6">{{ translate('Product Sharing Affiliate (Category Wise)')}}</h3>
@@ -186,51 +257,9 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card bg-gray-light">
-            <div class="card-header">
-                <h5 class="mb-0 h6">
-                    <i>{{ translate('N:B: You can not enable Single Product Sharing Affiliate and Category Wise Affiliate at a time.') }}</i>
-                </h5>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card bg-gray-light">
-            <div class="card-header">
-                <h3 class="mb-0 h6">{{ translate('Affiliate Link Validatin Time (Days)')}}</h3>
-            </div>
-            <div class="card-body">
-                <form class="form-horizontal" action="{{ route('affiliate.configs.store') }}" method="POST">
-                    @csrf
-                    @php
-                        $validation_time_info = \App\Models\AffiliateConfig::where('type', 'validation_time')->first();
-                        $validation_time = '';
-                        if($validation_time_info) {
-                            $validation_time = $validation_time_info->value;
-                        }
-                    @endphp
-                    <div class="form-group row">
-                        <div class="col-lg-4">
-                            <input type="hidden" class="form-control" name="type" value="validation_time">
-                            <label class="control-label">{{ translate('Validation Time')}}</label>
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="No of Days" name="validation_time" value="{{$validation_time}}">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Days</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group mb-0 text-right">
-                        <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    {{-- <div class="col-md-6">
+        
+        
+    </div> --}}
 </div>
 @endsection

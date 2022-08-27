@@ -131,4 +131,7 @@ return [
     'select_coupon' => 'حدد القسيمة',
     
     'please_select_coupon' => 'الرجاء تحديد قسيمة',
+
+    'public_commission' => 'عمولة لجميع المنتسبون',
+    'set_global_commission_success' => 'تم حفظ العمولة بنجاح',
 ];

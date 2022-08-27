@@ -41,6 +41,8 @@ Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin']], function()
 
     Route::get('/affiliate/logs', 'AffiliateController@affiliate_logs_admin')->name('affiliate.logs.admin');
 
+    Route::post('/affiliate/users/set_global_commission', 'AffiliateController@setGlobalCommission')->name('affiliate.global_commission');
+
 
 });
 

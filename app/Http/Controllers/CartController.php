@@ -61,12 +61,12 @@ class CartController extends Controller
             }
 
             $coupon = Coupon::find($request->input('coupon'));
+            $commission = $product->unit_price * ($coupon->commission / 100);
     
-            if($coupon->discount_type == 'percent') {
-                $commission = $product->unit_price * ($coupon->commission / 100);
-            } else {
-                $commission = $product->unit_price - $coupon->commission;
-            }
+            // if($coupon->discount_type == 'percent') {
+            // } else {
+            //     $commission = $product->unit_price - $coupon->commission;
+            // }
     
             if($request->get('affiliate_price_type') == 'discount' && $request->get('affiliate_price') > $commission){
                 return response()->json(['error' => Lang::get('delegate::delivery.commission_error')], 401);

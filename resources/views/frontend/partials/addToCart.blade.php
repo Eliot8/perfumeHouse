@@ -269,7 +269,7 @@
                             <select class="form-control aiz-selectpicker" name="coupon" id="coupons">
                                 <option value="nothing" selected disabled>@lang('delegate::delivery.select_coupon')</option>
                                 @foreach($coupons as $coupon)
-                                <option value="{{ $coupon->id }}" data-type="{{ $coupon->discount_type }}" data-value="{{ $coupon->commission }}" style="text-transform: uppercase;">{{ $coupon->code }}</option>
+                                <option value="{{ $coupon->id }}" data-value="{{ $coupon->commission }}" style="text-transform: uppercase;">{{ $coupon->code }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -343,24 +343,24 @@
         
         function set_affiliate_price () {
             const option = $('#coupons').find(':selected');
-            const discount_type = option.attr('data-type');
-            let discount = option.attr('data-value');
-            let commission = `{{ $product->unit_price }}`;
+            // const discount_type = option.attr('data-type');
+            let commission_percent = option.attr('data-value');
+            let product_price = `{{ $detailedProduct->unit_price }}`;
 
-            if(typeof discount == 'undefined') {
-                discount = 0;
+            if(typeof commission_percent == 'undefined') {
+                commission_percent = 0;
                 commission = 0;
             } else {
-                if(discount_type == 'percent') {
-                    commission *= discount / 100;
-                    discount = `${parseFloat(discount).toFixed(0)}%`;
-                } else {
-                    commission -= discount;
-                    discount = `-${parseFloat(discount).toFixed(0)}`;
-                }
+                // if(commission_percent_type == 'percent') {
+                    commission = product_price * commission_percent / 100;
+                    commission_percent = `${parseFloat(commission_percent).toFixed(0)}%`;
+                // } else {
+                //     commission -= discount;
+                //     discount = `-${parseFloat(discount).toFixed(0)}`;
+                // }
             }
 
-            $('#coupon_discount').val(discount);
+            $('#coupon_discount').val(commission_percent);
             $('#commission').text(commission);
         }
         @endif

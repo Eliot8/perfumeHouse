@@ -619,12 +619,25 @@ class AffiliateController extends Controller
 
     //
     public function setGlobalCommission(Request $request) {
-        // dd($request->request);
+        $percentage = $request->input('percentage');
+
+        $affiliate_option = AffiliateOption::where('type', 'coupon_commission')->first();
+        if(!$affiliate_option) {
+            $affiliate_option = new AffiliateOption();
+            $affiliate_option->type = 'coupon_commission';
+            $affiliate_option->percentage = $percentage;
+            $affiliate_option->status = 1;
+        } else {
+            $affiliate_option->percentage = $percentage;
+            $affiliate_option->status = 1;
+        }
+
+        $affiliate_option->save();
+
         $coupons = Coupon::all();
-        $new_commission = $request->input('percentage');
         foreach($coupons as $coupon) {
-            if($coupon->commission < $new_commission) {
-                $coupon->commission = $new_commission;
+            if($coupon->commission < $percentage) {
+                $coupon->commission = $percentage;
                 $coupon->save();
             }
         }

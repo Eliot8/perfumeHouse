@@ -118,7 +118,10 @@
                             <label class="control-label">@lang('delegate::delivery.public_commission')</label>
                         </div>
                         <div class="col-lg-6">
-                            <input type="number" min="0" step="0.01" max="100" class="form-control" name="percentage" value="0" placeholder="Percentage of Order Amount" required>
+                        @php
+                            $affiliate_option = \App\Models\AffiliateOption::where('type', 'coupon_commission')->first();
+                        @endphp
+                            <input type="number" min="0" step="0.01" max="100" class="form-control" name="percentage" value="{{ $affiliate_option ? $affiliate_option->percentage : 0 }}" placeholder="Percentage of Commission" required>
                         </div>
                         <div class="col-lg-2">
                             <label class="control-label">%</label>

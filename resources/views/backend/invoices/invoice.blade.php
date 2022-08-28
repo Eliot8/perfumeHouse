@@ -181,9 +181,24 @@
 							            <th class="gry-color text-left">{{ translate('Coupon Discount') }}</th>
 							            <td class="currency">{{ single_price($order->coupon_discount) }}</td>
 							        </tr>
+
+				                    <tr class="border-bottom">
+							            <th class="gry-color text-left">{{ translate('Commission') }}</th>
+							            <td class="currency">{{ single_price($order->orderDetails->sum('commission')) }}</td>
+							        </tr>
+				                    <tr class="border-bottom">
+							            <th class="gry-color text-left">@lang('delegate::delivery.discount') </th>
+							            <td class="currency">{{ single_price($order->orderDetails->where('affiliate_price_type', 'discount')->sum('affiliate_price')) }} -</td>
+							        </tr>
+				                    <tr class="border-bottom">
+							            <th class="gry-color text-left">@lang('delegate::delivery.over_price') </th>
+							            <td class="currency">{{ single_price($order->orderDetails->where('affiliate_price_type', 'over_price')->sum('affiliate_price')) }} +</td>
+							        </tr>
+
 							        <tr>
 							            <th class="text-left strong">{{ translate('Grand Total') }}</th>
-							            <td class="currency">{{ single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('shipping_cost')) }}</td>
+							            {{-- <td class="currency">{{ single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('shipping_cost')) }}</td> --}}
+							            <td class="currency">{{ single_price($order->grand_total) }}</td>
 							        </tr>
 						        </tbody>
 						    </table>

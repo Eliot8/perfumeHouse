@@ -288,8 +288,6 @@ class CheckoutController extends Controller
 
                     if (Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
 
-                        
-
                         $commission = 0;
                         $affiliate_discount = 0;
                         $affiliate_over_price = 0;

@@ -363,14 +363,11 @@ class OrderController extends Controller
                 if (Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
                     if($cartItem['affiliate_price_type'] == 'discount') {
                         $discount = $cartItem['affiliate_price'];
-                        $subtotal += ($cartItem['price'] - $discount) * $cartItem['quantity'];
                     } else {
                         $over_price = $cartItem['affiliate_price'];
-                        $subtotal += ($cartItem['price'] + $over_price) * $cartItem['quantity'];
                     }
-                } else {
-                    $subtotal += $cartItem['price'] * $cartItem['quantity'];
                 }
+                $subtotal += $cartItem['price'] * $cartItem['quantity'];
 
                 $tax += $cartItem['tax'] * $cartItem['quantity'];
                 $coupon_discount += $cartItem['discount'];
@@ -527,7 +524,7 @@ class OrderController extends Controller
                 $order->coupon_id = $coupon->id;
             }
 
-            // $order->grand_total = $order->grand_total + $over_price - $discount;
+            $order->grand_total = $order->grand_total + $over_price - $discount;
             $combined_order->grand_total += $order->grand_total;
 
             $order->save();

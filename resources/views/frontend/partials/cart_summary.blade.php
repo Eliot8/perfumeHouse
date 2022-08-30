@@ -166,13 +166,13 @@
                 @endif
 
                 @php
-                    $subtotal = 0;
-                    foreach ($carts as $key => $cartItem) {
-                        $subtotal += ($cartItem['price'] + $over_price - $discount ) * $cartItem['quantity'];
-                    }
+                    // $subtotal = 0;
+                    // foreach ($carts as $key => $cartItem) {
+                    //     $subtotal += ($cartItem['price'] + $over_price - $discount ) * $cartItem['quantity'];
+                    // }
                     
                     $total = $subtotal + $tax + $shipping;
-                    // $total = $total + $over_price - $discount;
+                    $total = $total + $over_price - $discount;
                     if(Session::has('club_point')) {
                         $total -= Session::get('club_point');
                     }

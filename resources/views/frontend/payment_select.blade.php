@@ -579,24 +579,46 @@
         }
 
         $(document).on("click", "#coupon-apply", function() {
-            var data = new FormData($('#apply-coupon-form')[0]);
-
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                method: "POST",
-                url: "{{ route('checkout.apply_coupon_code') }}",
-                data: data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(data, textStatus, jqXHR) {
-                    AIZ.plugins.notify(data.response_message.response, data.response_message.message);
-                    //                    console.log(data.response_message);
-                    $("#cart_summary").html(data.html);
-                }
-            })
+            @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    method: "POST",
+                    url: "{{ route('checkout.apply_coupon_code') }}",
+                    data: {
+                        code: $('#coupon-code').val(),
+                        affiliate_price_type: $('#affiliate_price_type').val(),
+                        affiliate_price: $('#affiliate_price').val(),
+                    },
+                    success: function(data, textStatus, jqXHR) {
+                        console.dir(data);
+                        AIZ.plugins.notify(data.response_message.response, data.response_message.message);
+                        $("#cart_summary").html(data.html);
+                    },
+                    error: function(response) {
+                        AIZ.plugins.notify('danger', response.responseJSON.error);
+                        $("#cart_summary").html(response.responseJSON.html);
+                    }
+                })
+            @else 
+                var data = new FormData($('#apply-coupon-form')[0]);
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    method: "POST",
+                    url: "{{ route('checkout.apply_coupon_code') }}",
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data, textStatus, jqXHR) {
+                        AIZ.plugins.notify(data.response_message.response, data.response_message.message);
+                        $("#cart_summary").html(data.html);
+                    }
+                });
+            @endif
         });
 
         $(document).on("click", "#coupon-remove", function() {

@@ -133,5 +133,7 @@ return [
     'public_commission' => 'Commission for all affiliates',
     'set_global_commission_success' => 'Commission has been saved.',
 
+    'delivery_man_cost_unset' => 'The cost of the delivery man is not specified.',
+
 
 ];

@@ -31,6 +31,7 @@ use App\Models\AffiliateUser;
 use App\Utility\NotificationUtility;
 use CoreComponentRepository;
 use App\Utility\SmsUtility;
+use Illuminate\Support\Facades\Lang;
 use Modules\Delegate\Entities\Province;
 use Modules\Delegate\Entities\Delegate;
 use Modules\Delegate\Entities\Stock;
@@ -351,15 +352,25 @@ class OrderController extends Controller
             $shipping = 0;
             $coupon_discount = 0;
             
-            $commission = 0;
             $discount = 0;
             $over_price = 0;
-
+            $commission = 0;
+            
             //Order Details Storing
             foreach ($seller_product as $cartItem) {
                 $product = Product::find($cartItem['product_id']);
                 
-                $subtotal += $cartItem['price'] * $cartItem['quantity'];
+                if (Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
+                    if($cartItem['affiliate_price_type'] == 'discount') {
+                        $discount = $cartItem['affiliate_price'];
+                        $subtotal += ($cartItem['price'] - $discount) * $cartItem['quantity'];
+                    } else {
+                        $over_price = $cartItem['affiliate_price'];
+                        $subtotal += ($cartItem['price'] + $over_price) * $cartItem['quantity'];
+                    }
+                } else {
+                    $subtotal += $cartItem['price'] * $cartItem['quantity'];
+                }
 
                 $tax += $cartItem['tax'] * $cartItem['quantity'];
                 $coupon_discount += $cartItem['discount'];
@@ -386,25 +397,35 @@ class OrderController extends Controller
                 $order_detail->commission = $cartItem['commission'];
                 $order_detail->affiliate_price_type = $cartItem['affiliate_price_type'];
                 $order_detail->affiliate_price = $cartItem['affiliate_price'];
-                
-                if(Auth::check() && has_coupon(Auth::user()) && get_valid_coupon()) {
-                    $order_detail->price = get_discounted_price($cartItem['price']) * $cartItem['quantity'];
-                } else {
-                    $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
-                }
+
+                $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
+
+                // if (Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
+                //     if ($cartItem['affiliate_price_type'] == 'discount') {
+                //         $order_detail->price = ($cartItem['price'] - $cartItem['affiliate_price']) * $cartItem['quantity'];
+                //     } else {
+                //         $order_detail->price = ($cartItem['price'] + $cartItem['affiliate_price']) * $cartItem['quantity'];
+                //     }
+                // }
+
+                // if(Auth::check() && has_coupon(Auth::user()) && get_valid_coupon()) {
+                //     $order_detail->price = get_discounted_price($cartItem['price']) * $cartItem['quantity'];
+                // } else {
+                //     $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
+                // }
 
                 //
                 $order_detail->tax = $cartItem['tax'] * $cartItem['quantity'];
                 $order_detail->shipping_type = $cartItem['shipping_type'];
                 $order_detail->product_referral_code = $cartItem['product_referral_code'];
 
-                $commission += $cartItem['commission'];
-                if($cartItem['affiliate_price_type'] == 'discount'){
-                    $discount += $cartItem['affiliate_price'];
-                }
-                if($cartItem['affiliate_price_type'] == 'over_price'){
-                    $over_price += $cartItem['affiliate_price'];
-                }
+                // $commission += $cartItem['commission'];
+                // if($cartItem['affiliate_price_type'] == 'discount'){
+                //     $discount += $cartItem['affiliate_price'];
+                // }
+                // if($cartItem['affiliate_price_type'] == 'over_price'){
+                //     $over_price += $cartItem['affiliate_price'];
+                // }
                 //
 
                 // $order_detail->shipping_cost = $cartItem['shipping_cost'];
@@ -435,43 +456,54 @@ class OrderController extends Controller
                 //         $affiliateController->processAffiliateStats($referred_by_user->id, 0, $order_detail->quantity, 0, 0);
                 //     }
                 // }
+                $coupon_code = $cartItem['coupon_code'];
+                $commission += $cartItem['commission'];
             }
 
             $user = Auth::user();
-            if (Auth::check() && has_coupon($user) && get_valid_coupon()) {
-                $coupon = get_valid_coupon();
+            // if (Auth::check() && has_coupon($user) && get_valid_coupon()) {
+            if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
+                // $coupon = get_valid_coupon();
 
-                $order->grand_total = get_discounted_price($subtotal) + $tax + $address->province->shipping_cost ?? 0;
+                // $order->grand_total = get_discounted_price($subtotal) + $tax + $address->province->shipping_cost ?? 0;
 
                 // SET COUPON ID
-                $order->coupon_id = $coupon->id;
-
-                $affiliateController = new AffiliateController;
-                $affiliateController->processAffiliateStats($user->id, 0, $order_detail->quantity, 0, 0);
-
-                
-                // CALCUL COMMISSION
-                if ($coupon->commission_type == 'percent') {
-                    $calculate_comission = $subtotal * ($coupon->commission / 100);
-                } else {
-                    $calculate_comission = $coupon->commission;
+                $coupon = Coupon::where('code', $coupon_code)->first();
+                if($coupon) {
+                    $order->coupon_id = $coupon->id;
+    
+                    $affiliateController = new AffiliateController;
+                    $affiliateController->processAffiliateStats($user->id, 0, $order_detail->quantity, 0, 0);
+    
+                    
+                    // CALCUL COMMISSION
+                    // if ($coupon->commission_type == 'percent') {
+                    //     $calculate_comission = $subtotal * ($coupon->commission / 100);
+                    // } else {
+                    //     $calculate_comission = $coupon->commission;
+                    // }
+                    // dd($calculate_comission);
+    
+                    // $calculate_comission = $calculate_comission - $discount + $over_price;
+    
+                    // $user->affiliate_user->balance_pending += $calculate_comission;
+                    $user->affiliate_user->balance_pending += $commission;
+                    $user->affiliate_user->save();
+                    
+    
+                    $coupon_usage = new CouponUsage;
+                    $coupon_usage->user_id = $user->id;
+                    $coupon_usage->coupon_id = $coupon->id;
+                    $coupon_usage->order_id = $order->id;
+                    // $coupon_usage->commission = isset($calculate_comission) ? $calculate_comission : 0;
+                    $coupon_usage->commission = isset($commission) ? $commission : 0;
+                    $coupon_usage->save();
                 }
-
-                $calculate_comission = $calculate_comission - $discount + $over_price;
-
-                $user->affiliate_user->balance_pending += $calculate_comission;
-                $user->affiliate_user->save();
-                
-
-                $coupon_usage = new CouponUsage;
-                $coupon_usage->user_id = $user->id;
-                $coupon_usage->coupon_id = $coupon->id;
-                $coupon_usage->order_id = $order->id;
-                $coupon_usage->commission = isset($calculate_comission) ? $calculate_comission : 0;
-                $coupon_usage->save();
-            } else {
+            } 
+            // else {
+                // dd(($subtotal + $tax + $address->province->shipping_cost ?? 0), $over_price, $discount);
                 $order->grand_total = $subtotal + $tax + $address->province->shipping_cost ?? 0;
-            }
+            // }
            
             if ($seller_product[0]->coupon_code != null) {
                 $order->coupon_discount = $coupon_discount;
@@ -495,9 +527,8 @@ class OrderController extends Controller
                 $order->coupon_id = $coupon->id;
             }
 
-            $order->grand_total = $order->grand_total + $over_price - $discount;
+            // $order->grand_total = $order->grand_total + $over_price - $discount;
             $combined_order->grand_total += $order->grand_total;
-            // $combined_order->grand_total = $address->province->shipping_cost ?? '0';
 
             $order->save();
         }
@@ -674,6 +705,13 @@ class OrderController extends Controller
             $order->grand_total -= $order->province->delegate_cost;
 
             // WEEK BALANCE
+            // dd($order->province->delegate_cost);
+            if($order->province->delegate_cost == null) {
+                return response()->json([
+                    'status' => 401,
+                    'message' => Lang::get('delegate::delivery.delivery_man_cost_unset'),
+                ]);
+            }
             insertIntoWeekOrders($delegate->id, $order->grand_total, $order->province->delegate_cost);
 
             // TRANSFORM COMMISSION FROM AFFILIATE BALANCE PENDING TO AFFILIATE BALANCE

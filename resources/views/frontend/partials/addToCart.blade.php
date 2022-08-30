@@ -239,7 +239,7 @@
                         </div>
                     </div>
 
-                     @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
+                     {{-- @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
                     <hr>
                     <h5>Affiliate</h5>
                     <div class="row no-gutters mt-4">
@@ -288,13 +288,12 @@
                         @if($coupon)
                         <div class="col-sm-5">
                             <strong class="h5 fw-600 text-primary" id="commission">
-                                {{-- {{ single_price($detailedProduct->unit_price * ($coupon->commission / 100)) }} --}}
                             </strong>
                         </div>
                         @endif
                     </div>
                     <hr>
-                    @endif
+                    @endif --}}
 
                 </form>
                 <div class="mt-3">
@@ -334,34 +333,34 @@
         getVariantPrice();
     });
 
-    @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
+    // @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
 
-        $('#coupons').on('change', function() {
-            set_affiliate_price();
-        });
-        set_affiliate_price();
+    //     $('#coupons').on('change', function() {
+    //         set_affiliate_price();
+    //     });
+    //     set_affiliate_price();
         
-        function set_affiliate_price () {
-            const option = $('#coupons').find(':selected');
-            // const discount_type = option.attr('data-type');
-            let commission_percent = option.attr('data-value');
-            let product_price = `{{ $detailedProduct->unit_price }}`;
+    //     function set_affiliate_price () {
+    //         const option = $('#coupons').find(':selected');
+    //         // const discount_type = option.attr('data-type');
+    //         let commission_percent = option.attr('data-value');
+    //         let product_price = `{{ $product->unit_price }}`;
 
-            if(typeof commission_percent == 'undefined') {
-                commission_percent = 0;
-                commission = 0;
-            } else {
-                // if(commission_percent_type == 'percent') {
-                    commission = product_price * commission_percent / 100;
-                    commission_percent = `${parseFloat(commission_percent).toFixed(0)}%`;
-                // } else {
-                //     commission -= discount;
-                //     discount = `-${parseFloat(discount).toFixed(0)}`;
-                // }
-            }
+    //         if(typeof commission_percent == 'undefined') {
+    //             commission_percent = 0;
+    //             commission = 0;
+    //         } else {
+    //             // if(commission_percent_type == 'percent') {
+    //                 commission = product_price * commission_percent / 100;
+    //                 commission_percent = `${parseFloat(commission_percent).toFixed(0)}%`;
+    //             // } else {
+    //             //     commission -= discount;
+    //             //     discount = `-${parseFloat(discount).toFixed(0)}`;
+    //             // }
+    //         }
 
-            $('#coupon_discount').val(commission_percent);
-            $('#commission').text(commission);
-        }
-        @endif
+    //         $('#coupon_discount').val(commission_percent);
+    //         $('#commission').text(commission);
+    //     }
+    //     @endif
 </script>

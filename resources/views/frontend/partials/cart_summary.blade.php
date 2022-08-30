@@ -41,9 +41,9 @@
                     $product_shipping_cost = 0;
                     $shipping_region = $shipping_info['city'];
 
-                    $commission = 0;
-                    $discount = 0;
-                    $over_price = 0;
+                    $commission = isset($commission) ? $commission : 0;
+                    $discount = isset($affiliate_discount) ? $affiliate_discount : 0;
+                    $over_price = isset($affiliate_over_price) ? $affiliate_over_price : 0;
                 @endphp
                 @foreach ($carts as $key => $cartItem)
                     @php
@@ -61,13 +61,13 @@
                         $shipping = \App\Models\Address::find($cartItem->address_id)->province->shipping_cost;
                         $cartItem['shipping_cost'] = $shipping ?? '0';
 
-                        $commission += $cartItem['commission'];
-                        if($cartItem['affiliate_price_type'] == 'discount'){
-                            $discount += $cartItem['affiliate_price'];
-                        }
-                        if($cartItem['affiliate_price_type'] == 'over_price'){
-                            $over_price += $cartItem['affiliate_price'];
-                        }
+                        // $commission += $cartItem['commission'];
+                        // if($cartItem['affiliate_price_type'] == 'discount'){
+                        //     $discount += $cartItem['affiliate_price'];
+                        // }
+                        // if($cartItem['affiliate_price_type'] == 'over_price'){
+                        //     $over_price += $cartItem['affiliate_price'];
+                        // }
                     @endphp
                     <tr class="cart_item">
                         <td class="product-name">
@@ -93,27 +93,6 @@
                         <span class="fw-600">{{ single_price($subtotal) }}</span>
                     </td>
                 </tr>
-
-                {{--  --}}
-                <tr class="cart-shipping">
-                    <th>{{translate('Commission')}}</th>
-                    <td class="text-right">
-                        <span class="font-italic">{{ single_price($commission) }}</span>
-                    </td>
-                </tr>
-                <tr class="cart-shipping">
-                    <th>@lang('delegate::delivery.discount')</th>
-                    <td class="text-right">
-                        <span class="font-italic">{{ single_price($discount) }} -</span>
-                    </td>
-                </tr>
-                <tr class="cart-shipping">
-                    <th>@lang('delegate::delivery.over_price')</th>
-                    <td class="text-right">
-                        <span class="font-italic">{{ single_price($over_price) }} +</span>
-                    </td>
-                </tr>
-                {{--  --}}
 
                 <tr class="cart-shipping">
                     <th>{{translate('Tax')}}</th>
@@ -147,9 +126,53 @@
                     </tr>
                 @endif
 
+                <tr>
+                    <th colspan="2">@lang('delegate::delivery.selling_price')</th>
+                </tr>
+
+                {{--  --}}
+                @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
+                 <tr>
+                    <th class="col-sm-5" style="border-top: none !important;">
+                        <select id="affiliate_price_type" class="form-control aiz-selectpicker" name="affiliate_price_type">
+                            <option value="nothing" selected >@lang('delegate::delivery.nothing')</option>
+                            <option value="discount" {{ isset($affiliate_price_type) && $affiliate_price_type == 'discount' ? 'selected' : '' }}>@lang('delegate::delivery.discount')</option>
+                            <option value="over_price" {{ isset($affiliate_price_type) && $affiliate_price_type == 'over_price' ? 'selected' : '' }}>@lang('delegate::delivery.over_price')</option>
+                        </select>
+                    </th>
+                    <td class="col-sm-3" style="border-top: none !important;">
+                        <input type="number" name="affiliate_price" id="affiliate_price" min="0" step="0.01" placeholder="{{ Translate('price') }}" class="form-control mx-2" value="{{ isset($affiliate_price) ? $affiliate_price : '' }}">
+                    </td>
+                </tr>
+                <tr class="cart-shipping">
+                    <th>{{translate('Commission')}}</th>
+                    <td class="text-right">
+                        <span class="font-italic">{{ single_price($commission) }}</span>
+                    </td>
+                </tr>
+                <tr class="cart-shipping">
+                    <th>@lang('delegate::delivery.discount')</th>
+                    <td class="text-right">
+                        <span class="font-italic">{{ single_price($discount) }} -</span>
+                    </td>
+                </tr>
+                <tr class="cart-shipping">
+                    <th>@lang('delegate::delivery.over_price')</th>
+                    <td class="text-right">
+                        <span class="font-italic">{{ single_price($over_price) }} +</span>
+                    </td>
+                </tr>
+                {{--  --}}
+                @endif
+
                 @php
+                    $subtotal = 0;
+                    foreach ($carts as $key => $cartItem) {
+                        $subtotal += ($cartItem['price'] + $over_price - $discount ) * $cartItem['quantity'];
+                    }
+                    
                     $total = $subtotal + $tax + $shipping;
-                    $total = $total + $over_price - $discount;
+                    // $total = $total + $over_price - $discount;
                     if(Session::has('club_point')) {
                         $total -= Session::get('club_point');
                     }
@@ -203,8 +226,8 @@
             @endif
         @endif
 
-        @if (Auth::check() && get_setting('coupon_system') == 1)
-        {{-- @if (Auth::check()) --}}
+        {{-- @if (Auth::check() && get_setting('coupon_system') == 1) --}}
+        @if (Auth::check())
             @if ($carts[0]['discount'] > 0)
                 <div class="mt-3">
                     <form class="" id="remove-coupon-form" enctype="multipart/form-data">
@@ -224,7 +247,7 @@
                         @csrf
                         <input type="hidden" name="owner_id" value="{{ $carts[0]['owner_id'] }}">
                         <div class="input-group">
-                            <input type="text" class="form-control" name="code" onkeydown="return event.key != 'Enter';" placeholder="{{translate('Have coupon code? Enter here')}}" required>
+                            <input type="text" class="form-control" id="coupon-code" name="code" value="{{ isset($code) ? $code : '' }}" onkeydown="return event.key != 'Enter';" placeholder="{{translate('Have coupon code? Enter here')}}" required>
                             <div class="input-group-append">
                                 <button type="button" id="coupon-apply" class="btn btn-primary">{{translate('Apply')}}</button>
                             </div>

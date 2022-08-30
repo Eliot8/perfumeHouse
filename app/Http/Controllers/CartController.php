@@ -55,24 +55,19 @@ class CartController extends Controller
     {
         $product = Product::find($request->id);
         $commission = 0;
-        if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status){
-            if(!$request->input('coupon')) {
-                return response()->json(['error' => Lang::get('delegate::delivery.please_select_coupon')], 401);
-            }
+        // if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status){
+        //     if(!$request->input('coupon')) {
+        //         return response()->json(['error' => Lang::get('delegate::delivery.please_select_coupon')], 401);
+        //     }
 
-            $coupon = Coupon::find($request->input('coupon'));
-            $commission = $product->unit_price * ($coupon->commission / 100);
+        //     $coupon = Coupon::find($request->input('coupon'));
+        //     $commission = $product->unit_price * ($coupon->commission / 100);
+
     
-            // if($coupon->discount_type == 'percent') {
-            // } else {
-            //     $commission = $product->unit_price - $coupon->commission;
-            // }
-    
-            if($request->get('affiliate_price_type') == 'discount' && $request->get('affiliate_price') > $commission){
-                return response()->json(['error' => Lang::get('delegate::delivery.commission_error')], 401);
-            }
-        }
-        // dd($request->request);
+        //     if($request->get('affiliate_price_type') == 'discount' && $request->get('affiliate_price') > $commission){
+        //         return response()->json(['error' => Lang::get('delegate::delivery.commission_error')], 401);
+        //     }
+        // }
         
 
         $carts = array();
@@ -95,11 +90,10 @@ class CartController extends Controller
 
         //
        
-        $data['commission'] = $commission;
+        // $data['commission'] = $commission;
 
-        // $data['commission'] = $request->get('commission');
-        $data['affiliate_price_type'] = $request->get('affiliate_price_type');
-        $data['affiliate_price'] = $request->get('affiliate_price');
+        // $data['affiliate_price_type'] = $request->get('affiliate_price_type');
+        // $data['affiliate_price'] = $request->get('affiliate_price');
        
         //
 

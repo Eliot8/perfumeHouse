@@ -170,6 +170,7 @@
                                                             <span class="fw-600">{{ single_price($order->orderDetails->sum('price')) }}</span>
                                                         </td>
                                                     </tr>
+                                                    @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
                                                     <tr>
                                                         <th>{{ translate('Commission')}}</th>
                                                         <td class="text-right">
@@ -179,19 +180,20 @@
                                                     <tr>
                                                         <th>@lang('delegate::delivery.discount')</th>
                                                         <td class="text-right">
-                                                            <span class="font-italic">{{ single_price($order->orderDetails->where('affiliate_price_type', 'discount')->sum('affiliate_price')) }} -</span>
+                                                            <span class="font-italic">{{ single_price($order->orderDetails->where('affiliate_price_type', 'discount')->first()->affiliate_price ?? 0) }} -</span>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <th>@lang('delegate::delivery.over_price')</th>
                                                         <td class="text-right">
-                                                            <span class="font-italic">{{ single_price($order->orderDetails->where('affiliate_price_type', 'over_price')->sum('affiliate_price')) }} +</span>
+                                                            <span class="font-italic">{{ single_price($order->orderDetails->where('affiliate_price_type', 'over_price')->first()->affiliate_price ?? 0) }} +</span>
                                                         </td>
                                                     </tr>
+                                                    @endif
                                                     <tr>
                                                         <th>{{ translate('Shipping')}}</th>
                                                         <td class="text-right">
-                                                            <span class="font-italic">{{ single_price($order->orderDetails->sum('shipping_cost')) }}</span>
+                                                            <span class="font-italic">{{ single_price($order->orderDetails->first()->shipping_cost) }}</span>
                                                         </td>
                                                     </tr>
                                                     <tr>

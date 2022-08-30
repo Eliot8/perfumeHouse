@@ -134,4 +134,6 @@ return [
 
     'public_commission' => 'عمولة لجميع المنتسبون',
     'set_global_commission_success' => 'تم حفظ العمولة بنجاح',
+
+    'delivery_man_cost_unset' => 'تكلفة المندوب غير محددة',
 ];

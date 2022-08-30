@@ -63,7 +63,7 @@
 						{{-- @if($logo != null)
 							<img src="{{ uploaded_asset($logo) }}" height="30" style="display:inline-block;">
 						@else --}}
-							<img src="{{ asset('assets/img/logo.png') }}" height="30" style="display:inline-block;">
+							{{-- <img src="{{ asset('assets/img/logo.png') }}" height="30" style="display:inline-block;"> --}}
 							{{-- <img src="https://frenchperfumehouse.com/uploads/all/5K1ps8PhqPEQWuqo1dtL3nzdGldLXkB7L9GymVii.png" height="30" style="display:inline-block;"> --}}
 						{{-- @endif --}}
 					</td>
@@ -171,7 +171,7 @@
 							        </tr>
 							        <tr>
 							            <th class="gry-color text-left">{{ translate('Shipping Cost') }}</th>
-							            <td class="currency">{{ single_price($order->orderDetails->sum('shipping_cost')) }}</td>
+							            <td class="currency">{{ single_price($order->orderDetails->first()->shipping_cost) }}</td>
 							        </tr>
 							        <tr class="border-bottom">
 							            <th class="gry-color text-left">{{ translate('Total Tax') }}</th>
@@ -181,7 +181,7 @@
 							            <th class="gry-color text-left">{{ translate('Coupon Discount') }}</th>
 							            <td class="currency">{{ single_price($order->coupon_discount) }}</td>
 							        </tr>
-
+									 @if($order->user->affiliate_user != null && $order->user->affiliate_user->status)
 				                    <tr class="border-bottom">
 							            <th class="gry-color text-left">{{ translate('Commission') }}</th>
 							            <td class="currency">{{ single_price($order->orderDetails->sum('commission')) }}</td>
@@ -194,7 +194,7 @@
 							            <th class="gry-color text-left">@lang('delegate::delivery.over_price') </th>
 							            <td class="currency">{{ single_price($order->orderDetails->where('affiliate_price_type', 'over_price')->sum('affiliate_price')) }} +</td>
 							        </tr>
-
+									@endif
 							        <tr>
 							            <th class="text-left strong">{{ translate('Grand Total') }}</th>
 							            {{-- <td class="currency">{{ single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('shipping_cost')) }}</td> --}}

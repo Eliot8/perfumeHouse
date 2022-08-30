@@ -171,6 +171,7 @@
                             {{ single_price($order->orderDetails->sum('price')) }}
                         </td>
                     </tr>
+                    @if($order->user->affiliate_user != null && $order->user->affiliate_user->status)
                     <tr>
                         <td>
                             <strong class="text-muted">{{translate('Commission')}} :</strong>
@@ -184,7 +185,7 @@
                             <strong class="text-muted">@lang('delegate::delivery.discount') :</strong>
                         </td>
                         <td>
-                            {{ single_price($order->orderDetails->where('affiliate_price_type', 'discount')->sum('affiliate_price')) }} -
+                            {{ single_price($order->orderDetails->where('affiliate_price_type', 'discount')->first()->affiliate_price ?? 0) }} -
                         </td>
                     </tr>
                     <tr>
@@ -192,9 +193,10 @@
                             <strong class="text-muted">@lang('delegate::delivery.over_price') :</strong>
                         </td>
                         <td>
-                            {{ single_price($order->orderDetails->where('affiliate_price_type', 'over_price')->sum('affiliate_price')) }} +
+                            {{ single_price($order->orderDetails->where('affiliate_price_type', 'over_price')->first()->affiliate_price ?? 0) }} +
                         </td>
                     </tr>
+                    @endif
                     <tr>
                         <td>
                             <strong class="text-muted">{{translate('Tax')}} :</strong>
@@ -208,7 +210,7 @@
                             <strong class="text-muted">{{translate('Shipping')}} :</strong>
                         </td>
                         <td>
-                            {{ single_price($order->orderDetails->sum('shipping_cost')) }}
+                            {{ single_price($order->orderDetails->first()->shipping_cost) }}
                         </td>
                     </tr>
                     <tr>
@@ -224,7 +226,7 @@
                             <strong class="text-muted">{{translate('TOTAL')}} :</strong>
                         </td>
                         <td style="font-weight: bold;">
-                            {{ single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('shipping_cost')) }}
+                            {{ single_price($order->orderDetails->sum('price') + $order->orderDetails->first()->shipping_cost) }}
                         </td>
                     </tr>
                     <hr>
@@ -279,7 +281,6 @@
                 order_id:order_id,
                 status:status
             }, function(data){
-                console.dir(data);
                 if(data.status == 200) {
                     AIZ.plugins.notify('success', data.message);
                 } else {

@@ -21,6 +21,7 @@ use App\Models\CombinedOrder;
 use Session;
 use App\Utility\PayhereUtility;
 use App\Utility\NotificationUtility;
+use Lang;
 
 class CheckoutController extends Controller
 {
@@ -268,10 +269,13 @@ class CheckoutController extends Controller
 
     public function apply_coupon_code(Request $request)
     {
-        $coupon = Coupon::where('code', $request->code)->first();
+        // dd($request->request);
+        $code = $request->code;
+        $affiliate_price_type = $request->get('affiliate_price_type');
+        $affiliate_price = $request->get('affiliate_price');
+        
+        $coupon = Coupon::where('code', $code)->first();
         $response_message = array();
-
-        // dd($coupon);
 
         if ($coupon != null) {
             if (strtotime(date('d-m-Y')) >= $coupon->start_date && strtotime(date('d-m-Y')) <= $coupon->end_date) {
@@ -281,6 +285,45 @@ class CheckoutController extends Controller
                     $carts = Cart::where('user_id', Auth::user()->id)
                                     ->where('owner_id', $coupon->user_id)
                                     ->get();
+
+                    if (Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
+
+                        
+
+                        $commission = 0;
+                        $affiliate_discount = 0;
+                        $affiliate_over_price = 0;
+
+                        if($affiliate_price_type == 'discount') 
+                            $affiliate_discount = $affiliate_price;
+                        else 
+                            $affiliate_over_price = $affiliate_price;
+
+                            foreach ($carts as $key => $cartItem) {
+                            $cal_commission = $cartItem['price'] * ($coupon->commission / 100);
+                            $commission += $cal_commission;
+                            $cartItem['commission'] = $cal_commission;
+                            $cartItem->save();
+                        }
+
+
+                        if ($affiliate_price_type == 'discount' && $affiliate_price > $commission) {
+                            
+                            $carts = Cart::where('user_id', Auth::user()->id)
+                            ->get();
+                            $shipping_info = Address::where('id', $carts[0]['address_id'])->first();
+
+                            $returnHTML = view('frontend.partials.cart_summary', compact('code', 'carts', 'shipping_info', 'commission', 'affiliate_price_type', 'affiliate_price'))->render();
+                            return response()->json(['error' => Lang::get('delegate::delivery.commission_error'), 'html' => $returnHTML], 401);
+                        // return response()->json([ 'response_message' => $response_message, 'html' => $returnHTML ], 401);
+                        }
+
+                        foreach ($carts as $key => $cartItem) {
+                            $cartItem['affiliate_price_type'] = $affiliate_price_type;
+                            $cartItem['affiliate_price'] = $affiliate_price;
+                            $cartItem->save();
+                        }
+                    }
 
                     if ($coupon->type == 'cart_base') {
                         $subtotal = 0;
@@ -352,8 +395,19 @@ class CheckoutController extends Controller
                 ->get();
         $shipping_info = Address::where('id', $carts[0]['address_id'])->first();
 
-        $returnHTML = view('frontend.partials.cart_summary', compact('coupon', 'carts', 'shipping_info'))->render();
-        return response()->json(array('response_message' => $response_message, 'html'=>$returnHTML));
+        if (Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
+            if(!$coupon){
+                $commission = 0;
+                $affiliate_discount = 0;
+                $affiliate_over_price = 0;
+            }
+            $returnHTML = view('frontend.partials.cart_summary', compact('code', 'carts', 'shipping_info', 'commission', 'affiliate_price_type', 'affiliate_price', 'affiliate_discount', 'affiliate_over_price'))->render();
+            // return response()->json(['error' => $response_message, 'html' => $returnHTML], 401);
+            return response()->json(array('response_message' => $response_message, 'html'=>$returnHTML));
+        } else {
+            $returnHTML = view('frontend.partials.cart_summary', compact('coupon', 'carts', 'shipping_info'))->render();
+            return response()->json(array('response_message' => $response_message, 'html'=>$returnHTML));
+        }
     }
 
     public function remove_coupon_code(Request $request)

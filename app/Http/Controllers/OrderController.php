@@ -474,17 +474,17 @@ class OrderController extends Controller
     
                     
                     // CALCUL COMMISSION
-                    // if ($coupon->commission_type == 'percent') {
-                    //     $calculate_comission = $subtotal * ($coupon->commission / 100);
-                    // } else {
-                    //     $calculate_comission = $coupon->commission;
-                    // }
+                    if ($coupon->commission_type == 'percent') {
+                        $calculate_comission = $subtotal * ($coupon->commission / 100);
+                    } else {
+                        $calculate_comission = $coupon->commission;
+                    }
                     // dd($calculate_comission);
     
-                    // $calculate_comission = $calculate_comission - $discount + $over_price;
+                    $calculate_comission = $calculate_comission - $discount + $over_price;
     
-                    // $user->affiliate_user->balance_pending += $calculate_comission;
-                    $user->affiliate_user->balance_pending += $commission;
+                    $user->affiliate_user->balance_pending += $calculate_comission;
+                    // $user->affiliate_user->balance_pending += $commission;
                     $user->affiliate_user->save();
                     
     
@@ -492,8 +492,8 @@ class OrderController extends Controller
                     $coupon_usage->user_id = $user->id;
                     $coupon_usage->coupon_id = $coupon->id;
                     $coupon_usage->order_id = $order->id;
-                    // $coupon_usage->commission = isset($calculate_comission) ? $calculate_comission : 0;
-                    $coupon_usage->commission = isset($commission) ? $commission : 0;
+                    $coupon_usage->commission = isset($calculate_comission) ? $calculate_comission : 0;
+                    // $coupon_usage->commission = isset($commission) ? $commission : 0;
                     $coupon_usage->save();
                 }
             } 

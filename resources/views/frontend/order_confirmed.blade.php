@@ -174,7 +174,8 @@
                                                     <tr>
                                                         <th>{{ translate('Commission')}}</th>
                                                         <td class="text-right">
-                                                            <span class="font-italic">{{ single_price($order->orderDetails->sum('commission')) }}</span>
+                                                            {{-- <span class="font-italic">{{ single_price($order->orderDetails->sum('commission')) }}</span> --}}
+                                                            <span class="font-italic">{{ single_price($order->commission_calculated) }}</span>
                                                         </td>
                                                     </tr>
                                                     <tr>

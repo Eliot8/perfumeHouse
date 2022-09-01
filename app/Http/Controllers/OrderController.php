@@ -479,10 +479,10 @@ class OrderController extends Controller
                     } else {
                         $calculate_comission = $coupon->commission;
                     }
-                    // dd($calculate_comission);
     
+                    $order->commission_calculated = $calculate_comission;
                     $calculate_comission = $calculate_comission - $discount + $over_price;
-    
+
                     $user->affiliate_user->balance_pending += $calculate_comission;
                     // $user->affiliate_user->balance_pending += $commission;
                     $user->affiliate_user->save();

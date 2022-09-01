@@ -226,8 +226,8 @@
             @endif
         @endif
 
-        {{-- @if (Auth::check() && get_setting('coupon_system') == 1) --}}
-        @if (Auth::check())
+        @if (Auth::check() && get_setting('coupon_system') == 1)
+        {{-- @if (Auth::check()) --}}
             @if ($carts[0]['discount'] > 0)
                 <div class="mt-3">
                     <form class="" id="remove-coupon-form" enctype="multipart/form-data">

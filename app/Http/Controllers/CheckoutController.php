@@ -291,18 +291,20 @@ class CheckoutController extends Controller
                         $commission = 0;
                         $affiliate_discount = 0;
                         $affiliate_over_price = 0;
+                        $subtotal = 0;
 
-                        if($affiliate_price_type == 'discount') 
-                            $affiliate_discount = $affiliate_price;
-                        else 
-                            $affiliate_over_price = $affiliate_price;
+                        if($affiliate_price_type == 'discount')  $affiliate_discount = $affiliate_price;
+                        else  $affiliate_over_price = $affiliate_price;
 
-                            foreach ($carts as $key => $cartItem) {
-                            $cal_commission = $cartItem['price'] * ($coupon->commission / 100);
-                            $commission += $cal_commission;
-                            $cartItem['commission'] = $cal_commission;
+
+                        foreach ($carts as $key => $cartItem) {
+                            $subtotal += $cartItem['price'] * $cartItem['quantity'];
+                            // $cal_commission = $cartItem['price'] * ($coupon->commission / 100);
+                            // $commission += $cal_commission;
+                            // $cartItem['commission'] = $cal_commission;
                             $cartItem->save();
                         }
+                        $commission = $subtotal * ($coupon->commission / 100);
 
 
                         if ($affiliate_price_type == 'discount' && $affiliate_price > $commission) {

@@ -98,6 +98,17 @@
 
                     <div class="col-xl-7 col-lg-6">
                         <div class="text-left">
+                            @php
+                                $stock = Modules\Delegate\Entities\Stock::where('product_id', $detailedProduct->id)->get();
+                            @endphp
+                            @if($stock)
+                            <div class="alert alert-primary" role="alert">
+                                هدا المنتج يشحن الى:
+                                @foreach ($stock as $item)
+                                    <strong>{{ $item->delegates->province->name }}</strong>,
+                                @endforeach
+                            </div>
+                            @endif
                             <h1 class="mb-2 fs-20 fw-600">
                                 {{ $detailedProduct->getTranslation('name') }}
                             </h1>

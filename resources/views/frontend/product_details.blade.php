@@ -98,21 +98,7 @@
 
                     <div class="col-xl-7 col-lg-6">
                         <div class="text-left">
-                            @php
-                                $stock = Modules\Delegate\Entities\Stock::where('product_id', $detailedProduct->id)->get();
-                                $province_ids = [];
-                            @endphp
-                            @if($stock)
-                            <div class="alert alert-primary" role="alert">
-                                هدا المنتج يشحن الى:
-                                @foreach ($stock as $item)
-                                @if(!in_array($item->delegates->province->id, $province_ids))
-                                <strong>{{ $item->delegates->province->name }}</strong>,
-                                @php array_push($province_ids, $item->delegates->province->id); @endphp
-                                @endif
-                                @endforeach
-                            </div>
-                            @endif
+                            
                             <h1 class="mb-2 fs-20 fw-600">
                                 {{ $detailedProduct->getTranslation('name') }}
                             </h1>
@@ -511,6 +497,21 @@
                                     <div class="aiz-share"></div>
                                 </div>
                             </div>
+                            @php
+                                $stock = Modules\Delegate\Entities\Stock::where('product_id', $detailedProduct->id)->get();
+                                $province_ids = [];
+                            @endphp
+                            @if($stock)
+                            <div class="alert alert-primary" role="alert">
+                                هدا المنتج يشحن الى:
+                                @foreach ($stock as $item)
+                                @if(!in_array($item->delegates->province->id, $province_ids))
+                                <strong>{{ $item->delegates->province->name }}</strong>,
+                                @php array_push($province_ids, $item->delegates->province->id); @endphp
+                                @endif
+                                @endforeach
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>

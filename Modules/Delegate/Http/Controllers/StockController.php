@@ -75,12 +75,12 @@ class StockController extends Controller
 
 
         // DECREASE PRODUCT STOCK
-        $response = $this->decreaseProductStock($request->product, $request->quantity);
+        // $response = $this->decreaseProductStock($request->product, $request->quantity);
         
-        if($response->getStatusCode() !== 200){
-           flash(json_decode($response->getContent())->message)->error();
-           return back();
-        }
+        // if($response->getStatusCode() !== 200){
+        //    flash(json_decode($response->getContent())->message)->error();
+        //    return back();
+        // }
 
         // CREATE NEW INSTANCE OF STOCK
         $stock = new Stock();
@@ -102,6 +102,8 @@ class StockController extends Controller
         
         $stock->save();
 
+        updateOfficialProductStock($stock->product_id);
+
         flash(Lang::get('delegate::delivery.stock_added'))->success();
         return back();
     }
@@ -120,11 +122,13 @@ class StockController extends Controller
         $stock = Stock::findOrFail($id);
 
         // DECREASE & INCREASE PRODUCT STOCK 
-        $this->increaseProductStock($stock->product_id, $stock->stock);
-        $this->decreaseProductStock($stock->product_id, $request->input('quantity'));
+        // $this->increaseProductStock($stock->product_id, $stock->stock);
+        // $this->decreaseProductStock($stock->product_id, $request->input('quantity'));
 
         $stock->stock = $request->input('quantity');
         $stock->save();
+
+        updateOfficialProductStock($stock->product_id);
 
         flash(Lang::get('delegate::delivery.stock_updated'))->success();
         return back();
@@ -140,10 +144,13 @@ class StockController extends Controller
         $delivery_stock = Stock::findOrFail($id);
 
         // INCREASE PRODUCT STOCK
-        $this->increaseProductStock($delivery_stock->product_id, $delivery_stock->stock);
+        // $this->increaseProductStock($delivery_stock->product_id, $delivery_stock->stock);
 
         // DELETE DELIVERY STOCK
         $delivery_stock->delete();
+
+        $this->updateOfficialProductStock($delivery_stock->product_id);
+
         flash(Lang::get('delegate::delivery.stock_deleted'))->success();
         return back();
     }
@@ -230,4 +237,5 @@ class StockController extends Controller
             return false;
     }
 
+   
 }

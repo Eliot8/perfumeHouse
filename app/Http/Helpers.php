@@ -1245,3 +1245,14 @@ if(!function_exists('insertIntoWeekOrders')){
     }
 
 }
+if (!function_exists('updateOfficialProductStock')) {
+    function updateOfficialProductStock($product_id) {
+       $total_delegates_stock = Stock::where('product_id', $product_id)->sum('stock');
+        $product_stock = ProductStock::where('product_id', $product_id)->get();
+    
+        $product_stock->each(function($p) use ($total_delegates_stock) {
+            $p->qty = $total_delegates_stock;
+            $p->save();
+        });
+    }
+}

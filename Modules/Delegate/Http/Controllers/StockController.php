@@ -49,11 +49,13 @@ class StockController extends Controller
             $variation= '';
     
             if($request->get('color')){
-                $variation .= Color::where('code', $request->get('color'))->first()->name . '-';
+                // $variation .= Color::where('code', $request->get('color'))->first()->name . '-';
+                $variation = Color::where('code', $request->get('color'))->first()->name;
             }
     
             if($request->get('attributes')){
                 $variation .= preg_replace("/\s+/", "", implode("-", $request->get('attributes')));
+                // $variation = preg_replace("/\s+/", "", implode("-", $request->get('attributes')));
             }
 
             $delivery_stock = Stock::where([
@@ -102,7 +104,7 @@ class StockController extends Controller
         
         $stock->save();
 
-        updateOfficialProductStock($stock->product_id);
+        updateOfficialProductStock($stock->product_id, $stock->variation);
 
         flash(Lang::get('delegate::delivery.stock_added'))->success();
         return back();
@@ -128,7 +130,7 @@ class StockController extends Controller
         $stock->stock = $request->input('quantity');
         $stock->save();
 
-        updateOfficialProductStock($stock->product_id);
+        updateOfficialProductStock($stock->product_id, $stock->variation);
 
         flash(Lang::get('delegate::delivery.stock_updated'))->success();
         return back();
@@ -149,7 +151,7 @@ class StockController extends Controller
         // DELETE DELIVERY STOCK
         $delivery_stock->delete();
 
-        $this->updateOfficialProductStock($delivery_stock->product_id);
+        updateOfficialProductStock($delivery_stock->product_id, $delivery_stock->variation);
 
         flash(Lang::get('delegate::delivery.stock_deleted'))->success();
         return back();
@@ -162,6 +164,7 @@ class StockController extends Controller
         return view('delegate::stock.manage', compact('products', 'delegate_id'));
     }
 
+    # PROTECTED FUNCTIONS
     protected function decreaseProductStock($product_id, $quantity) {
         $product_stock = ProductStock::where('product_id', $product_id)->first();
 

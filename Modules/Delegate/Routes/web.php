@@ -12,6 +12,8 @@
 */
 
 use App\Models\Cart;
+use App\Models\Product;
+use Modules\Delegate\Entities\Stock;
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
     Route::resource('delegates', 'DelegatesController')->except(['destroy']);
@@ -54,6 +56,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
 // AJAX
 Route::get('/province/{id}/zone', 'DelegatesController@getZone');
+
+Route::get('/update/allStock', function() {
+    $products = Product::get();
+    foreach($products as $product) {
+        $stock = Stock::where('product_id', $product->id)->get();
+        foreach($stock as $item) {
+            updateOfficialProductStock($product->id, $item->variation);
+        }
+    }
+});
 
 
 

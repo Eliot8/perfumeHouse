@@ -698,7 +698,7 @@ class OrderController extends Controller
                 }
 
                 $delivery_stock->save();
-                updateOfficialProductStock($orderDetail->product_id);
+                updateOfficialProductStock($orderDetail->product_id, $delivery_stock->variation);
             }
             $order->grand_total -= $order->province->delegate_cost;
 

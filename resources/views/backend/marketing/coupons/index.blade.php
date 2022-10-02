@@ -88,6 +88,7 @@
                 <ul class="dropdown-menu">
                     <li class="dropdown-item column_visibility" id="affiliate_user" style="cursor: pointer;">@lang('delegate::delivery.affiliate_user')</li>
                     <li class="dropdown-item column_visibility" id="commission" style="cursor: pointer;">{{ translate('Commission') }}</li>
+                    <li class="dropdown-item column_visibility" id="coupon_validity" style="cursor: pointer;">@lang('delegate::delivery.coupon_validity')</li>
                     <li class="dropdown-item column_visibility" id="code" style="cursor: pointer;">{{translate('Code')}}</li>
                     <li class="dropdown-item column_visibility" id="type" style="cursor: pointer;">{{translate('Type')}}</li>
                     <li class="dropdown-item column_visibility" id="start_date" style="cursor: pointer;">{{translate('Start Date')}}</li>
@@ -105,11 +106,12 @@
                     <th data-breakpoints="lg">#</th>
                     <th class="affiliate_user" >@lang('delegate::delivery.affiliate_user')</th>
                     <th class="commission" >{{ translate('Commission') }}</th>
+                    <th class="coupon_validity" >@lang('delegate::delivery.coupon_validity')</th>
                     <th class="code" >{{translate('Code')}}</th>
-                    <th  class="type" data-breakpoints="lg">{{translate('Type')}}</th>
-                    <th  class="start_date" data-breakpoints="lg">{{translate('Start Date')}}</th>
-                    <th  class="end_date" data-breakpoints="lg">{{translate('End Date')}}</th>
-                    <th  class="options" width="10%">{{translate('Options')}}</th>
+                    <th class="type" data-breakpoints="lg">{{translate('Type')}}</th>
+                    <th class="start_date" data-breakpoints="lg">{{translate('Start Date')}}</th>
+                    <th class="end_date" data-breakpoints="lg">{{translate('End Date')}}</th>
+                    <th class="options" width="10%">{{translate('Options')}}</th>
                 </tr>
             </thead>
             <tbody>
@@ -118,6 +120,13 @@
                         <td>{{$key+1}}</td>
                         <td class="affiliate_user">{{ $coupon->affiliate_user->user->name }}</td>
                         <td class="commission">{{ $coupon->commission }} @if($coupon->commission_type == 'percent') % @endif</td>
+                        <td class="coupon_validity">
+                            @if(coupon_has_expired($coupon->end_date))
+                            <span class="badge badge-inline badge-danger">@lang('delegate::delivery.expired')</span>
+                            @else
+                            <span class="badge badge-inline badge-success">@lang('delegate::delivery.valid')</span>
+                            @endif
+                        </td>
                         <td class="code">{{$coupon->code}}</td>
                         <td class="type">@if ($coupon->type == 'cart_base')
                                 {{ translate('Cart Base') }}

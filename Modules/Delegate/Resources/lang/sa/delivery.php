@@ -136,5 +136,6 @@ return [
     'set_global_commission_success' => 'تم حفظ العمولة بنجاح',
 
     'delivery_man_cost_unset' => 'تكلفة المندوب غير محددة',
-    'total_amount' => 'إجمالي العمولات'
+    'total_amount' => 'إجمالي العمولات',
+    'coupon_validity' => 'صلاحية الكوبون'
 ];

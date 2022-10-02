@@ -136,6 +136,7 @@ return [
     'delivery_man_cost_unset' => 'The cost of the delivery man is not specified.',
 
     'total_amount' => 'Total Commissions',
+    'coupon_validity' => 'Coupon Validity',
 
 
 ];

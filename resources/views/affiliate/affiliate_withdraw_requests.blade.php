@@ -126,6 +126,16 @@
                     </tr>
                 @endif
             @endforeach
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="float: left;"><strong>@lang('delegate::delivery.total_amount'):</strong></td>
+                <td> {{ single_price($affiliate_withdraw_requests->sum('amount')) }} </td>
+                <td></td>
+                <td></td>
+            </tr>
+
             </tbody>
         </table>
         <div class="clearfix">

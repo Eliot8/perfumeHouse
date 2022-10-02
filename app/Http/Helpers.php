@@ -1128,8 +1128,19 @@ if(!function_exists('filterCoupon')){
         if ($request->has('affiliate_user')) {
             $coupons = $coupons->where('affiliate_user_id', $request->get('affiliate_user'));
         }
+
         if ($request->has('commission_type')) {
             $coupons = $coupons->where('commission_type', $request->get('commission_type'));
+        }
+
+        if ($request->has('coupon_validity')) {
+            if($request->input('coupon_validity') == 'expired'){
+                $coupons = $coupons->where('end_date', '<=', strtotime(date('m/d/Y')));
+            }
+
+            if($request->input('coupon_validity') == 'valid') {
+                $coupons = $coupons->where('end_date', '>=', strtotime(date('m/d/Y')));
+            }
         }
 
         if ($request->get('start_date')) {

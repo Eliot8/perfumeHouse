@@ -48,6 +48,14 @@
                     </select>
                 </div>
                 <div class="col-lg-3 form-group">
+                    <label class="col-from-label">@lang('delegate::delivery.coupon_validity')</label>
+                    <select class="form-control aiz-selectpicker" name="coupon_validity">
+                        <option value="" selected disabled hidden>@lang('delegate::delivery.coupon_validity')</option>
+                        <option value="expired" @if(request()->has('coupon_validity') && request()->filled('coupon_validity') && request()->get('coupon_validity') == 'expired') selected @endif>@lang('delegate::delivery.expired')</option>
+                        <option value="valid" @if(request()->has('coupon_validity') && request()->filled('coupon_validity') && request()->get('coupon_validity') == 'valid') selected @endif>@lang('delegate::delivery.valid')</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 form-group">
                     <label class="col-from-label">{{ translate('Start Date') }}</label>
                     <input type="text" class="aiz-date-range form-control" value="{{ request()->query('start_date') }}" name="start_date" placeholder="{{ translate('Start Date') }}" data-format="DD-MM-Y" data-separator=" to " data-advanced-range="true" autocomplete="off">
                 </div>

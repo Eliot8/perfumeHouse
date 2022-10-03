@@ -23,6 +23,7 @@ use Auth;
 use DB;
 use Hash;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Lang;
 
 class AffiliateController extends Controller
@@ -525,11 +526,20 @@ class AffiliateController extends Controller
 
     public function affiliate_withdraw_requests(Request $request)
     {
+        if($request->get('paginate')) {
+            Cache::put('paginate', $request->get('paginate'));
+        }
+        
+        $paginate = Cache::get('paginate') ?? 8;
+        
+        if ($paginate == 'all') $paginate = AffiliateWithdrawRequest::count();
+
         $affiliate_withdraw_requests = AffiliateWithdrawRequest::orderBy('id', 'desc');
 
         $affiliate_withdraw_requests = filterAffiliateWithdrawRequests($request, $affiliate_withdraw_requests);
 
-        $affiliate_withdraw_requests = $affiliate_withdraw_requests->paginate(8);
+        $affiliate_withdraw_requests = $affiliate_withdraw_requests->paginate($paginate);
+        
 
         return view('affiliate.affiliate_withdraw_requests', compact('affiliate_withdraw_requests'));
     }

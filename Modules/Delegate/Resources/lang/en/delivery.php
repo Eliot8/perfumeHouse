@@ -138,5 +138,5 @@ return [
     'total_amount' => 'Total Commissions',
     'coupon_validity' => 'Coupon Validity',
 
-
+    'show_entries' => 'Show Entries'
 ];

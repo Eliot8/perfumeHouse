@@ -137,5 +137,7 @@ return [
 
     'delivery_man_cost_unset' => 'تكلفة المندوب غير محددة',
     'total_amount' => 'إجمالي العمولات',
-    'coupon_validity' => 'صلاحية الكوبون'
+    'coupon_validity' => 'صلاحية الكوبون',
+
+    'show_entries' => 'عرض الإدخالات',
 ];

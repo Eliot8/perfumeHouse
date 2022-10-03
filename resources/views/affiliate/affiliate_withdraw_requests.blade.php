@@ -78,6 +78,19 @@
             </div>
             <a href="" class="export-to-pdf btn btn-primary btn-sm mb-1"><i class="las la-file-pdf fs-18 mr-2"></i>@lang('delegate::delivery.export_to_pdf')</a>
         </div>
+        <div class="col-2" style="display: flex; align-items: center;">
+            <h6 style="flex: 3;">
+                @lang('delegate::delivery.show_entries')
+            </h6>
+            <select name="entries" id="entries" class="form-control" style="flex: 2;">
+                <option value="25" {{ \Cache::get('paginate') == '25' ? 'selected' : '' }}><a href="{{ route('affiliate.withdraw_requests', 25) }}">25</a></option>
+                <option value="100" {{ \Cache::get('paginate') == '100' ? 'selected' : '' }}><a href="{{ route('affiliate.withdraw_requests', 100) }}">100</a></option>
+                <option value="200" {{ \Cache::get('paginate') == '200' ? 'selected' : '' }}><a href="{{ route('affiliate.withdraw_requests', 200) }}">200</a></option>
+                <option value="500" {{ \Cache::get('paginate') == '500' ? 'selected' : '' }}><a href="{{ route('affiliate.withdraw_requests', 500) }}" >500</a></option>
+                <option value="1000" {{ \Cache::get('paginate') == '1000' ? 'selected' : '' }}><a href="{{ route('affiliate.withdraw_requests', 1000) }}">1000</a></option>
+                <option value="all" {{ \Cache::get('paginate') == 'all' ? 'selected' : '' }}><a href="{{ route('affiliate.withdraw_requests', 'all') }}">{{ translate('all') }}</a></option>
+            </select>
+        </div>
     </div>
     <div class="card-body">
         <table class="table aiz-table mb-0">
@@ -188,10 +201,21 @@
                 AIZ.plugins.bootstrapSelect('refresh');
             });
         }
+
         function affiliate_withdraw_reject_modal(reject_link){
             $('#affiliate_withdraw_reject_modal').modal('show');
             document.getElementById('reject_link').setAttribute('href' , reject_link);
         }
+
+        // function changeEntries() {
+        //     console.log('event');
+        // }
+        $('#entries').on('change', function() {
+            // let url = '{{ route("affiliate.withdraw_requests", ":paginate") }}';
+            // url.replace(':paginate', $(this).val());
+
+            window.location.href = '{{ route("affiliate.withdraw_requests") }}' + '?paginate=' + $(this).val();
+        });
 
         $(".export-to-excel").click(function(e) {
             e.preventDefault();
@@ -202,6 +226,7 @@
                 preserveColors: false 
             });
         });
+
         $(".export-to-pdf").click(function(e) {
             e.preventDefault();
              html2canvas($('.aiz-table')[0], {

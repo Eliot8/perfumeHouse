@@ -35,6 +35,7 @@ Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin']], function()
 
     // Affiliate Withdraw Request
     Route::get('/affiliate/withdraw_requests', 'AffiliateController@affiliate_withdraw_requests')->name('affiliate.withdraw_requests');
+    Route::get('/affiliate/withdraw_requests', 'AffiliateController@affiliate_withdraw_requests')->name('affiliate.withdraw_requests');
     Route::post('/affiliate/affiliate_withdraw_modal', 'AffiliateController@affiliate_withdraw_modal')->name('affiliate_withdraw_modal');
     Route::post('/affiliate/withdraw_request/payment_store', 'AffiliateController@withdraw_request_payment_store')->name('withdraw_request.payment_store');
     Route::get('/affiliate/withdraw_request/reject/{id}', 'AffiliateController@reject_withdraw_request')->name('affiliate.withdraw_request.reject');

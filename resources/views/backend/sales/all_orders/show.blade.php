@@ -55,6 +55,10 @@
                     {{ json_decode($order->shipping_address)->email }}<br>
                     {{ json_decode($order->shipping_address)->phone }}<br>
                     {{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->zone }}, {{ json_decode($order->shipping_address)->province}}<br>
+                    <span>
+                        @lang('delegate::delivery.optional_phone') : 
+                        {{ json_decode($order->shipping_address)->optional_phone ?? 'لا شيء' }}
+                    </span>
                 </address>
                 @if ($order->manual_payment && is_array(json_decode($order->manual_payment_data, true)))
                 <br>

@@ -77,25 +77,14 @@
                                                         <span class="opacity-60">@lang('delegate::delivery.zone'):</span>
                                                         <span class="fw-600 ml-2">{{ Modules\Delegate\Entities\Neighborhood::find($address->zone_id)->name ?? Modules\Delegate\Entities\Province::find($address->province_id)->name  }}</span>
                                                     </div>
-                                                    {{-- <div>
-                                                        <span class="opacity-60">{{ translate('Postal Code') }}:</span>
-                                                        <span class="fw-600 ml-2">{{ $address->postal_code }}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span class="opacity-60">{{ translate('City') }}:</span>
-                                                        <span class="fw-600 ml-2">{{ optional($address->city)->name }}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span class="opacity-60">{{ translate('State') }}:</span>
-                                                        <span class="fw-600 ml-2">{{ optional($address->state)->name }}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span class="opacity-60">{{ translate('Country') }}:</span>
-                                                        <span class="fw-600 ml-2">{{ optional($address->country)->name }}</span>
-                                                    </div> --}}
+                                                    
                                                     <div>
                                                         <span class="opacity-60">{{ translate('Phone') }}:</span>
                                                         <span class="fw-600 ml-2">{{ $address->phone }}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="opacity-60">@lang('delegate::delivery.optional_phone'):</span>
+                                                        <span class="fw-600 ml-2">{{ $address->optional_phone ?? 'لا شيء' }}</span>
                                                     </div>
                                                 </span>
                                             </span>

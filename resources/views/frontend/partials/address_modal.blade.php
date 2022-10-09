@@ -52,51 +52,21 @@
                             </div>
                         </div>
 
-                        {{-- @if (get_setting('google_map') == 1)
-                            <div class="row">
-                                <input id="searchInput" class="controls" type="text" placeholder="{{translate('Enter a location')}}">
-                                <div id="map"></div>
-                                <ul id="geoData">
-                                    <li style="display: none;">Full Address: <span id="location"></span></li>
-                                    <li style="display: none;">Postal Code: <span id="postal_code"></span></li>
-                                    <li style="display: none;">Country: <span id="country"></span></li>
-                                    <li style="display: none;">Latitude: <span id="lat"></span></li>
-                                    <li style="display: none;">Longitude: <span id="lon"></span></li>
-                                </ul>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-2" id="">
-                                    <label for="exampleInputuname">Longitude</label>
-                                </div>
-                                <div class="col-md-10" id="">
-                                    <input type="text" class="form-control mb-3" id="longitude" name="longitude" readonly="">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2" id="">
-                                    <label for="exampleInputuname">Latitude</label>
-                                </div>
-                                <div class="col-md-10" id="">
-                                    <input type="text" class="form-control mb-3" id="latitude" name="latitude" readonly="">
-                                </div>
-                            </div>
-                        @endif --}}
-                        
-                        {{-- <div class="row">
-                            <div class="col-md-2">
-                                <label>{{ translate('Postal code')}}</label>
-                            </div>
-                            <div class="col-md-10">
-                                <input type="text" class="form-control mb-3" placeholder="{{ translate('Your Postal Code')}}" name="postal_code" value="" required>
-                            </div>
-                        </div> --}}
                         <div class="row">
                             <div class="col-md-2">
                                 <label>{{ translate('Phone')}}</label>
                             </div>
                             <div class="col-md-10">
-                                <input type="text" class="form-control mb-3" placeholder="{{ translate('+249')}}" name="phone" value="" required>
+                                <input type="text" class="form-control mb-3" placeholder="" name="phone" value="{{ old('phone') }}" onkeyup="this.value=this.value.replace(/[^\d]/,'')" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label>@lang('delegate::delivery.optional_phone')</label>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control mb-3" placeholder="" name="optional_phone" value="{{ old('optional_phone') }}" onkeyup="this.value=this.value.replace(/[^\d]/,'')" required>
                             </div>
                         </div>
                         <div class="form-group text-right">
@@ -128,6 +98,14 @@
 
 @section('script')
     <script type="text/javascript">
+        @error('phone')
+        AIZ.plugins.notify('danger', '{{ $errors->first("phone") }}');
+        $('#new-address-modal').modal('show');
+        @enderror
+        @error('optional_phone')
+        AIZ.plugins.notify('danger', '{{ $errors->first("optional_phone") }}');
+        $('#new-address-modal').modal('show');
+        @enderror
         function add_new_address(){
             $('#new-address-modal').modal('show');
         }

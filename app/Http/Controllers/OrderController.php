@@ -306,6 +306,7 @@ class OrderController extends Controller
             $shippingAddress['zone']         = $address->zone_id == null ? '' : \Modules\Delegate\Entities\Neighborhood::find($address->zone_id)->name;
 
             $shippingAddress['phone']       = $address->phone;
+            $shippingAddress['optional_phone']       = $address->optional_phone;
             if ($address->latitude || $address->longitude) {
                 $shippingAddress['lat_lang'] = $address->latitude . ',' . $address->longitude;
             }

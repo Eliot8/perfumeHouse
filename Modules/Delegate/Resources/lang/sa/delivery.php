@@ -140,4 +140,7 @@ return [
     'coupon_validity' => 'صلاحية الكوبون',
 
     'show_entries' => 'عرض الإدخالات',
+    'show_entries' => 'عرض الإدخالات',
+    
+    'optional_phone' => 'هاتف احتياطي'
 ];

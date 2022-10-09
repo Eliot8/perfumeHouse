@@ -79,6 +79,10 @@
                             <td class="w-50 fw-600">{{ translate('phone_number') }}:</td>
                             <td>{{ json_decode($order->shipping_address)->phone }}</td>
                         </tr>
+                        <tr>
+                            <td class="w-50 fw-600">@lang('delegate::delivery.optional_phone'):</td>
+                            <td>{{ json_decode($order->shipping_address)->optional_phone ?? 'لاشيء' }}</td>
+                        </tr>
                         @if($order->coupon_id != null)
                         <tr>
                             <td class="w-50 fw-600">@lang('delegate::delivery.marketer_phone_number'):</td>

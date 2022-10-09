@@ -82,38 +82,26 @@
             </div>
         @endif
         
-        {{-- <div class="row">
-            <div class="col-md-2">
-                <label>{{ translate('Postal code')}}</label>
-            </div>
-            <div class="col-md-10">
-                <input type="text" class="form-control mb-3" placeholder="{{ translate('Your Postal Code')}}" value="{{ $address_data->postal_code }}" name="postal_code" value="" required>
-            </div>
-        </div> --}}
         <div class="row">
             <div class="col-md-2">
                 <label>{{ translate('Phone')}}</label>
             </div>
             <div class="col-md-10">
-                <input type="text" class="form-control mb-3" placeholder="{{ translate('+880')}}" value="{{ $address_data->phone }}" name="phone" value="" required>
+                <input type="text" class="form-control mb-3" placeholder="{{ translate('880')}}" value="{{ $address_data->phone }}" name="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" required>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                <label>@lang('delegate::delivery.optional_phone')</label>
+            </div>
+            <div class="col-md-10">
+                <input type="text" class="form-control mb-3" placeholder="" value="{{ $address_data->optional_phone }}" name="optional_phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" required>
+            </div>
+        </div>
+
         <div class="form-group text-right">
             <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
         </div>
     </div>
 </form>
-
-{{-- @section('script')
-<script type="text/javascript">
-    $('#province_id').on('change', function() {
-        $.ajax({
-            url: `/province/${$(this).val()}/zone`,
-            type: "GET",
-            success: function(response) {
-                $('#zone_id').empty().append(response.options).selectpicker('refresh');
-            }
-        });
-    });
-</script>
-@endsection --}}

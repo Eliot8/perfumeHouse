@@ -7,6 +7,7 @@ use App\Models\Address;
 use App\Models\City;
 use App\Models\State;
 use Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AddressController extends Controller
 {
@@ -38,7 +39,15 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->request);
+        
+        $request->validate([
+            'phone' => 'digits:10',
+            'optional_phone' => 'digits:10',
+        ], [
+            'phone.digits' => 'يجب أن يتكون الهاتف من 10 أرقام.',
+            'optional_phone.digits' => 'يجب أن يتكون الهاتف من 10 أرقام.',
+        ]);
+
         $address = new Address;
         if($request->has('customer_id')){
             $address->user_id   = $request->customer_id;
@@ -52,6 +61,8 @@ class AddressController extends Controller
         $address->province_id   = $request->province;
         $address->zone_id       = $request->zone;
         $address->phone         = $request->phone;
+
+        $address->optional_phone         = $request->input('optional_phone') ?? null;
         $address->save();
 
         return back();
@@ -95,7 +106,14 @@ class AddressController extends Controller
     public function update(Request $request, $id)
     {
 
-        // dd($request->request);
+        $request->validate([
+            'phone' => 'digits:10',
+            'optional_phone' => 'digits:10',
+        ], [
+            'phone.digits' => 'يجب أن يتكون الهاتف من 10 أرقام.',
+            'optional_phone.digits' => 'يجب أن يتكون الهاتف من 10 أرقام.',
+        ]);
+
         $address = Address::findOrFail($id);
         
         $address->name       = $request->name;
@@ -105,6 +123,8 @@ class AddressController extends Controller
         $address->zone_id       = $request->zone;
         $address->phone         = $request->phone;
 
+        $address->optional_phone         = $request->input('optional_phone') ?? null;
+        
         $address->save();
 
         flash(translate('Address info updated successfully'))->success();

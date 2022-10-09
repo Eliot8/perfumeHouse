@@ -63,7 +63,7 @@
 						{{-- @if($logo != null)
 							<img src="{{ uploaded_asset($logo) }}" height="30" style="display:inline-block;">
 						@else --}}
-							<img src="{{ asset('assets/img/logo.png') }}" height="30" style="display:inline-block;">
+							{{-- <img src="{{ asset('assets/img/logo.png') }}" height="30" style="display:inline-block;"> --}}
 							{{-- <img src="https://frenchperfumehouse.com/uploads/all/5K1ps8PhqPEQWuqo1dtL3nzdGldLXkB7L9GymVii.png" height="30" style="display:inline-block;"> --}}
 						{{-- @endif --}}
 					</td>
@@ -100,6 +100,7 @@
 				<tr><td class="gry-color small">{{ $shipping_address->address }}, {{ $shipping_address->zone }}, {{ $shipping_address->province }}</td></tr>
 				<tr><td class="gry-color small">{{ translate('Email') }}: {{ $shipping_address->email }}</td></tr>
 				<tr><td class="gry-color small">{{ translate('Phone') }}: {{ $shipping_address->phone }}</td></tr>
+				<tr><td class="gry-color small">@lang('delegate::delivery.optional_phone'): {{ $shipping_address->optional_phone ?? 'لاشيء' }}</td></tr>
 				@if($order->coupon_id != null)
 				<tr>
 					<td class="gry-color small">@lang('delegate::delivery.marketer_phone_number'): {{ \App\Models\Coupon::find($order->coupon_id)->affiliate_user->user->phone }}</td>

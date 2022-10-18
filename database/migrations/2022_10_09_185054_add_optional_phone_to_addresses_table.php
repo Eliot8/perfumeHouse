@@ -13,7 +13,7 @@ class AddOptionalPhoneToAddressesTable extends Migration
      */
     public function up()
     {
-        Schema::table('Addresses', function (Blueprint $table) {
+        Schema::table('addresses', function (Blueprint $table) {
             $table->string('optional_phone')->nullable()->after('phone');
         });
     }
@@ -25,7 +25,7 @@ class AddOptionalPhoneToAddressesTable extends Migration
      */
     public function down()
     {
-        Schema::table('Addresses', function (Blueprint $table) {
+        Schema::table('addresses', function (Blueprint $table) {
             $table->dropColumn('optional_phone');
         });
     }

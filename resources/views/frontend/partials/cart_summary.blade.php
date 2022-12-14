@@ -61,13 +61,6 @@
                         $shipping = \App\Models\Address::find($cartItem->address_id)->province->shipping_cost;
                         $cartItem['shipping_cost'] = $shipping ?? '0';
 
-                        // $commission += $cartItem['commission'];
-                        // if($cartItem['affiliate_price_type'] == 'discount'){
-                        //     $discount += $cartItem['affiliate_price'];
-                        // }
-                        // if($cartItem['affiliate_price_type'] == 'over_price'){
-                        //     $over_price += $cartItem['affiliate_price'];
-                        // }
                     @endphp
                     <tr class="cart_item">
                         <td class="product-name">
@@ -166,10 +159,6 @@
                 @endif
 
                 @php
-                    // $subtotal = 0;
-                    // foreach ($carts as $key => $cartItem) {
-                    //     $subtotal += ($cartItem['price'] + $over_price - $discount ) * $cartItem['quantity'];
-                    // }
                     
                     $total = $subtotal + $tax + $shipping;
                     $total = $total + $over_price - $discount;
@@ -227,7 +216,6 @@
         @endif
 
         @if (Auth::check() && get_setting('coupon_system') == 1)
-        {{-- @if (Auth::check()) --}}
             @if ($carts[0]['discount'] > 0)
                 <div class="mt-3">
                     <form class="" id="remove-coupon-form" enctype="multipart/form-data">

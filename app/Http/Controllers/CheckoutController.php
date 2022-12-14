@@ -269,7 +269,6 @@ class CheckoutController extends Controller
 
     public function apply_coupon_code(Request $request)
     {
-        // dd($request->request);
         $code = $request->code;
         $affiliate_price_type = $request->get('affiliate_price_type');
         $affiliate_price = $request->get('affiliate_price');
@@ -281,7 +280,6 @@ class CheckoutController extends Controller
             if (strtotime(date('d-m-Y')) >= $coupon->start_date && strtotime(date('d-m-Y')) <= $coupon->end_date) {
                 // if (CouponUsage::where('user_id', Auth::user()->id)->where('coupon_id', $coupon->id)->first() == null) {
                     $coupon_details = json_decode($coupon->details);
-
                     $carts = Cart::where('user_id', Auth::user()->id)
                                     ->where('owner_id', $coupon->user_id)
                                     ->get();
@@ -294,18 +292,14 @@ class CheckoutController extends Controller
                         $subtotal = 0;
 
                         if($affiliate_price_type == 'discount')  $affiliate_discount = $affiliate_price;
-                        else  $affiliate_over_price = $affiliate_price;
-
+                        elseif ($affiliate_price_type == 'over_price')  $affiliate_over_price = $affiliate_price;
 
                         foreach ($carts as $key => $cartItem) {
                             $subtotal += $cartItem['price'] * $cartItem['quantity'];
-                            // $cal_commission = $cartItem['price'] * ($coupon->commission / 100);
-                            // $commission += $cal_commission;
-                            // $cartItem['commission'] = $cal_commission;
                             $cartItem->save();
                         }
-                        $commission = $subtotal * ($coupon->commission / 100);
 
+                        $commission = $subtotal * ($coupon->commission / 100);
 
                         if ($affiliate_price_type == 'discount' && $affiliate_price > $commission) {
                             
@@ -315,7 +309,6 @@ class CheckoutController extends Controller
 
                             $returnHTML = view('frontend.partials.cart_summary', compact('code', 'carts', 'shipping_info', 'commission', 'affiliate_price_type', 'affiliate_price'))->render();
                             return response()->json(['error' => Lang::get('delegate::delivery.commission_error'), 'html' => $returnHTML], 401);
-                        // return response()->json([ 'response_message' => $response_message, 'html' => $returnHTML ], 401);
                         }
 
                         foreach ($carts as $key => $cartItem) {

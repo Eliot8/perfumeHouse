@@ -580,6 +580,13 @@
 
         $(document).on("click", "#coupon-apply", function() {
             @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
+                const affiliatePriceType = $('#affiliate_price_type').val();
+                let affiliatePrice = $('#affiliate_price').val();
+
+                if (affiliatePriceType === 'nothing') {
+                    affiliatePrice = 0;
+                }
+
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -588,11 +595,10 @@
                     url: "{{ route('checkout.apply_coupon_code') }}",
                     data: {
                         code: $('#coupon-code').val(),
-                        affiliate_price_type: $('#affiliate_price_type').val(),
-                        affiliate_price: $('#affiliate_price').val(),
+                        affiliate_price_type: affiliatePriceType,
+                        affiliate_price: affiliatePrice,
                     },
                     success: function(data, textStatus, jqXHR) {
-                        console.dir(data);
                         AIZ.plugins.notify(data.response_message.response, data.response_message.message);
                         $("#cart_summary").html(data.html);
                     },

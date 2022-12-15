@@ -45,6 +45,7 @@ class ProvinceController extends Controller
             'name' => ['required', 'min:3', 'max:50'],
             'delegate_cost' => ['required', 'numeric'],
             'shipping_type' => ['required'],
+            'delegate_commission' => ['required', 'numeric', 'max:100', 'min:0'],
         ]);
 
         if ($validator->fails()) {
@@ -55,6 +56,7 @@ class ProvinceController extends Controller
         $province = new Province();
         $province->name = $request->input('name');
         $province->delegate_cost = $request->input('delegate_cost');
+        $province->delegate_commission = $request->input('delegate_commission');
 
         if ($request->shipping_type == 'free') {
             $province->free_shipping = 1;
@@ -102,6 +104,7 @@ class ProvinceController extends Controller
         $validator  = Validator::make($request->all(), [
             'name' => ['required', 'min:3', 'max:50'],
             'delegate_cost' => ['required', 'numeric'],
+            'delegate_commission' => ['required', 'numeric', 'max:100', 'min:0'],
             'shipping_type' => ['required'],
         ]);
 
@@ -109,10 +112,12 @@ class ProvinceController extends Controller
             flash(translate($validator->errors()->first()))->error();
             return back();
         }
+
         $province = Province::findOrFail($id);
         $province->name = $request->input('name');
         $province->delegate_cost = $request->input('delegate_cost');
-
+        $province->delegate_commission = $request->input('delegate_commission');
+        
         if ($request->shipping_type == 'free') {
             $province->free_shipping = 1;
             $province->shipping_cost = 0;

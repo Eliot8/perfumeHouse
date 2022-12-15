@@ -140,4 +140,7 @@ return [
 
     'show_entries' => 'Show Entries',
     'optional_phone' => 'Optional Phone',
+
+    'delegate_commission' => 'Delegate Commission',
+    'commission_earnings' => 'Commission Earnings',
 ];

@@ -142,5 +142,8 @@ return [
     'show_entries' => 'عرض الإدخالات',
     'show_entries' => 'عرض الإدخالات',
     
-    'optional_phone' => 'هاتف احتياطي'
+    'optional_phone' => 'هاتف احتياطي',
+    
+    'delegate_commission' => 'عمولة المندوب',
+    'commission_earnings' => 'أرباح العمولة'
 ];

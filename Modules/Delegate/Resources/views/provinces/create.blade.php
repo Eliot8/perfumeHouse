@@ -11,13 +11,21 @@
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label">{{ translate('Name') }} <span class="text-danger">*</span></label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="name" value="" placeholder="@lang('delegate::delivery.province_name')" required>
+                            <input type="text" class="form-control" name="name" placeholder="@lang('delegate::delivery.province_name')" required>
                         </div>
                     </div>
+
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label">@lang('delegate::delivery.delegate_cost') <span class="text-danger">*</span></label>
                         <div class="col-md-8">
-                            <input type="number" class="form-control" name="delegate_cost" value="" placeholder="@lang('delegate::delivery.delegate_cost')" required>
+                            <input type="number" class="form-control" name="delegate_cost" placeholder="@lang('delegate::delivery.delegate_cost')" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">@lang('delegate::delivery.delegate_commission') <span class="text-danger">*</span></label>
+                        <div class="col-md-8">
+                            <input type="number" class="form-control" name="delegate_commission" max="100" min="0" step="5" placeholder="@lang('delegate::delivery.delegate_commission')" required>
                         </div>
                     </div>
 

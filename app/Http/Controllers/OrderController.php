@@ -663,9 +663,9 @@ class OrderController extends Controller
         $order = Order::findOrFail($request->order_id);
 
         if ($request->status == 'delivered') {
-
-            // DELIVERY MAN CODE
-            $delegate = Delegate::select('id')->where('user_id', $order->assign_delivery_boy)->first();
+            
+            # DELIVERY MAN CODE
+            $delegate = Delegate::select('id', 'commission_earnings')->where('user_id', $order->assign_delivery_boy)->first();
             if(!$delegate){
                 return response()->json([
                     'status' => 400,
@@ -673,7 +673,7 @@ class OrderController extends Controller
                 ]);
             }
             
-            // MANAGE DELIVERY MAN STOCK
+            # MANAGE DELIVERY MAN STOCK
             foreach ($order->orderDetails as $orderDetail) {
                 if ($orderDetail->product->variant_product) {
                     $delivery_stock = Stock::where([
@@ -703,8 +703,7 @@ class OrderController extends Controller
             }
             $order->grand_total -= $order->province->delegate_cost;
 
-            // WEEK BALANCE
-            // dd($order->province->delegate_cost);
+            # WEEK BALANCE
             if($order->province->delegate_cost == null) {
                 return response()->json([
                     'status' => 401,
@@ -713,7 +712,7 @@ class OrderController extends Controller
             }
             insertIntoWeekOrders($delegate->id, $order->grand_total, $order->province->delegate_cost);
 
-            // TRANSFORM COMMISSION FROM AFFILIATE BALANCE PENDING TO AFFILIATE BALANCE
+            # TRANSFORM COMMISSION FROM AFFILIATE BALANCE PENDING TO AFFILIATE BALANCE
             if($order->coupon_id != null){
                 $affiliate_user = Coupon::find($order->coupon_id)->affiliate_user;
                 $coupon_usage = CouponUsage::where('order_id', $order->id)->first();
@@ -727,6 +726,11 @@ class OrderController extends Controller
                 
                 $affiliate_user->save();
             }
+
+            # COMMISSION EARNINGS FOR DELIVERY MAN
+            $delegate->commission_earnings += $order->orderDetails->sum('price') * ($order->province->delegate_commission / 100);
+            $delegate->save();
+            // dd($commission_earnings);
 
         }
 

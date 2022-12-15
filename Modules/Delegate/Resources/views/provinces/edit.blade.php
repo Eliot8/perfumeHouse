@@ -5,7 +5,7 @@
     <h5 class="mb-0 h6">@lang('delegate::delivery.edit_province')</h5>
 </div>
 <div class="">
-    <form class="form form-horizontal mar-top" action="{{route('provinces.update', $province->id)}}" method="POST" id="choice_form">
+    <form class="form form-horizontal mar-top" action="{{ route('provinces.update', $province->id) }}" method="POST" id="province_form">
         <div class="row gutters-5">
             <div class="col-lg-8 mx-auto">
                 @csrf
@@ -19,10 +19,18 @@
                                 <input type="text" class="form-control" name="name" value="{{ $province->name }}" placeholder="@lang('delegate::delivery.province_name')" required>
                             </div>
                         </div>
+
                         <div class="form-group row">
                             <label class="col-md-3 col-from-label">@lang('delegate::delivery.delegate_cost') <span class="text-danger">*</span></label>
                             <div class="col-md-8">
                                 <input type="number" class="form-control" name="delegate_cost" value="{{ $province->delegate_cost }}" placeholder="@lang('delegate::delivery.delegate_cost')" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">@lang('delegate::delivery.delegate_commission') <span class="text-danger">*</span></label>
+                            <div class="col-md-8">
+                                <input type="number" class="form-control" name="delegate_commission" max="100" min="0" step="5" value="{{ $province->delegate_commission }}" placeholder="@lang('delegate::delivery.delegate_commission')" required>
                             </div>
                         </div>
 
@@ -57,7 +65,7 @@
                         
                         <div class="btn-toolbar float-right mb-3" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group" role="group" aria-label="Second group">
-                                <button type="submit" name="button" value="create" class="btn btn-primary action-btn">{{ translate('Update') }}</button>
+                                <button type="submit" name="button" class="btn btn-primary" onclick="submitForm()">{{ translate('Update') }}</button>
                             </div>
                         </div>
                     </div>
@@ -76,8 +84,12 @@
         if($(this).val() == 'cost'){
             $(".flat_rate_shipping_div").show();
         }
-
     });
+
+    function submitForm() {
+        console.log('hi');
+        $('#province_form').submit();
+    }
     </script>
 @endsection
 

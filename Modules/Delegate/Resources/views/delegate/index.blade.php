@@ -81,7 +81,8 @@
                     <li class="dropdown-item column_visibility" id="province" style="cursor: pointer;">@lang('delegate::delivery.province')</li>
                     <li class="dropdown-item column_visibility" id="earnings" style="cursor: pointer;">@lang('delegate::delivery.earnings')</li>
                     <li class="dropdown-item column_visibility" id="personal_earnings" style="cursor: pointer;">@lang('delegate::delivery.weekly_personal_earnings')</li>
-                    <li class="dropdown-item column_visibility" id="earnisystem_earningsngs" style="cursor: pointer;">@lang('delegate::delivery.weekly_system_earnings')</li>
+                    <li class="dropdown-item column_visibility" id="system_earnings" style="cursor: pointer;">@lang('delegate::delivery.weekly_system_earnings')</li>
+                    <li class="dropdown-item column_visibility" id="commission_earnings" style="cursor: pointer;">@lang('delegate::delivery.commission_earnings')</li>
                     <li class="dropdown-item column_visibility" id="orders_count" style="cursor: pointer;">@lang('delegate::delivery.orders_count')</li>
                     <li class="dropdown-item column_visibility" id="options" style="cursor: pointer;">{{translate('Options')}}</li>
                 </ul>
@@ -103,6 +104,7 @@
                         <th class="earnings" data-breakpoints="md">@lang('delegate::delivery.earnings')</th>
                         <th class="personal_earnings" data-breakpoints="md">@lang('delegate::delivery.weekly_personal_earnings')</th>
                         <th class="system_earnings" data-breakpoints="md">@lang('delegate::delivery.weekly_system_earnings')</th>
+                        <th class="commission_earnings" data-breakpoints="md">@lang('delegate::delivery.commission_earnings')</th>
                         <th class="orders_count" data-breakpoints="md">@lang('delegate::delivery.orders_count')</th>
                         <th class="options" data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
                     </tr>
@@ -134,6 +136,7 @@
                         <td class="earnings">{{ single_price($price) }} </td>
                         <td class="personal_earnings">{{ single_price($week_orders->personal_earnings ?? 0)}} </td>
                         <td class="system_earnings">{{ single_price($week_orders->system_earnings ?? 0)}} </td>
+                        <td class="commission_earnings">{{ single_price($delegate->commission_earnings ?? 0)}} </td>
                         <td class="orders_count"><span class="badge badge-inline badge-success">{{ $ordersCount }}</span></td>
                         <td class="options text-right">
                             @if($week_orders)

@@ -94,8 +94,9 @@
                     <ul class="dropdown-menu">
                         <li class="dropdown-item column_visibility" id="name" style="cursor: pointer;">{{ translate('Name') }}</li>
                         <li class="dropdown-item column_visibility" id="delegate" style="cursor: pointer;">@lang('delegate::delivery.delegate')</li>
-                        <li class="dropdown-item column_visibility" id="shipping_cost" style="cursor: pointer;">@lang('delegate::delivery.shipping_cost')</li>
+                        <li class="dropdown-item column_visibility" id="delegate_commission" style="cursor: pointer;">@lang('delegate::delivery.delegate_commission')</li>
                         <li class="dropdown-item column_visibility" id="delegate_cost" style="cursor: pointer;">@lang('delegate::delivery.delegate_cost')</li>
+                        <li class="dropdown-item column_visibility" id="shipping_cost" style="cursor: pointer;">@lang('delegate::delivery.shipping_cost')</li>
                         <li class="dropdown-item column_visibility" id="options" style="cursor: pointer;">{{translate('Options')}}</li>
                     </ul>
                 </div>
@@ -110,6 +111,7 @@
                         <th data-breakpoints="sm">#</th>
                         <th class="name">{{ translate('Name') }}</th>
                         <th class="delegate" data-breakpoints="sm">@lang('delegate::delivery.delivery_man')</th>
+                        <th class="delegate_commission" data-breakpoints="sm">@lang('delegate::delivery.delegate_commission')</th>
                         <th class="delegate_cost" data-breakpoints="sm">@lang('delegate::delivery.delegate_cost')</th>
                         <th class="shipping_cost" data-breakpoints="sm">@lang('delegate::delivery.shipping_cost')</th>
                         <th class="options" data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
@@ -134,6 +136,9 @@
                             @else
                             <span class="btn-soft-danger btn-circle btn-sm" style="transition: all 0.3s ease;">@lang('delegate::delivery.province_empty')</span>
                             @endif
+                        </td>
+                        <td class="delegate_commission">
+                            {{ $province->delegate_commission ?? 0}} %
                         </td>
                         <td class="delegate_cost">
                             {{ single_price($province->delegate_cost) }} 

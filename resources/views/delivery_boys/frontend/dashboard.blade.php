@@ -6,36 +6,22 @@
         background-image: linear-gradient(315deg, #eb4786 0%, #b854a6 74%);
     }
     .bg-grad-5 {
-        /* background-color: #8c64dd; 
-        background-image: linear-gradient(315deg, #8c64dd 0%, #7764dd 74%); */
-        /* background-image: linear-gradient(to right top, #b91c1c, #bc2719, #be3015, #c03911, #c2410c); */
         background-image: linear-gradient(to right top, #991b1b, #a91e1e, #ba2021, #cb2323, #dc2626);
     }
     .bg-grad-6 {
-        /* background-color: #fdce4b; 
-        background-image: linear-gradient(315deg, #ecdc65 0%, #bd9e49 74%); */
-        /* background-image: linear-gradient(to right top, #ca8a04, #ce8602, #d28102, #d57c03, #d97706); */
         background-image: linear-gradient(to right top, #d97706, #d57c03, #d28102, #ce8602, #ca8a04);
     }
     .bg-grad-7 {
-        /* background-color: #767676;
-        background-image: linear-gradient(315deg, #767676 0%, #282828 74%); */
         background-color: #4473b7; 
         background-image: linear-gradient(315deg, #4473b7 0%, #114781 74%);
     }
     .bg-grad-8 {
-        /* background-color: #56bb78; 
-        background-image: linear-gradient(315deg, #56bb78 0%, #4f996a 74%); */
          background-image: linear-gradient(to right top, #065f46, #076142, #0a623e, #106439, #166534);
     }
     .bg-grad-9 {
-        /* background-color: #00c896; 
-        background-image: linear-gradient(315deg, #00c896 0%, #325e9f 74%); */
         background-image: linear-gradient(to right top, #0f766e, #007678, #007681, #007589, #0e7490);
     }
     .bg-grad-10 {
-        /* background-color: #00c896; 
-        background-image: linear-gradient(315deg, #00c896 0%, #325e9f 74%); */
          background-image: linear-gradient(to right top, #155e75, #065f6f, #005f69, #055f61, #115e59);  
     }
     
@@ -48,8 +34,8 @@
 @section('panel_content')
 
 @php 
-$delivery_boy_info = \App\Models\DeliveryBoy::where('user_id', Auth::user()->id)->first();
-$delegate = \Modules\Delegate\Entities\Delegate::where('user_id', Auth::user()->id)->first();
+    $delivery_boy_info = \App\Models\DeliveryBoy::where('user_id', Auth::user()->id)->first();
+    $delegate = \Modules\Delegate\Entities\Delegate::where('user_id', Auth::user()->id)->first();
 @endphp
 <div class="aiz-titlebar mt-2 mb-4">
     <div class="row align-items-center">
@@ -250,6 +236,7 @@ $delegate = \Modules\Delegate\Entities\Delegate::where('user_id', Auth::user()->
             </div>
         </div>
     </div>
+
     <div class="col-md-3">
         <div class="bg-grad-11 text-white rounded-lg mb-4 overflow-hidden">
             <div class="px-3 pt-3 text-center">
@@ -257,6 +244,18 @@ $delegate = \Modules\Delegate\Entities\Delegate::where('user_id', Auth::user()->
                 <div class="opacity-50">@lang('delegate::delivery.weekly_personal_earnings')</div>
                  <div class="h3 fw-700">
                    {{ $week_orders ? substr($week_orders->personal_earnings, 0, -3) : 0 }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="bg-grad-11 text-white rounded-lg mb-4 overflow-hidden">
+            <div class="px-3 pt-3 text-center">
+                <i class="las la-dollar-sign la-4x"></i>
+                <div class="opacity-50">@lang('delegate::delivery.commission_earnings')</div>
+                <div class="h3 fw-700">
+                   {{ number_format($delegate->commission_earnings, 0) }}
                 </div>
             </div>
         </div>

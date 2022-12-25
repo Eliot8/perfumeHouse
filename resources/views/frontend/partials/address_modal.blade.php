@@ -7,7 +7,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form class="form-default" role="form" action="{{ route('addresses.store') }}" method="POST">
+            <form id="create_address_form" class="form-default" role="form" action="{{ route('addresses.store') }}" method="POST" onsubmit="event.preventDefault();">
                 @csrf
                 <div class="modal-body">
                     <div class="p-3">
@@ -57,7 +57,7 @@
                                 <label>{{ translate('Phone')}}</label>
                             </div>
                             <div class="col-md-10">
-                                <input type="text" class="form-control mb-3" placeholder="" name="phone" value="{{ old('phone') }}" onkeyup="this.value=this.value.replace(/[^\d]/,'')" required>
+                                <input type="text" class="form-control mb-3" id="phone" name="phone" value="{{ old('phone') }}" onkeyup="this.value=this.value.replace(/[^\d]/,'')" required>
                             </div>
                         </div>
 
@@ -66,11 +66,11 @@
                                 <label>@lang('delegate::delivery.optional_phone')</label>
                             </div>
                             <div class="col-md-10">
-                                <input type="text" class="form-control mb-3" placeholder="" name="optional_phone" value="{{ old('optional_phone') }}" onkeyup="this.value=this.value.replace(/[^\d]/,'')" required>
+                                <input type="text" class="form-control mb-3" id="optional_phone" name="optional_phone" value="{{ old('optional_phone') }}" onkeyup="this.value=this.value.replace(/[^\d]/,'')">
                             </div>
                         </div>
                         <div class="form-group text-right">
-                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                            <button type="submit" class="btn btn-sm btn-primary" onclick="submitAddressForm()">{{translate('Save')}}</button>
                         </div>
                     </div>
                 </div>
@@ -191,6 +191,7 @@
                 }
             });
         }
+
         function get_zones(select){
              $.ajax({
                 url: `/province/${select.value}/zone`,
@@ -211,6 +212,46 @@
                 }
             });
         });
+
+        function submitAddressForm() {
+
+            $.ajax({
+                type: $('#create_address_form').attr('method'),
+                url: $('#create_address_form').attr('action'),
+                data: $('#create_address_form').serialize(),
+                async: false,
+                success: function(response) {
+                    $('#new-address-modal').modal('hide');
+                    AIZ.plugins.notify('success', response.message);
+                    location.reload();
+                },
+                error: function(response) {
+                    $.each(response.responseJSON, function(r, value) {
+                        AIZ.plugins.notify('danger', value);
+                    });
+                }
+            });
+        }
+
+        function submitAddressEditForm() {
+
+            $.ajax({
+                type: $('#edit_address_form').attr('method'),
+                url: $('#edit_address_form').attr('action'),
+                data: $('#edit_address_form').serialize(),
+                async: false,
+                success: function(response) {
+                    $('#edit-address-modal').modal('hide');
+                    AIZ.plugins.notify('success', response.message);
+                    location.reload();
+                },
+                error: function(response) {
+                    $.each(response.responseJSON, function(r, value) {
+                        AIZ.plugins.notify('danger', value);
+                    });
+                }
+            });
+        }
     </script>
 
     

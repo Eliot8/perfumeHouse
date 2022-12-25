@@ -1,4 +1,4 @@
-<form class="form-default" role="form" action="{{ route('addresses.update', $address_data->id) }}" method="POST">
+<form id="edit_address_form" class="form-default" role="form" action="{{ route('addresses.update', $address_data->id) }}" method="POST" onsubmit="event.preventDefault();">
     @csrf
     <div class="p-3">
         <div class="row">
@@ -96,12 +96,12 @@
                 <label>@lang('delegate::delivery.optional_phone')</label>
             </div>
             <div class="col-md-10">
-                <input type="text" class="form-control mb-3" placeholder="" value="{{ $address_data->optional_phone }}" name="optional_phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" required>
+                <input type="text" class="form-control mb-3" placeholder="" value="{{ $address_data->optional_phone }}" name="optional_phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')">
             </div>
         </div>
 
         <div class="form-group text-right">
-            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+            <button type="submit" class="btn btn-sm btn-primary" onclick="submitAddressEditForm()">{{translate('Save')}}</button>
         </div>
     </div>
 </form>

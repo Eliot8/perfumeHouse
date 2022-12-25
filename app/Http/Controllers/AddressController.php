@@ -39,32 +39,48 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $request->validate([
-            'phone' => 'digits:10',
-            'optional_phone' => 'digits:10',
-        ], [
-            'phone.digits' => 'يجب أن يتكون الهاتف من 10 أرقام.',
-            'optional_phone.digits' => 'يجب أن يتكون الهاتف من 10 أرقام.',
-        ]);
+        if (request()->ajax()) {
+            
+            $validator = Validator::make($request->all(), [
+                'phone' => ['numeric', 'digits:10'],
+                'optional_phone' => ['nullable', 'numeric', 'digits:10'],
+            ], [
+                'phone.digits' => 'يجب أن يتكون الهاتف من 10 أرقام.',
+                'phone.numeric' => 'يجب أن يكون الهاتف رقمًا.',
+                'optional_phone.numeric' => 'يجب أن يكون الهاتف رقمًا.',
+                'optional_phone.digits' => 'يجب أن يتكون الهاتف الاحتياطي من 10 أرقام.',
+            ]);
 
-        $address = new Address;
-        if($request->has('customer_id')){
-            $address->user_id   = $request->customer_id;
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
+            try {
+                $address = new Address;
+
+                if($request->has('customer_id')){
+                    $address->user_id   = $request->customer_id;
+                } else {
+                    $address->user_id   = Auth::user()->id;
+                }
+
+                $address->name           = $request->name;
+                $address->address        = $request->address;
+                $address->province_id    = $request->province;
+                $address->zone_id        = $request->zone;
+                $address->phone          = $request->phone;
+                $address->optional_phone = $request->input('optional_phone') ?? null;
+                $address->save();
+    
+            } catch(\Exception $e) {
+                return response()->json(['message' => [$e->getMessage()]], 400);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'تمت إضافة العنوان بنجاح',
+            ], 200);
         }
-        else{
-            $address->user_id   = Auth::user()->id;
-        }
-        $address->name          = $request->name;
-        $address->address       = $request->address;
-
-        $address->province_id   = $request->province;
-        $address->zone_id       = $request->zone;
-        $address->phone         = $request->phone;
-
-        $address->optional_phone         = $request->input('optional_phone') ?? null;
-        $address->save();
-
         return back();
     }
 
@@ -106,29 +122,41 @@ class AddressController extends Controller
     public function update(Request $request, $id)
     {
 
-        $request->validate([
-            'phone' => 'digits:10',
-            'optional_phone' => 'digits:10',
-        ], [
-            'phone.digits' => 'يجب أن يتكون الهاتف من 10 أرقام.',
-            'optional_phone.digits' => 'يجب أن يتكون الهاتف من 10 أرقام.',
-        ]);
+        if (request()->ajax()) {
+            
+            $validator = Validator::make($request->all(), [
+                'phone' => ['numeric', 'digits:10'],
+                'optional_phone' => ['nullable', 'numeric', 'digits:10'],
+            ], [
+                'phone.digits' => 'يجب أن يتكون الهاتف من 10 أرقام.',
+                'phone.numeric' => 'يجب أن يكون الهاتف رقمًا.',
+                'optional_phone.numeric' => 'يجب أن يكون الهاتف رقمًا.',
+                'optional_phone.digits' => 'يجب أن يتكون الهاتف الاحتياطي من 10 أرقام.',
+            ]);
 
-        $address = Address::findOrFail($id);
-        
-        $address->name       = $request->name;
-        $address->address       = $request->address;
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
 
-        $address->province_id   = $request->province;
-        $address->zone_id       = $request->zone;
-        $address->phone         = $request->phone;
+            try {
+                $address = Address::findOrFail($id);
+                $address->name           = $request->name;
+                $address->address        = $request->address;
+                $address->province_id    = $request->province;
+                $address->zone_id        = $request->zone;
+                $address->phone          = $request->phone;
+                $address->optional_phone = $request->input('optional_phone') ?? null;
+                $address->save();
+    
+            } catch(\Exception $e) {
+                return response()->json(['message' => [$e->getMessage()]], 400);
+            }
 
-        $address->optional_phone         = $request->input('optional_phone') ?? null;
-        
-        $address->save();
-
-        flash(translate('Address info updated successfully'))->success();
-        return back();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'تم تحديث معلومات العنوان بنجاح',
+            ], 200);
+        }
     }
 
     /**

@@ -145,26 +145,16 @@
                                 <span class="w-50 fw-600">@lang('delegate::delivery.zone'):</span>
                                 <span class="ml-2">{{ Modules\Delegate\Entities\Neighborhood::find($address->zone_id)->name ?? Modules\Delegate\Entities\Province::find($address->province_id)->name  }}</span>
                             </div>
-                            {{-- <div>
-                                <span class="w-50 fw-600">{{ translate('Postal Code') }}:</span>
-                                <span class="ml-2">{{ $address->postal_code }}</span>
-                            </div>
-                            <div>
-                                <span class="w-50 fw-600">{{ translate('City') }}:</span>
-                                <span class="ml-2">{{ optional($address->city)->name }}</span>
-                            </div>
-                            <div>
-                                <span class="w-50 fw-600">{{ translate('State') }}:</span>
-                                <span class="ml-2">{{ optional($address->state)->name }}</span>
-                            </div>
-                            <div>
-                                <span class="w-50 fw-600">{{ translate('Country') }}:</span>
-                                <span class="ml-2">{{ optional($address->country)->name }}</span>
-                            </div> --}}
                             <div>
                                 <span class="w-50 fw-600">{{ translate('Phone') }}:</span>
                                 <span class="ml-2">{{ $address->phone }}</span>
                             </div>
+                            @if($address->optional_phone)
+                            <div>
+                                <span class="w-50 fw-600">@lang('delegate::delivery.optional_phone'):</span>
+                                <span class="ml-2">{{ $address->optional_phone }}</span>
+                            </div>
+                            @endif
                             @if ($address->set_default)
                                 <div class="position-absolute right-0 bottom-0 pr-2 pb-3">
                                     <span class="badge badge-inline badge-primary">{{ translate('Default') }}</span>
@@ -257,12 +247,11 @@
                     AIZ.plugins.notify('danger', data.message);
             });
         });
+
     </script>
 
     @if (get_setting('google_map') == 1)
-        
         @include('frontend.partials.google_map')
-        
     @endif
 
 @endsection

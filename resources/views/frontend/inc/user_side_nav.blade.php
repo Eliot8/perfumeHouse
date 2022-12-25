@@ -112,18 +112,6 @@
                                 if($comment->viewed == 0) $count ++;
                             }   
                             $locale = app()->getLocale();
-
-
-
-
-
-
-
-
-
-
-
-
                         @endphp
                         <a href="{{ route('total-collection') }}"
                             class="aiz-side-nav-link {{ areActiveRoutes(['today-collection']) }}">

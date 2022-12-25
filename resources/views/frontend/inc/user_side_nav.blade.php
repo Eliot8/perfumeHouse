@@ -104,12 +104,26 @@
                     </li>
                     <li class="aiz-side-nav-item position-relative">
                         @php
-                            $comments_not_viewed = \Modules\Delegate\Entities\Comment::where('user_id', '!=', Auth::user()->id)->get();
+                            $comments_not_viewed = \Modules\Delegate\Entities\Comment::whereHas('order', function ($q) {
+                                return $q->where('assign_delivery_boy', Auth::user()->id);
+                            })->where('user_id', '!=', Auth::user()->id)->get();
                             $count = 0;
                             foreach($comments_not_viewed as $comment) {
                                 if($comment->viewed == 0) $count ++;
                             }   
                             $locale = app()->getLocale();
+
+
+
+
+
+
+
+
+
+
+
+
                         @endphp
                         <a href="{{ route('total-collection') }}"
                             class="aiz-side-nav-link {{ areActiveRoutes(['today-collection']) }}">
@@ -481,13 +495,6 @@
                                 ->where('payment_status', 'paid')
                                 ->where('created_at', '>=', $days_ago_30)
                                 ->sum('grand_total');
-                            //$orderDetails = \App\Models\OrderDetail::where('seller_id', Auth::user()->id)->where('created_at', '>=', $days_ago_30)->get();
-                            //$total = 0;
-                            //foreach ($orderDetails as $key => $orderDetail) {
-                            //if($orderDetail->order != null && $orderDetail->order != null && $orderDetail->order->payment_status == 'paid'){
-                            //$total += $orderDetail->price;
-                            //}
-                            //}
                         @endphp
                         <small
                             class="d-block fs-12 mb-2">{{ translate('Your sold amount (current month)') }}</small>

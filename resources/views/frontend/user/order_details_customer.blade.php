@@ -48,23 +48,11 @@
                             <td class="w-50 fw-600">{{ translate('Order Code')}}:</td>
                             <td>{{ $order->code }}</td>
                         </tr>
-                        {{-- <tr>
-                            <td class="w-50 fw-600">{{ translate('Customer')}}:</td>
-                            <td>{{ json_decode($order->shipping_address)->name }}</td>
-                        </tr> --}}
-                        {{-- <tr>
-                            <td class="w-50 fw-600">{{ translate('Email')}}:</td>
-                            @if ($order->user_id != null)
-                                <td>{{ $order->user->email }}</td>
-                            @endif
-                        </tr> --}}
                         <tr>
                             <td class="w-50 fw-600">{{ translate('Shipping address')}}:</td>
                             <td>
                                 {{ json_decode($order->shipping_address)->name }} <br>
                                 {{ json_decode($order->shipping_address)->address }}, 
-                                {{-- @lang('delegate::delivery.zone'): {{ json_decode($order->shipping_address)->zone }}, <br>
-                                @lang('delegate::delivery.province'): {{ json_decode($order->shipping_address)->province }} --}}
                             </td>
                         </tr>
                         <tr>
@@ -103,7 +91,8 @@
                         </tr>
                         <tr>
                             <td class="w-50 fw-600">{{ translate('Total order amount')}}:</td>
-                            <td>{{ single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('tax')) }}</td>
+                            {{-- <td>{{ single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('tax')) }}</td> --}}
+                            <td>{{ single_price($order->grand_total) }}</td>
                         </tr>
                         <tr>
                             <td class="w-50 fw-600">{{ translate('Shipping method')}}:</td>
@@ -223,6 +212,12 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td class="w-50 fw-600">@lang('delegate::delivery.administrative_expenses')</td>
+                                <td class="text-right">
+                                    <span class="strong-600">{{ single_price($order->administrative_expenses) }}</span>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td class="w-50 fw-600">{{ translate('Shipping')}}</td>
                                 <td class="text-right">
                                     <span class="text-italic">{{ single_price($order->orderDetails->sum('shipping_cost')) }}</span>
@@ -243,7 +238,8 @@
                             <tr>
                                 <td class="w-50 fw-600">{{ translate('Total')}}</td>
                                 <td class="text-right">
-                                    <strong><span>{{ single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('shipping_cost')) }}</span></strong>
+                                    {{-- <strong><span>{{ single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('shipping_cost')) }}</span></strong> --}}
+                                    <strong><span>{{ single_price($order->grand_total) }}</span></strong>
                                 </td>
                             </tr>
                         </tbody>

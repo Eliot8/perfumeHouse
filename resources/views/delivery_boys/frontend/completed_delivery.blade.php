@@ -28,7 +28,8 @@
                                     </td>
                                     <td>{{ $delivery->created_at }}</td>
                                     <td>
-                                        {{ single_price($delivery->orderDetails->sum('price') + $delivery->orderDetails->sum('shipping_cost')) }}
+                                        {{-- {{ single_price($delivery->orderDetails->sum('price') + $delivery->orderDetails->sum('shipping_cost')) }} --}}
+                                        {{ single_price($delivery->grand_total) }}
                                     </td>
                                     <td>
                                         {{ translate(ucfirst(str_replace('_', ' ', $delivery->delivery_status))) }}

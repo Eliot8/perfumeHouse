@@ -63,7 +63,8 @@
                                 </td>
                                 <td>{{ date('d-m-Y', strtotime($collection->created_at)) }}</td>
                                 <td>
-                                    {{ single_price($collection->orderDetails->sum('price') + $collection->orderDetails->sum('shipping_cost')) }}
+                                    {{-- {{ single_price($collection->orderDetails->sum('price') + $collection->orderDetails->sum('shipping_cost')) }} --}}
+                                    {{ single_price($collection->grand_total) }}
                                 </td>
                                 <td>
                                     <span class="text-capitalize badge badge-inline

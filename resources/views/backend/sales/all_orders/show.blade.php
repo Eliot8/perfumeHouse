@@ -44,9 +44,9 @@
         </div>
         <div class="mb-3">
             @php
-                                $removedXML = '<?xml version="1.0" encoding="UTF-8"?>';
-                            @endphp
-                            {!! str_replace($removedXML,"", QrCode::size(100)->generate($order->code)) !!}
+                $removedXML = '<?xml version="1.0" encoding="UTF-8"?>';
+            @endphp
+            {!! str_replace($removedXML,"", QrCode::size(100)->generate($order->code)) !!}
         </div>
         <div class="row gutters-5">
             <div class="col text-center text-md-left">
@@ -173,6 +173,14 @@
                         </td>
                         <td>
                             {{ single_price($order->orderDetails->sum('price')) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong class="text-muted">@lang('delegate::delivery.administrative_expenses') :</strong>
+                        </td>
+                        <td>
+                            {{ single_price($order->administrative_expenses) }}
                         </td>
                     </tr>
                     @if($order->user->affiliate_user != null && $order->user->affiliate_user->status)

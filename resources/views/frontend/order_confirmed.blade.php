@@ -170,26 +170,32 @@
                                                             <span class="fw-600">{{ single_price($order->orderDetails->sum('price')) }}</span>
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <th>@lang('delegate::delivery.administrative_expenses')</th>
+                                                        <td class="text-right">
+                                                            <span class="fw-600">{{ single_price($order->administrative_expenses) }}</span>
+                                                        </td>
+                                                    </tr>
                                                     @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
-                                                    <tr>
-                                                        <th>{{ translate('Commission')}}</th>
-                                                        <td class="text-right">
-                                                            {{-- <span class="font-italic">{{ single_price($order->orderDetails->sum('commission')) }}</span> --}}
-                                                            <span class="font-italic">{{ single_price($order->commission_calculated) }}</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>@lang('delegate::delivery.discount')</th>
-                                                        <td class="text-right">
-                                                            <span class="font-italic">{{ single_price($order->orderDetails->where('affiliate_price_type', 'discount')->first()->affiliate_price ?? 0) }} -</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>@lang('delegate::delivery.over_price')</th>
-                                                        <td class="text-right">
-                                                            <span class="font-italic">{{ single_price($order->orderDetails->where('affiliate_price_type', 'over_price')->first()->affiliate_price ?? 0) }} +</span>
-                                                        </td>
-                                                    </tr>
+                                                        <tr>
+                                                            <th>{{ translate('Commission')}}</th>
+                                                            <td class="text-right">
+                                                                {{-- <span class="font-italic">{{ single_price($order->orderDetails->sum('commission')) }}</span> --}}
+                                                                <span class="font-italic">{{ single_price($order->commission_calculated) }}</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>@lang('delegate::delivery.discount')</th>
+                                                            <td class="text-right">
+                                                                <span class="font-italic">{{ single_price($order->orderDetails->where('affiliate_price_type', 'discount')->first()->affiliate_price ?? 0) }} -</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>@lang('delegate::delivery.over_price')</th>
+                                                            <td class="text-right">
+                                                                <span class="font-italic">{{ single_price($order->orderDetails->where('affiliate_price_type', 'over_price')->first()->affiliate_price ?? 0) }} +</span>
+                                                            </td>
+                                                        </tr>
                                                     @endif
                                                     <tr>
                                                         <th>{{ translate('Shipping')}}</th>

@@ -145,5 +145,7 @@ return [
     'optional_phone' => 'هاتف احتياطي',
     
     'delegate_commission' => 'عمولة المندوب',
-    'commission_earnings' => 'أرباح العمولة'
+    'commission_earnings' => 'أرباح العمولة',
+
+    'administrative_expenses' => 'مصاريف إدارية'
 ];

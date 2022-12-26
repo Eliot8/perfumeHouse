@@ -143,4 +143,6 @@ return [
 
     'delegate_commission' => 'Delegate Commission',
     'commission_earnings' => 'Commission Earnings',
+
+    'administrative_expenses' => 'Administrative Expenses'
 ];

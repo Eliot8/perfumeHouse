@@ -88,6 +88,18 @@
                 </tr>
 
                 <tr class="cart-shipping">
+                    <th>@lang('delegate::delivery.administrative_expenses')</th>
+                    <td class="text-right">
+                        @php
+                            # DELEGATE_COMMISSION => ADMINISTRATIVE EXPENSES
+                            $delegate_commission = \App\Models\Address::find($carts[0]['address_id'])->province->delegate_commission;
+                            $administrative_expenses = $subtotal * ($delegate_commission / 100);
+                        @endphp
+                        <span class="font-italic">{{ single_price($administrative_expenses) }}</span>
+                    </td>
+                </tr>
+
+                <tr class="cart-shipping">
                     <th>{{translate('Tax')}}</th>
                     <td class="text-right">
                         <span class="font-italic">{{ single_price($tax) }}</span>
@@ -123,7 +135,7 @@
                     <th colspan="2">@lang('delegate::delivery.selling_price')</th>
                 </tr>
 
-                {{--  --}}
+                {{-- AFFFILIATE PRICE --}}
                 @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
                  <tr>
                     <th class="col-sm-5" style="border-top: none !important;">
@@ -137,18 +149,21 @@
                         <input type="number" name="affiliate_price" id="affiliate_price" min="0" step="0.01" placeholder="{{ Translate('price') }}" class="form-control mx-2" value="{{ isset($affiliate_price) ? $affiliate_price : '' }}">
                     </td>
                 </tr>
+
                 <tr class="cart-shipping">
                     <th>{{translate('Commission')}}</th>
                     <td class="text-right">
                         <span class="font-italic">{{ single_price($commission) }}</span>
                     </td>
                 </tr>
+
                 <tr class="cart-shipping">
                     <th>@lang('delegate::delivery.discount')</th>
                     <td class="text-right">
                         <span class="font-italic">{{ single_price($discount) }} -</span>
                     </td>
                 </tr>
+
                 <tr class="cart-shipping">
                     <th>@lang('delegate::delivery.over_price')</th>
                     <td class="text-right">
@@ -160,7 +175,7 @@
 
                 @php
                     
-                    $total = $subtotal + $tax + $shipping;
+                    $total = $subtotal + $tax + $shipping + $administrative_expenses;
                     $total = $total + $over_price - $discount;
                     if(Session::has('club_point')) {
                         $total -= Session::get('club_point');
@@ -244,6 +259,5 @@
                 </div>
             @endif
         @endif
-
     </div>
 </div>

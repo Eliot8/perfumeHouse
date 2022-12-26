@@ -27,8 +27,8 @@
                                     </td>
                                     <td>{{ date('d-m-Y', $order->date) }}</td>
                                     <td>
-                                        {{-- {{ single_price($order->grand_total) }} --}}
-                                        {{single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('shipping_cost'))}}
+                                        {{ single_price($order->grand_total) }}
+                                        {{-- {{single_price($order->orderDetails->sum('price') + $order->orderDetails->sum('shipping_cost'))}} --}}
                                     </td>
                                     <td>
                                         {{ translate(ucfirst(str_replace('_', ' ', $order->delivery_status))) }}

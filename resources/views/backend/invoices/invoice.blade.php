@@ -171,6 +171,10 @@
 							            <td class="currency">{{ single_price($order->orderDetails->sum('price')) }}</td>
 							        </tr>
 							        <tr>
+							            <th class="gry-color text-left">@lang('delegate::delivery.administrative_expenses')</th>
+							            <td class="currency">{{ single_price($order->administrative_expenses) }}</td>
+							        </tr>
+							        <tr>
 							            <th class="gry-color text-left">{{ translate('Shipping Cost') }}</th>
 							            <td class="currency">{{ single_price($order->orderDetails->first()->shipping_cost) }}</td>
 							        </tr>

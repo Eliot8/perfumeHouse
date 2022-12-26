@@ -295,14 +295,14 @@ class OrderController extends Controller
         }
 
         $address = Address::where('id', $carts[0]['address_id'])->first();
-
+        $province = \Modules\Delegate\Entities\Province::select('id', 'name', 'delegate_commission')->find($address->province_id);
         $shippingAddress = [];
         if ($address != null) {
             $shippingAddress['name']        = Auth::user()->name;
             $shippingAddress['email']       = Auth::user()->email;
             $shippingAddress['address']     = $address->address;
             
-            $shippingAddress['province']     = \Modules\Delegate\Entities\Province::find($address->province_id)->name;
+            $shippingAddress['province']     = $province->name;
             $shippingAddress['zone']         = $address->zone_id == null ? '' : \Modules\Delegate\Entities\Neighborhood::find($address->zone_id)->name;
 
             $shippingAddress['phone']       = $address->phone;
@@ -368,70 +368,35 @@ class OrderController extends Controller
                         $over_price = $cartItem['affiliate_price'];
                     }
                 }
-                $subtotal += $cartItem['price'] * $cartItem['quantity'];
 
+                $subtotal += $cartItem['price'] * $cartItem['quantity'];
                 $tax += $cartItem['tax'] * $cartItem['quantity'];
                 $coupon_discount += $cartItem['discount'];
-
                 $product_variation = $cartItem['variation'];
-
                 $product_stock = $product->stocks->where('variant', $product_variation)->first();
+
                 if ($product->digital != 1 && $cartItem['quantity'] > $product_stock->qty) {
                     flash(translate('The requested quantity is not available for ') . $product->getTranslation('name'))->warning();
                     $order->delete();
                     return redirect()->route('cart')->send();
-                } 
-                // elseif ($product->digital != 1) {
-                //     $product_stock->qty -= $cartItem['quantity'];
-                //     $product_stock->save();
-                // }
+                }
 
                 $order_detail = new OrderDetail;
                 $order_detail->order_id = $order->id;
                 $order_detail->seller_id = $product->user_id;
                 $order_detail->product_id = $product->id;
                 $order_detail->variation = $product_variation;
-
                 $order_detail->commission = $cartItem['commission'];
                 $order_detail->affiliate_price_type = $cartItem['affiliate_price_type'];
                 $order_detail->affiliate_price = $cartItem['affiliate_price'];
-
                 $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
-
-                // if (Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
-                //     if ($cartItem['affiliate_price_type'] == 'discount') {
-                //         $order_detail->price = ($cartItem['price'] - $cartItem['affiliate_price']) * $cartItem['quantity'];
-                //     } else {
-                //         $order_detail->price = ($cartItem['price'] + $cartItem['affiliate_price']) * $cartItem['quantity'];
-                //     }
-                // }
-
-                // if(Auth::check() && has_coupon(Auth::user()) && get_valid_coupon()) {
-                //     $order_detail->price = get_discounted_price($cartItem['price']) * $cartItem['quantity'];
-                // } else {
-                //     $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
-                // }
-
-                //
                 $order_detail->tax = $cartItem['tax'] * $cartItem['quantity'];
                 $order_detail->shipping_type = $cartItem['shipping_type'];
                 $order_detail->product_referral_code = $cartItem['product_referral_code'];
-
-                // $commission += $cartItem['commission'];
-                // if($cartItem['affiliate_price_type'] == 'discount'){
-                //     $discount += $cartItem['affiliate_price'];
-                // }
-                // if($cartItem['affiliate_price_type'] == 'over_price'){
-                //     $over_price += $cartItem['affiliate_price'];
-                // }
-                //
-
-                // $order_detail->shipping_cost = $cartItem['shipping_cost'];
                 $order_detail->shipping_cost = $address->province->shipping_cost ?? 0;
-
+                
                 $shipping += $order_detail->shipping_cost;
-                //End of storing shipping cost
-
+                
                 $order_detail->quantity = $cartItem['quantity'];
                 $order_detail->save();
 
@@ -445,25 +410,13 @@ class OrderController extends Controller
                     $seller->num_of_sale += $cartItem['quantity'];
                     $seller->save();
                 }
-
-                // if (addon_is_activated('affiliate_system')) {
-                //     if ($order_detail->product_referral_code) {
-                //         $referred_by_user = User::where('referral_code', $order_detail->product_referral_code)->first();
-
-                //         $affiliateController = new AffiliateController;
-                //         $affiliateController->processAffiliateStats($referred_by_user->id, 0, $order_detail->quantity, 0, 0);
-                //     }
-                // }
+                
                 $coupon_code = $cartItem['coupon_code'];
                 $commission += $cartItem['commission'];
             }
 
             $user = Auth::user();
-            // if (Auth::check() && has_coupon($user) && get_valid_coupon()) {
             if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
-                // $coupon = get_valid_coupon();
-
-                // $order->grand_total = get_discounted_price($subtotal) + $tax + $address->province->shipping_cost ?? 0;
 
                 // SET COUPON ID
                 $coupon = Coupon::where('code', $coupon_code)->first();
@@ -485,7 +438,6 @@ class OrderController extends Controller
                     $calculate_comission = $calculate_comission - $discount + $over_price;
 
                     $user->affiliate_user->balance_pending += $calculate_comission;
-                    // $user->affiliate_user->balance_pending += $commission;
                     $user->affiliate_user->save();
                     
     
@@ -494,14 +446,13 @@ class OrderController extends Controller
                     $coupon_usage->coupon_id = $coupon->id;
                     $coupon_usage->order_id = $order->id;
                     $coupon_usage->commission = isset($calculate_comission) ? $calculate_comission : 0;
-                    // $coupon_usage->commission = isset($commission) ? $commission : 0;
                     $coupon_usage->save();
                 }
             } 
-            // else {
-                // dd(($subtotal + $tax + $address->province->shipping_cost ?? 0), $over_price, $discount);
-                $order->grand_total = $subtotal + $tax + $address->province->shipping_cost ?? 0;
-            // }
+
+            $shipping_cost = $address->province->shipping_cost ?? 0;
+            $order->administrative_expenses = $subtotal * ($province->delegate_commission / 100);
+            $order->grand_total = $subtotal + $tax + $shipping_cost + $order->administrative_expenses;
            
             if ($seller_product[0]->coupon_code != null) {
                 $order->coupon_discount = $coupon_discount;

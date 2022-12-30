@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'deliveries' => 'عمليات التسليم',
-    'add_new_delegate' => 'اضافة مندوب جديد',
-    'delegates' => 'المندوبين',
-    'delegate' => 'المندوب',
+    'deliveries' => 'وكيل عمليات التسليم',
+    'add_new_delegate' => 'اضافة وكيل جديد',
+    'delegates' => 'الوكلاء',
+    'delegate' => 'الوكيل',
     'stock_management' => 'إدارة المخزون',
     'provinces' => 'مدن',
     'province' => 'مدينة',
@@ -12,24 +12,24 @@ return [
     'zone' => 'منطقة',
     'neighborhoods' => 'احياء',
     'neighborhood' => 'حي',
-    'delegate_info' => 'معلومات المندوب',
-    'delegate_name' => 'اسم المندوب',
+    'delegate_info' => 'معلومات الوكيل ',
+    'delegate_name' => 'اسم الوكيل ',
     'phone_number' => 'رقم الهاتف',
     'delivery_info' => 'معلومات التوصيل',
     'select_province' => 'حدد المدينة',
-    'delegate_account' => 'حساب المندوب',
-    'password_confirmation' => 'تأكيد المرور',
+    'delegate_account' => 'حساب الوكيل ',
+    'password_confirmation' => 'تأكيد كلمة المرور',
     'reset_password' => 'إعادة تعيين كلمة المرور',
-    'edit_delegate' => 'تعديل المندوب',
+    'edit_delegate' => 'تعديل الوكيل ',
     'edit_stock' => 'تعديل المخزون',
-    'empty' => 'فارغ',
+    'empty' => 'المخزون فارغ',
     'low' => 'قليل',
     'high' => 'ممتلئ',
     'manage' => 'تدبير',
     'back' => 'رجوع',
     'add' => 'إضافة',
-    'product_stock' => 'المنتوج + المخزون',
-    'select_product' => 'حدد المنتوج',
+    'product_stock' => 'المنتج + المخزون',
+    'select_product' => 'حدد المنتج',
     'add_stock' => 'إضافة مخزون ',
 
     'stock_added' => 'تم إضافة المخزون بنجاح',
@@ -37,9 +37,9 @@ return [
     'stock_deleted' => 'تم حذف المخزون بنجاح',
     'stock_exist' => 'المخزون موجود بالفعل ، يرجى تعديله',
 
-    'delegate_added' => 'تم إضافة المندوب بنجاح',
-    'delegate_updated' => 'تم تحديث المندوب بنجاح',
-    'delegate_deleted' => 'تم حذف المندوب بنجاح',
+    'delegate_added' => 'تم إضافة الوكيل بنجاح',
+    'delegate_updated' => 'تم تحديث الوكيل بنجاح',
+    'delegate_deleted' => 'تم حذف الوكيل بنجاح',
 
     'province_added' => 'تم إضافة المدينة بنجاح',
     'province_updated' => 'تم تحديث المدينة بنجاح',
@@ -55,7 +55,7 @@ return [
     'add_province' => 'إضافة مدينة',
     'edit_province' => 'تعديل مدينة',
     'province_empty' => 'لا يوجد',
-    'delivery_man' => 'المندوب',
+    'delivery_man' => 'الوكيل ',
     'province_name' => 'اسم المدينة',
     'new_province' => 'مدينة جديدة',
 
@@ -74,19 +74,19 @@ return [
     'earnings' => 'الارباح',
     'free_shipping' => 'مجاني',
     'shipping_cost' => 'مصاريف الشحن',
-    'delegate_cost' => 'مصاريف المندوب',
+    'delegate_cost' => 'مصاريف الوكيل ',
     'orders_count' => 'عدد الطلبات التي تم تسليمها',
     'cancel_request' => 'طلب الإلغاء',
     'final_total' => 'المجموع النهائي',
 
-    'no_delegate_selected' => 'لم يحدد المندوب بعد',
-    'no_delegate_found' => 'لم يتم العثور على أي من المندوبين في هذه المقاطعة',
-    'stock_error' => 'مخزون المندوب فارغ',
+    'no_delegate_selected' => 'لم يحدد الوكيل بعد',
+    'no_delegate_found' => 'لم يتم العثور على أي من الوكيل ين في هذه المقاطعة',
+    'stock_error' => 'مخزون الوكيل  فارغ',
     'no_order_comments' => 'لا توجد تعليقات على هذا الطلب',
     'orders_comments' => 'تعليقات الطلب',
 
     'system_earnings' => 'أرباح النظام',
-    'personal_earnings' => 'أرباح شخصية',
+    'personal_earnings' => 'أرباح الوكيل',
 
 
     'affiliate_user' => 'المسوق بعمولة',
@@ -119,7 +119,7 @@ return [
     'over_price' => 'زيادة السعر',
 
     'weekly_system_earnings' => 'أرباح النظام اليومية',
-    'weekly_personal_earnings' => 'أرباح شخصية يومية',
+    'weekly_personal_earnings' => 'أرباح الوكيل اليومية',
     'payment_request' => 'طلب سداد',
     'payment_request_success' => 'تم طلب السداد بنجاح',
 
@@ -128,14 +128,14 @@ return [
 
     'commission_error' => 'لا يمكن خصم اكثر من عمولتك',
     'selling_price' => 'سعر البيع',
-    'select_coupon' => 'حدد القسيمة',
+    'select_coupon' => 'حدد الكوبون',
     
-    'please_select_coupon' => 'الرجاء تحديد قسيمة',
+    'please_select_coupon' => 'الرجاء تحديد الكوبون',
 
-    'public_commission' => 'عمولة لجميع المنتسبون',
+    'public_commission' => 'عمولة لجميع المسوقين',
     'set_global_commission_success' => 'تم حفظ العمولة بنجاح',
 
-    'delivery_man_cost_unset' => 'تكلفة المندوب غير محددة',
+    'delivery_man_cost_unset' => 'تكلفة الوكيل  غير محددة',
     'total_amount' => 'إجمالي العمولات',
     'coupon_validity' => 'صلاحية الكوبون',
 
@@ -144,8 +144,8 @@ return [
     
     'optional_phone' => 'هاتف احتياطي',
     
-    'delegate_commission' => 'عمولة المندوب',
+    'delegate_commission' => 'عمولة الوكيل ',
     'commission_earnings' => 'أرباح العمولة',
 
-    'administrative_expenses' => 'مصاريف إدارية'
+    'administrative_expenses' => 'شحن ولائي'
 ];

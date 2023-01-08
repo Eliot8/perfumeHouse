@@ -127,13 +127,12 @@
                         </td>
                         @php 
                             $ordersCount = ordersCount($delegate->user_id);
-                            $price = $delegate->province->delegate_cost * $ordersCount;
                             $today = date('d-m-Y');
                             $week_orders = \Modules\Delegate\Entities\WeekOrders::where('delivery_man_id', $delegate->id)
                                 ->where('week_end', '>', $today)
                                 ->first();
                         @endphp
-                        <td class="earnings">{{ single_price($price) }} </td>
+                        <td class="earnings">{{ single_price($delegate->all_earnings) }} </td>
                         <td class="personal_earnings">{{ single_price($week_orders->personal_earnings ?? 0)}} </td>
                         <td class="system_earnings">{{ single_price($week_orders->system_earnings ?? 0)}} </td>
                         <td class="commission_earnings">{{ single_price($delegate->commission_earnings ?? 0)}} </td>

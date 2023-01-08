@@ -1230,15 +1230,16 @@ if (!function_exists('checkNewPriceProduct')) {
 }
 
 if(!function_exists('insertIntoWeekOrders')){
-    function insertIntoWeekOrders($delivery_man_id, $system_earnings, $personal_earnings){
+    function insertIntoWeekOrders($delivery_man_id, $system_earnings, $personal_earnings, $commission_earning_from_order){
         
         $day = date('w');
         $week_start = date('d-m-Y', strtotime('-' . $day . ' days'));
         $week_end = date('d-m-Y', strtotime('+' . (6 - $day) . ' days'));
         $today = date('d-m-Y');
 
-        // dd(Carbon::createFromFormat('d-m-Y', $week_start), $week_end);
+        
         $week = WeekOrders::where('delivery_man_id', $delivery_man_id)->where('week_end', '>', $today)->first();
+        $system_earnings = $system_earnings - ($personal_earnings + $commission_earning_from_order);
         if($week){
             $week->system_earnings += $system_earnings;
             $week->personal_earnings += $personal_earnings;

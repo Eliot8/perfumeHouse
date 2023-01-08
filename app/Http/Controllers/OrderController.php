@@ -652,7 +652,6 @@ class OrderController extends Controller
                 $delivery_stock->save();
                 updateOfficialProductStock($orderDetail->product_id, $delivery_stock->variation);
             }
-            $order->grand_total -= $order->province->delegate_cost;
 
             # WEEK BALANCE
             if($order->province->delegate_cost == null) {
@@ -661,7 +660,6 @@ class OrderController extends Controller
                     'message' => Lang::get('delegate::delivery.delivery_man_cost_unset'),
                 ]);
             }
-            insertIntoWeekOrders($delegate->id, $order->grand_total, $order->province->delegate_cost);
 
             # TRANSFORM COMMISSION FROM AFFILIATE BALANCE PENDING TO AFFILIATE BALANCE
             if($order->coupon_id != null){
@@ -679,10 +677,11 @@ class OrderController extends Controller
             }
 
             # COMMISSION EARNINGS FOR DELIVERY MAN
-            $delegate->commission_earnings += $order->orderDetails->sum('price') * ($order->province->delegate_commission / 100);
+            $commission_earning_from_order = $order->orderDetails->sum('price') * ($order->province->delegate_commission / 100);
+            $delegate->commission_earnings += $commission_earning_from_order;
             $delegate->save();
-            // dd($commission_earnings);
 
+            insertIntoWeekOrders($delegate->id, $order->grand_total, $order->province->delegate_cost, $commission_earning_from_order);
         }
 
         $order->delivery_viewed = '0';

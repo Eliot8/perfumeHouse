@@ -188,4 +188,26 @@ class DelegatesController extends Controller
         } else 
             return false;
     }
+
+    public function paymentRequest($delegate_id, $week_end) 
+    {
+        $week_orders = \Modules\Delegate\Entities\WeekOrders::where('delivery_man_id', $delegate_id)
+            ->where('week_end', $week_end)
+            ->first();
+        $delivery_man =  \Modules\Delegate\Entities\Delegate::find($week_orders->delivery_man_id);
+
+        // $discount_system_earnings = $week_orders->system_earnings - ($delivery_man->commission_earnings + $week_orders->personal_earnings);
+        
+        $delivery_man->all_earnings += $delivery_man->commission_earnings + $week_orders->personal_earnings;
+        $delivery_man->commission_earnings = 0;
+        $delivery_man->save();
+
+        $week_orders->personal_earnings = 0;
+        $week_orders->system_earnings = 0;
+        // $week_orders->system_earnings = $discount_system_earnings < 0 ? 0 : $discount_system_earnings;
+        $week_orders->save();
+
+        flash(Lang::get('delegate::delivery.payment_request_success'), 'success');
+        return back();
+    }
 }

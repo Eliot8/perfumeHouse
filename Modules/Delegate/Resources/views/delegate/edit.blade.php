@@ -65,9 +65,9 @@
                                     @foreach (Modules\Delegate\Entities\Zone::where('province_id', $delegate->province_id)->get() as $zone)
                                     <optgroup label="{{ $zone->name }}">
                                         @forelse($zone->neighborhoods as $item)
-                                        <option value="{{ $item->id }}" @if(in_array($item->id, json_decode($delegate->zones))) selected @endif>{{ $item->name }}</option>
+                                        <option value="{{ $item->id }}" @if(in_array($item->id, json_decode($delegate->zones) ?? [])) selected @endif>{{ $item->name }}</option>
                                         @empty
-                                        <option value="{{ $zone->id }}" @if(in_array($zone->id, json_decode($delegate->zones))) selected @endif>{{ $zone->name }}</option>
+                                        <option value="{{ $zone->id }}" @if(in_array($zone->id, json_decode($delegate->zones) ?? [])) selected @endif>{{ $zone->name }}</option>
                                         @endforelse
                                     </optgroup>
                                     @endforeach

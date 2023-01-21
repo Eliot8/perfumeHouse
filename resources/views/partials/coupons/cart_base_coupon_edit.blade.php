@@ -54,7 +54,7 @@
     <div class="col-sm-9">
         <select class="form-control aiz-selectpicker" name="affiliate_user" required>
             @foreach($affiliate_users as $affiliate_user)
-            <option value="{{$affiliate_user->id }}" @if($coupon->affiliate_user_id == $affiliate_user->id ) selected @endif>{{ $affiliate_user->user->name }}</option>
+            <option value="{{$affiliate_user->id }}" @if($coupon->affiliate_user_id == $affiliate_user->id ) selected @endif>{{ $affiliate_user->user->name ?? ''}}</option>
             @endforeach
         </select>
     </div>

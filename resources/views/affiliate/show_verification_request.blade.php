@@ -11,7 +11,7 @@
             <h6 class="mb-4">{{ translate('User Info') }}</h6>
             <p class="text-muted">
                 <strong>{{ translate('Name') }} :</strong>
-                <span class="ml-2">{{ $affiliate_user->user->name }}</span>
+                <span class="ml-2">{{ $affiliate_user->user->name ?? ''}}</span>
             </p>
             <p class="text-muted">
                 <strong>{{translate('Email')}}</strong>

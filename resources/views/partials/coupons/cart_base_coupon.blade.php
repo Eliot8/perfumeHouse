@@ -43,7 +43,7 @@
     <div class="col-sm-9">
         <select class="form-control aiz-selectpicker" name="affiliate_user" required>
             @foreach($affiliate_users as $affiliate_user)
-            <option value="{{$affiliate_user->id }}">{{ $affiliate_user->user->name }}</option>
+            <option value="{{$affiliate_user->id }}">{{ $affiliate_user->user->name ?? ''}}</option>
             @endforeach
         </select>
     </div>

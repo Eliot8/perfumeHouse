@@ -34,7 +34,7 @@
                         <option value="" selected disabled hidden>@lang('delegate::delivery.affiliate_user')</option>
                         @foreach (\App\Models\AffiliateUser::select('id', 'user_id')->get() as $affiliate_user)
                             <option value="{{ $affiliate_user->id }}" @if(request()->has('affiliate_user') && request()->filled('affiliate_user') && request()->get('affiliate_user') == $affiliate_user->id) selected @endif>
-                                {{ $affiliate_user->user->name }}
+                                {{ $affiliate_user->user->name ?? ''}}
                             </option>
                         @endforeach
                     </select>

@@ -127,6 +127,7 @@
         <div class="card-body">
             <div class="row gutters-10">
                 @foreach (Auth::user()->addresses as $key => $address)
+                @if(Modules\Delegate\Entities\Province::find($address->province_id))
                     <div class="col-lg-6">
                         <div class="border p-3 pr-5 rounded mb-3 position-relative">
                             <div>
@@ -176,6 +177,7 @@
                             </div>
                         </div>
                     </div>
+                @endif
                 @endforeach
                 <div class="col-lg-6 mx-auto" onclick="add_new_address()">
                     <div class="border p-3 rounded mb-3 c-pointer text-center bg-light">

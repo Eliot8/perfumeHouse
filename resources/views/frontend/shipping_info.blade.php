@@ -53,6 +53,7 @@
                         <div class="shadow-sm bg-white p-4 rounded mb-4">
                             <div class="row gutters-5">
                                 @foreach (Auth::user()->addresses as $key => $address)
+                                @if(Modules\Delegate\Entities\Province::find($address->province_id))
                                     <div class="col-md-6 mb-3">
                                         <label class="aiz-megabox d-block bg-white mb-0">
                                             <input type="radio" name="address_id" value="{{ $address->id }}" @if ($address->set_default)
@@ -71,7 +72,7 @@
                                                     </div>
                                                     <div>
                                                         <span class="opacity-60">@lang('delegate::delivery.province'):</span>
-                                                        <span class="fw-600 ml-2">{{ Modules\Delegate\Entities\Province::find($address->province_id)->name  }}</span>
+                                                        <span class="fw-600 ml-2">{{ Modules\Delegate\Entities\Province::find($address->province_id)->name }}</span>
                                                     </div>
                                                     <div>
                                                         <span class="opacity-60">@lang('delegate::delivery.zone'):</span>
@@ -100,6 +101,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                @endif
                                 @endforeach
                                 <input type="hidden" name="checkout_type" value="logged">
                                 <div class="col-md-6 mx-auto mb-3" >

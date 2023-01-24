@@ -341,6 +341,8 @@
                         AIZ.plugins.notify('success', '{{ translate('Delivery status has been updated') }}');
                         location.reload();
                     }
+                }, error: function (response) {
+                    AIZ.plugins.notify('danger', response.responseJSON);
                 }
             });
         }

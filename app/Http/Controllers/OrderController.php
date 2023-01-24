@@ -582,7 +582,11 @@ class OrderController extends Controller
                 $order = Order::find($order_id);
                 if($order->delivery_status == 'pending'){
                     $request->merge(['status' => 'confirmed', 'order_id' => $order_id]);
-                    $this->update_delivery_status($request);
+                    $result = $this->update_delivery_status($request);
+                    // dd($result->getData()->status, $result->getData('message'));
+                    if ($result->getData()->status === 400) {
+                        return response()->json($result->getData()->message, 400);
+                    }
                 } 
             }
         }
@@ -711,7 +715,7 @@ class OrderController extends Controller
                 return response()->json([
                     'status' => 400,
                     'message' => __('delegate::delivery.no_delegate_found'),
-                ]);
+                ], 400);
             }
             
             // CHECH IF STOCK IS NOT EMPTY
@@ -719,7 +723,7 @@ class OrderController extends Controller
                 return response()->json([
                     'status' => 400,
                     'message' => __('delegate::delivery.stock_error'),
-                ]);
+                ], 400);
             }
             // ASSIGNED DELIVERY MAN
             $order->assign_delivery_boy = $delivery_man->user_id;

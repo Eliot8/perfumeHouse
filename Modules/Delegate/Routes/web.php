@@ -42,6 +42,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
     # payment reuqest
     Route::get('/week-payment-request/{delegate_id}/{week_end}', 'DelegatesController@paymentRequest')->name('week.payment.request');
+    Route::get('/payment-request-invoice/{ids}/{name}', 'DelegatesController@paymentRequestInvoice')->name('payment_request.invoice');
 });
 
 // AJAX

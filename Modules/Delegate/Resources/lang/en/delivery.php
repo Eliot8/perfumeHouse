@@ -144,5 +144,12 @@ return [
     'delegate_commission' => 'Delegate Commission',
     'commission_earnings' => 'Commission Earnings',
 
-    'administrative_expenses' => 'Administrative Expenses'
+    'administrative_expenses' => 'Administrative Expenses',
+
+    'payement_requests' => 'Payment Requests',
+    'id' => 'ID',
+    'date_request' => 'Date Request',
+    'attached_pieces' => 'Attached Pieces',
+
+    'payments_empty' => 'Payments are empty',
 ];

@@ -139,7 +139,8 @@
                         <td class="orders_count"><span class="badge badge-inline badge-success">{{ $ordersCount }}</span></td>
                         <td class="options text-right">
                             @if($week_orders)
-                            <a class="btn btn-soft-success btn-icon btn-circle btn-sm" href="{{ route('week.payment.request', [$delegate->id, $week_orders->week_end]) }}" title="@lang('delegate::delivery.payment_request')">
+                            {{-- <a class="btn btn-soft-success btn-icon btn-circle btn-sm" href="{{ route('week.payment.request', [$delegate->id, $week_orders->week_end]) }}" onclick="redirect()" title="@lang('delegate::delivery.payment_request')"> --}}
+                            <a class="btn btn-soft-success btn-icon btn-circle btn-sm" href="javascript:void(0);" onclick="paymentRequest({{ $delegate->id }}, '{{ $week_orders->week_end }}')" title="@lang('delegate::delivery.payment_request')">
                                <i class="las la-hand-holding-usd"></i>
                             </a>
                             @endif
@@ -166,48 +167,78 @@
 @section('script')
 <script>
     $(".export-to-excel").click(function(e) {
-            e.preventDefault();
-            $(".aiz-table").table2excel({
-                exclude: ".excludeThisClass",
-                name: "All Delivery men",
-                filename: "deliver_men.xls", 
-                preserveColors: false 
-            });
+        e.preventDefault();
+        $(".aiz-table").table2excel({
+            exclude: ".excludeThisClass",
+            name: "All Delivery men",
+            filename: "deliver_men.xls", 
+            preserveColors: false 
         });
-        $(".export-to-pdf").click(function(e) {
-            e.preventDefault();
-             html2canvas($('.aiz-table')[0], {
-                onrendered: function (canvas) {
-                    var data = canvas.toDataURL();
-                    var docDefinition = {
-                        content: [{
-                            image: data,
-                            width: 500
-                        }]
-                    };
-                    pdfMake.createPdf(docDefinition).download("deliver_men.pdf");
-                }
-            });
-        });
+    });
 
-        $(".export-to-csv").click(function(e) {
-            e.preventDefault();
-            $(".aiz-table").tableHTMLExport({
-                type:'csv',
-                filename: 'deliver_men.csv',
-                separator: ',',
-                newline: '\r\n',
-                trimContent: true,
-                quoteFields: true,
-                // CSS selector(s)
-                ignoreColumns: '',
-                ignoreRows: '',      
-                // your html table has html content?
-                htmlContent: true,
-                // debug
-                consoleLog: false,      
-            });
+    $(".export-to-pdf").click(function(e) {
+        e.preventDefault();
+            html2canvas($('.aiz-table')[0], {
+            onrendered: function (canvas) {
+                var data = canvas.toDataURL();
+                var docDefinition = {
+                    content: [{
+                        image: data,
+                        width: 500
+                    }]
+                };
+                pdfMake.createPdf(docDefinition).download("deliver_men.pdf");
+            }
         });
+    });
+
+    $(".export-to-csv").click(function(e) {
+        e.preventDefault();
+        $(".aiz-table").tableHTMLExport({
+            type:'csv',
+            filename: 'deliver_men.csv',
+            separator: ',',
+            newline: '\r\n',
+            trimContent: true,
+            quoteFields: true,
+            // CSS selector(s)
+            ignoreColumns: '',
+            ignoreRows: '',      
+            // your html table has html content?
+            htmlContent: true,
+            // debug
+            consoleLog: false,      
+        });
+    });
+
+    function paymentRequest(deleagte_id, week_end) {
+       let url = '{{ route("week.payment.request", [":delegate_id", ":week_end"]) }}';
+            url = url.replace(':delegate_id', deleagte_id);
+            url = url.replace(':week_end', week_end);
+            
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+            },
+            url: url,
+            type: "GET",
+            dataType: "JSON",
+            success: function(response) {
+                let url = "{{ route('payment_request.invoice', [':ids', ':name']) }}";
+                url = url.replace(':ids', response.ids);
+                url = url.replace(':name', response.delegate_name);
+                
+                AIZ.plugins.notify('success', response.msg);
+                window.location.href = url;
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            },
+            error: function(response) {
+                AIZ.plugins.notify('danger', response.responseJSON);
+            }
+        });
+    }
 </script>
 @endsection
 

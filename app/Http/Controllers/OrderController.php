@@ -2,39 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\AffiliateController;
-use App\Http\Controllers\OTPVerificationController;
-use Illuminate\Http\Request;
-use App\Http\Controllers\ClubPointController;
-use App\Models\Order;
+use DB;
+use Auth;
+use Mail;
+use Session;
 use App\Models\Cart;
+use App\Models\User;
+use App\Models\Color;
+use App\Models\Order;
+use App\Models\Coupon;
 use App\Models\Address;
 use App\Models\Product;
-use App\Models\ProductStock;
-use App\Models\CommissionHistory;
-use App\Models\Color;
-use App\Models\OrderDetail;
-use App\Models\CouponUsage;
-use App\Models\Coupon;
 use App\OtpConfiguration;
-use App\Models\User;
-use App\Models\BusinessSetting;
-use App\Models\CombinedOrder;
+use App\Models\CouponUsage;
+use App\Models\OrderDetail;
 use App\Models\SmsTemplate;
-use Auth;
-use Session;
-use DB;
-use Mail;
-use App\Mail\InvoiceEmailManager;
-use App\Models\AffiliateProductPrice;
-use App\Models\AffiliateUser;
-use App\Utility\NotificationUtility;
-use CoreComponentRepository;
 use App\Utility\SmsUtility;
+use App\Models\ProductStock;
+use CoreComponentRepository;
+use Illuminate\Http\Request;
+use App\Models\AffiliateUser;
+use App\Models\CombinedOrder;
+use App\Models\BusinessSetting;
+use App\Mail\InvoiceEmailManager;
+use App\Models\CommissionHistory;
+use App\Utility\NotificationUtility;
 use Illuminate\Support\Facades\Lang;
-use Modules\Delegate\Entities\Province;
-use Modules\Delegate\Entities\Delegate;
 use Modules\Delegate\Entities\Stock;
+use App\Models\AffiliateProductPrice;
+use App\Models\DeliveredOrdersEarnings;
+use Modules\Delegate\Entities\Delegate;
+use Modules\Delegate\Entities\Province;
+use App\Http\Controllers\AffiliateController;
+use App\Http\Controllers\ClubPointController;
+use App\Http\Controllers\OTPVerificationController;
 
 class OrderController extends Controller
 {
@@ -681,7 +682,19 @@ class OrderController extends Controller
             $delegate->commission_earnings += $commission_earning_from_order;
             $delegate->save();
 
+
+
             insertIntoWeekOrders($delegate->id, $order->grand_total, $order->province->delegate_cost, $commission_earning_from_order);
+
+            # INSERT INTO DELIVERED_ORDERS_EARNINGS
+            $delivered_order = new DeliveredOrdersEarnings();
+            $delivered_order->delegate_id = $delegate->id;
+            $delivered_order->order_id = $order->id;
+            $delivered_order->system_earnings = $order->grand_total;
+            $delivered_order->personal_earnings = $order->province->delegate_cost;
+            $delivered_order->commission = $commission_earning_from_order;
+            $delivered_order->status = 'unpaid';
+            $delivered_order->save();
         }
 
         $order->delivery_viewed = '0';

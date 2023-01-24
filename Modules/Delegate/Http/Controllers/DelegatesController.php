@@ -2,18 +2,22 @@
 
 namespace Modules\Delegate\Http\Controllers;
 
-use App\Models\User;
+use PDF;
 use Exception;
-use Illuminate\Contracts\Support\Renderable;
+use App\Models\User;
+use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Delegate\Entities\Zone;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
+use App\Models\DeliveredOrdersEarnings;
 use Modules\Delegate\Entities\Delegate;
-use Modules\Delegate\Entities\Zone;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Delegate\Http\Requests\StoreDelegateRequest;
 use Modules\Delegate\Http\Requests\UpdateDelegateRequest;
+use Session;
 
 class DelegatesController extends Controller
 {
@@ -166,7 +170,8 @@ class DelegatesController extends Controller
             return false;
     }
     
-    public function getZone($province_id){
+    public function getZone($province_id)
+    {
         if(request()->ajax()){
             $zones = Zone::where('province_id', $province_id)->get();
             $html = '';
@@ -191,23 +196,46 @@ class DelegatesController extends Controller
 
     public function paymentRequest($delegate_id, $week_end) 
     {
+        $ids = DeliveredOrdersEarnings::where(['delegate_id' => $delegate_id, 'status' => 'unpaid'])->pluck('id');
+        if (count($ids) == 0) return response()->json(Lang::get("delegate::delivery.payments_empty"), 400);
+       
         $week_orders = \Modules\Delegate\Entities\WeekOrders::where('delivery_man_id', $delegate_id)
-            ->where('week_end', $week_end)
-            ->first();
-        $delivery_man =  \Modules\Delegate\Entities\Delegate::find($week_orders->delivery_man_id);
-
-        // $discount_system_earnings = $week_orders->system_earnings - ($delivery_man->commission_earnings + $week_orders->personal_earnings);
+        ->where('week_end', $week_end)
+        ->first();
+        $delivery_man = \Modules\Delegate\Entities\Delegate::find($week_orders->delivery_man_id);
         
         $delivery_man->all_earnings += $delivery_man->commission_earnings + $week_orders->personal_earnings;
         $delivery_man->commission_earnings = 0;
         $delivery_man->save();
-
+        
         $week_orders->personal_earnings = 0;
         $week_orders->system_earnings = 0;
-        // $week_orders->system_earnings = $discount_system_earnings < 0 ? 0 : $discount_system_earnings;
         $week_orders->save();
-
-        flash(Lang::get('delegate::delivery.payment_request_success'), 'success');
-        return back();
+        
+        return response()->json(['ids' => $ids, 'delegate_name' => $delivery_man->full_name, 'msg' => Lang::get('delegate::delivery.payment_request_success')], 200);
+        
     }
-}
+
+    public function paymentRequestInvoice($ids, $delegate_name)
+    {
+        $items = DeliveredOrdersEarnings::whereIn('id', explode(',', $ids))->get();
+        foreach($items as $item) {
+            $item->status = 'paid';
+            $item->save();
+        }  
+
+        $direction = 'rtl';
+        $text_align = 'right';
+        $not_text_align = 'left';
+        $font_family = "'Baloo Bhaijaan 2','sans-serif'";
+
+        return PDF::loadView('delegate::delegate.invoice', [
+            'items' => $items,
+            'delegate_name' => $delegate_name,
+            'font_family' => $font_family,
+            'direction' => $direction,
+            'text_align' => $text_align,
+            'not_text_align' => $not_text_align
+        ], [], [])->download('payment_request_hisyory.pdf');
+    }
+ }

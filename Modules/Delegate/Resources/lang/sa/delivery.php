@@ -147,5 +147,12 @@ return [
     'delegate_commission' => 'عمولة الوكيل ',
     'commission_earnings' => 'أرباح العمولة',
 
-    'administrative_expenses' => 'شحن ولائي'
+    'administrative_expenses' => 'شحن ولائي',
+
+    'payment_requests' => 'طلبات التسديد',
+    'id' => 'الرمز',
+    'date_request' => 'تاريخ الطلب',
+    'attached_pieces' => 'مرفقات',
+
+    'payments_empty' => 'المدفوعات فارغة',
 ];

@@ -694,7 +694,7 @@ class OrderController extends Controller
             $delivered_order = new DeliveredOrdersEarnings();
             $delivered_order->delegate_id = $delegate->id;
             $delivered_order->order_id = $order->id;
-            $delivered_order->system_earnings = $order->grand_total;
+            $delivered_order->system_earnings = $order->grand_total - ($order->province->delegate_cost + $commission_earning_from_order); // system = total - (personal + commission)
             $delivered_order->personal_earnings = $order->province->delegate_cost;
             $delivered_order->commission = $commission_earning_from_order;
             $delivered_order->status = 'unpaid';

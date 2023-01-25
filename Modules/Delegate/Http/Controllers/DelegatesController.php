@@ -236,6 +236,6 @@ class DelegatesController extends Controller
             'direction' => $direction,
             'text_align' => $text_align,
             'not_text_align' => $not_text_align
-        ], [], [])->download('payment_request_hisyory.pdf');
+        ], [], [])->download('payment_request_history.pdf');
     }
  }

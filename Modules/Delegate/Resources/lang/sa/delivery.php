@@ -81,7 +81,7 @@ return [
 
     'no_delegate_selected' => 'لم يحدد الوكيل بعد',
     'no_delegate_found' => 'لم يتم العثور على أي من الوكيل ين في هذه المقاطعة',
-    'stock_error' => 'مخزون الوكيل  فارغ',
+    'stock_error' => 'مخزون :delegate فارغ',
     'no_order_comments' => 'لا توجد تعليقات على هذا الطلب',
     'orders_comments' => 'تعليقات الطلب',
 
@@ -150,9 +150,18 @@ return [
     'administrative_expenses' => 'شحن ولائي',
 
     'payment_requests' => 'طلبات التسديد',
+    'payment_request' => 'طلب التسديد',
     'id' => 'الرمز',
     'date_request' => 'تاريخ الطلب',
     'attached_pieces' => 'مرفقات',
 
     'payments_empty' => 'المدفوعات فارغة',
+    'pay' => 'تسديد',
+    'send' => 'إرسال',
+    'sent_successfully' => 'تم الارسال بنجاح',
+    'pending' => 'قيد الانتظار',
+    'approved' => 'تمت الموافقة',
+    'amount' => 'المبلغ',
+    'payment_request_details' => 'تفاصيل طلب السداد',
+
 ];

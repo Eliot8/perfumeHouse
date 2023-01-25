@@ -81,7 +81,7 @@ return [
 
     'no_delegate_selected' => 'The delivery man has not yet been determined',
     'no_delegate_found' => 'No delivery man were found in this province',
-    'stock_error' => 'Stock of Delivey man is empty',
+    'stock_error' => 'Stock of :delegate is empty',
     'no_order_comments' => 'No comments for this order',
     'orders_comments' => 'Order comments',
 
@@ -146,10 +146,18 @@ return [
 
     'administrative_expenses' => 'Administrative Expenses',
 
-    'payement_requests' => 'Payment Requests',
+    'payment_requests' => 'Payment Requests',
+    'payment_request' => 'Payment Request',
     'id' => 'ID',
     'date_request' => 'Date Request',
     'attached_pieces' => 'Attached Pieces',
 
     'payments_empty' => 'Payments are empty',
+    'pay' => 'Pay',
+    'send' => 'Send',
+    'sent_successfully' => 'Sent Successfully',
+    'pending' => 'Pending',
+    'approved' => 'Approved',
+    'amount' => 'Amount',
+    'payment_request_details' => 'Payment request details',
 ];

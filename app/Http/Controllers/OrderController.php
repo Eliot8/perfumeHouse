@@ -722,7 +722,7 @@ class OrderController extends Controller
             if(!check_delivey_man_stock($order, $delivery_man->id)) {
                 return response()->json([
                     'status' => 400,
-                    'message' => __('delegate::delivery.stock_error'),
+                    'message' => trans('delegate::delivery.stock_error', ['delegate' => $delivery_man->full_name]),
                 ], 400);
             }
             // ASSIGNED DELIVERY MAN

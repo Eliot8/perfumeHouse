@@ -293,11 +293,14 @@
                 order_id:order_id,
                 status:status
             }, function(data){
-                if(data.status == 200) {
-                    AIZ.plugins.notify('success', data.message);
-                } else {
-                    AIZ.plugins.notify('danger', data.message);
-                }
+                AIZ.plugins.notify('success', data.message);
+                
+                // if(data.status == 200) {
+                // } else {
+                //     AIZ.plugins.notify('danger', data.message);
+                // }
+            }).fail(function(response) {
+                AIZ.plugins.notify('danger', response.responseJSON.message);
             });
         });
 

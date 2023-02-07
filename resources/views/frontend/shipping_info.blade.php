@@ -72,11 +72,13 @@
                                                     </div>
                                                     <div>
                                                         <span class="opacity-60">@lang('delegate::delivery.province'):</span>
-                                                        <span class="fw-600 ml-2">{{ Modules\Delegate\Entities\Province::find($address->province_id)->name }}</span>
+                                                        {{-- <span class="fw-600 ml-2">{{ Modules\Delegate\Entities\Province::find($address->province_id)->name }}</span> --}}
+                                                        <span class="fw-600 ml-2">{{ $address->province->name }}</span>
                                                     </div>
                                                     <div>
                                                         <span class="opacity-60">@lang('delegate::delivery.zone'):</span>
-                                                        <span class="fw-600 ml-2">{{ Modules\Delegate\Entities\Neighborhood::find($address->zone_id)->name ?? Modules\Delegate\Entities\Province::find($address->province_id)->name  }}</span>
+                                                        {{-- <span class="fw-600 ml-2">{{ Modules\Delegate\Entities\Neighborhood::find($address->zone_id)->name ?? Modules\Delegate\Entities\Province::find($address->province_id)->name  }}</span> --}}
+                                                        <span class="fw-600 ml-2">{{ $address->zone->name ?? $address->province->name  }}</span>
                                                     </div>
                                                     
                                                     <div>

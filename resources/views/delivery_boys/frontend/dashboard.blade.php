@@ -187,7 +187,7 @@
                     }
                 @endphp
                 <div class="h3 fw-700">
-                    {{ $total_earnings }}
+                    {{ number_format($total_earnings, 0) }}
                 </div>
             </div>
         </div>
@@ -202,7 +202,7 @@
                     $system_earnigns = $total_earnings - $personal_earnigns;
                 @endphp
                  <div class="h3 fw-700">
-                    {{ $system_earnigns }}
+                    {{ number_format($system_earnigns, 0) }}
                 </div>
             </div>
         </div>
@@ -213,7 +213,7 @@
                 <i class="las la-dollar-sign la-4x"></i>
                 <div class="opacity-50">@lang('delegate::delivery.personal_earnings')</div>
                  <div class="h3 fw-700">
-                    {{  $personal_earnigns }}
+                    {{  number_format($personal_earnigns, 0) }}
                 </div>
             </div>
         </div>
@@ -231,7 +231,7 @@
                 <i class="las la-comment-dollar la-4x"></i>
                 <div class="opacity-50">@lang('delegate::delivery.weekly_system_earnings')</div>
                  <div class="h3 fw-700">
-                  {{  $week_orders ? substr($week_orders->system_earnings, 0, -3) : 0 }}
+                  {{  $week_orders ? number_format(substr($week_orders->system_earnings, 0, -3), 0) : 0 }}
                 </div>
             </div>
         </div>
@@ -243,7 +243,7 @@
                 <i class="las la-dollar-sign la-4x"></i>
                 <div class="opacity-50">@lang('delegate::delivery.weekly_personal_earnings')</div>
                  <div class="h3 fw-700">
-                   {{ $week_orders ? substr($week_orders->personal_earnings, 0, -3) : 0 }}
+                   {{ $week_orders ? number_format(substr($week_orders->personal_earnings, 0, -3), 0) : 0 }}
                 </div>
             </div>
         </div>

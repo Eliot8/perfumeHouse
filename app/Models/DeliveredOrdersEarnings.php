@@ -9,4 +9,9 @@ class DeliveredOrdersEarnings extends Model
 {
     use HasFactory;
 
+    public function order() 
+    {
+        return $this->belongsTo(Order::class, 'order_id');
+    }
+
 }

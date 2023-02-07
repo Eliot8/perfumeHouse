@@ -160,4 +160,8 @@ return [
     'approved' => 'Approved',
     'amount' => 'Amount',
     'payment_request_details' => 'Payment request details',
+
+    'payments_list' => 'Payments List',
+    'no_payments_found' => 'No payments found.',
+    'confirm' => 'Are You Sure ?',
 ];

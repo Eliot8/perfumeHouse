@@ -123,7 +123,7 @@
                         <td class="phone_number">{{ $delegate->phone_number }}</td>
                         <td class="email">{{ $delegate->email }}</td>
                         <td class="province">
-                            <strong class="btn-soft-info btn-circle btn-sm" style="transition: all 0.3s ease;">{{ \DB::table('provinces')->where('id', $delegate->province_id)->first()->name }}</strong>
+                            <strong class="badge badge-inline badge-secondary" style="font-size: 12px; font-weight: 600;">{{ \DB::table('provinces')->where('id', $delegate->province_id)->first()->name }}</strong>
                         </td>
                         @php 
                             $ordersCount = ordersCount($delegate->user_id);
@@ -139,8 +139,10 @@
                         <td class="orders_count"><span class="badge badge-inline badge-success">{{ $ordersCount }}</span></td>
                         <td class="options text-right">
                             @if($week_orders)
-                            {{-- <a class="btn btn-soft-success btn-icon btn-circle btn-sm" href="{{ route('week.payment.request', [$delegate->id, $week_orders->week_end]) }}" onclick="redirect()" title="@lang('delegate::delivery.payment_request')"> --}}
-                            <a class="btn btn-soft-success btn-icon btn-circle btn-sm" href="javascript:void(0);" onclick="paymentRequest({{ $delegate->id }}, '{{ $week_orders->week_end }}')" title="@lang('delegate::delivery.payment_request')">
+                            <a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="javascript:void(0);" onclick="displayPayments({{ $delegate->id }})" title="@lang('delegate::delivery.payments_list')">
+                               <i class="las la-search-dollar"></i>
+                            </a>
+                            <a class="btn btn-soft-success btn-icon btn-circle btn-sm" href="javascript:void(0);" onclick="paymentRequestConfirm({{ $delegate->id }}, '{{ $week_orders->week_end }}')" title="@lang('delegate::delivery.payment_request')">
                                <i class="las la-hand-holding-usd"></i>
                             </a>
                             @endif
@@ -162,6 +164,44 @@
         </form>
     </div>
 </div>
+@endsection
+@section('modal')
+    <div id="payment_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="payment_modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-info ">
+                    <h4 class="modal-title h6 text-white">@lang('delegate::delivery.payments_list')</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                </div>
+                <div id="payment-modal-body" class="modal-body">
+                  
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmation_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmation_modal" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-success">
+                    <h4 class="modal-title h6 text-white">@lang('delegate::delivery.confirm')</h4>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-hidden="true"></button>
+                </div>
+                <div class="modal-body">
+                    @lang('delegate::delivery.confirm')
+                    <input type="hidden" id="delegate_id" value="">
+                    <input type="hidden" id="week_end" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="confirmation-link" class="btn btn-success btn-sm">{{ translate('Confirm') }}</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -211,9 +251,40 @@
         });
     });
 
-    function paymentRequest(deleagte_id, week_end) {
-       let url = '{{ route("week.payment.request", [":delegate_id", ":week_end"]) }}';
-            url = url.replace(':delegate_id', deleagte_id);
+    function displayPayments(delegate_id) {
+        let url = '{{ route("delegates.payment_request_view", ":delegate_id") }}';
+            url = url.replace(':delegate_id', delegate_id);
+            
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+            },
+            url: url,
+            type: "GET",
+            dataType: "JSON",
+            success: function(response) {
+                $('#payment-modal-body').html(response);
+                $('#payment_modal').modal();
+              
+            },
+            error: function(response) {
+                AIZ.plugins.notify('danger', response.responseJSON);
+            }
+        });
+    }
+
+    function paymentRequestConfirm(delegate_id, week_end) {
+        $('#confirmation_modal').modal();
+        $('#delegate_id').val(delegate_id);
+        $(' #week_end').val(week_end);
+    }
+
+    $('#confirmation-link').on('click', function() {
+        const delegate_id = $('#delegate_id').val();
+        const week_end = $('#week_end').val();
+        console.log(delegate_id, week_end);
+        let url = '{{ route("week.payment.request", [":delegate_id", ":week_end"]) }}';
+            url = url.replace(':delegate_id', delegate_id);
             url = url.replace(':week_end', week_end);
             
         $.ajax({
@@ -238,7 +309,8 @@
                 AIZ.plugins.notify('danger', response.responseJSON);
             }
         });
-    }
+        $('#confirmation_modal').modal('toggle');
+    });
 </script>
 @endsection
 

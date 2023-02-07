@@ -238,4 +238,17 @@ class DelegatesController extends Controller
             'not_text_align' => $not_text_align
         ], [], [])->download('payment_request_history.pdf');
     }
+
+    public function paymentRequestView($delegate_id)
+    {
+        try {
+            $payments = DeliveredOrdersEarnings::where('delegate_id', $delegate_id)->where('status', 'unpaid')->get();
+
+            $view = view('delegate::components.payment_request_view', compact('payments'))->render();
+            return response()->json($view, 200);
+            
+        } catch(\Exception $e) {
+            return response()->json($e->getMessage(), 400);
+        }
+    }
  }

@@ -164,4 +164,7 @@ return [
     'amount' => 'المبلغ',
     'payment_request_details' => 'تفاصيل طلب السداد',
 
+    'payments_list' => 'قائمة المدفوعات',
+    'no_payments_found' => 'لم يتم العثور على مدفوعات.',
+    'confirm' => 'هل أنت متأكد؟',
 ];

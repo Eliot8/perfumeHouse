@@ -138,7 +138,7 @@
                                 <span class="w-50 fw-600">{{ translate('Address') }}:</span>
                                 <span class="ml-2">{{ $address->address }}</span>
                             </div>
-                             <div>
+                            <div>
                                 <span class="w-50 fw-600">@lang('delegate::delivery.province'):</span>
                                 <span class="ml-2">{{ Modules\Delegate\Entities\Province::find($address->province_id)->name  }}</span>
                             </div>

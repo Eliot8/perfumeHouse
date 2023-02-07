@@ -82,12 +82,14 @@
                     @endphp
                     @if($address != null)
                         <ul class="list-unstyled mb-0">
-                            <li class=" py-2"><span>{{ translate('Address') }} : {{ $address->address }}</span></li>
-                            <li class=" py-2"><span>{{ translate('Country') }} : {{ $address->country->name }}</span></li>
-                            <li class=" py-2"><span>{{ translate('State') }} : {{ $address->state->name }}</span></li>
-                            <li class=" py-2"><span>{{ translate('City') }} : {{ $address->city->name }}</span></li>
-                            <li class=" py-2"><span>{{ translate('Postal Code') }} : {{ $address->postal_code }}</span></li>
-                            <li class=" py-2"><span>{{ translate('Phone') }} : {{ $address->phone }}</span></li>
+                            <li class="py-2"><span>{{ translate('Address') }} : {{ $address->address }}</span></li>
+                            <li class="py-2"><span>@lang('delegate::delivery.province') : {{ $address->province->name }}</span></li>
+                            <li class="py-2"><span>@lang('delegate::delivery.zone') : {{ Modules\Delegate\Entities\Neighborhood::find($address->zone_id)->name ?? Modules\Delegate\Entities\Province::find($address->province_id)->name }}</span></li>
+                            {{-- <li class="py-2"><span>{{ translate('Country') }} : {{ $address->country->name ?? '' }}</span></li>
+                            <li class="py-2"><span>{{ translate('State') }} : {{ $address->state->name ?? '' }}</span></li>
+                            <li class="py-2"><span>{{ translate('City') }} : {{ $address->city->name ?? '' }}</span></li> --}}
+                            <li class="py-2"><span>{{ translate('Postal Code') }} : {{ $address->postal_code }}</span></li>
+                            <li class="py-2"><span>{{ translate('Phone') }} : {{ $address->phone }}</span></li>
                         </ul>
                     @endif
                 @endif

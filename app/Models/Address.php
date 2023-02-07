@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Modules\Delegate\Entities\Zone;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Delegate\Entities\Province;
 
@@ -30,7 +31,13 @@ class Address extends Model
     }
 
 
-    public function province(){
+    public function province()
+    {
         return $this->belongsTo(Province::class, 'province_id');
+    }
+
+    public function zone()
+    {
+        return $this->belongsTo(Zone::class, 'zone_id');
     }
 }

@@ -167,4 +167,7 @@ return [
     'payments_list' => 'قائمة المدفوعات',
     'no_payments_found' => 'لم يتم العثور على مدفوعات.',
     'confirm' => 'هل أنت متأكد؟',
+
+    'payment_info' => 'معلومات الدفع',
+    'success_flash' => 'تم حفظ المعلومات بنجاح',
 ];

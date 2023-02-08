@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Cart;
+use Laravel\Sanctum\HasApiTokens;
+use Modules\Delegate\Entities\Delegate;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Laravel\Sanctum\HasApiTokens;
-use App\Models\Cart;
 use App\Notifications\EmailVerificationNotification;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -133,5 +134,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function product_bids() {
         return $this->hasMany(AuctionProductBid::class);
+    }
+
+    public function delegate()
+    {
+        return $this->hasOne(Delegate::class);
     }
 }

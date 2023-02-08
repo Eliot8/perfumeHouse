@@ -59,6 +59,9 @@ class DelegatesController extends Controller
         $delegate->email = $request->input('email');
         $delegate->password = Hash::make($request->input('password'));
 
+        $delegate->paypal_email = $request->get('paypal');
+        $delegate->bank_information = $request->get('bank_info');
+
         $request->filled('phone_number') ? $delegate->phone_number = $request->input('phone_number') : null;
         $request->filled('address') ? $delegate->address = $request->input('address') : null;
         $request->filled('zones') ? $delegate->zones = json_encode($request->input('zones')) : null;
@@ -120,7 +123,9 @@ class DelegatesController extends Controller
             $delegate =Delegate::findOrFail($id);
             $delegate->full_name = $request->input('name');
             $delegate->province_id = $request->input('province_id');
-    
+            $delegate->paypal_email = $request->get('paypal');
+            $delegate->bank_information = $request->get('bank_info');
+
             if($request->input('email')){
                 $delegate->email = $request->input('email');
                 $user = User::findOrFail($delegate->user_id);
@@ -134,7 +139,7 @@ class DelegatesController extends Controller
                 $user->password = $delegate->password;
                 $user->save();
             }
-    
+            
             $delegate->zones = $request->filled('zones') ?  json_encode($request->input('zones')) : null;
             $request->filled('phone_number') ? $delegate->phone_number = $request->input('phone_number') : null;
             $request->filled('address') ? $delegate->address = $request->input('address') : null;
@@ -250,5 +255,16 @@ class DelegatesController extends Controller
         } catch(\Exception $e) {
             return response()->json($e->getMessage(), 400);
         }
+    }
+
+    public function updatePaymentInfo(Request $request)
+    {
+        $delegate = Delegate::find(auth()->user()->delegate->id);
+        $delegate->paypal_email = $request->get('paypal');
+        $delegate->bank_information = $request->get('bank_info');
+        $delegate->save();
+
+        flash(Lang::get('delegate::delivery.success_flash'))->success();
+        return redirect()->back();
     }
  }

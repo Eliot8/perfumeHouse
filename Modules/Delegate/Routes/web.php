@@ -45,7 +45,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::get('/payment-request-invoice/{ids}/{name}', 'DelegatesController@paymentRequestInvoice')->name('payment_request.invoice');
 
     Route::get('/delegate/{id}/payment_request_view', 'DelegatesController@paymentRequestView')->name('delegates.payment_request_view');
+
 });
+Route::post('/delegate/update_payments_info', 'DelegatesController@updatePaymentInfo')->name('deleagte.update.payment_info');
 
 // AJAX
 Route::get('/province/{id}/zone', 'DelegatesController@getZone');

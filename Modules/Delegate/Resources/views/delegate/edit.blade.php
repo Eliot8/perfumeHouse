@@ -76,6 +76,26 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0 h6">@lang('delegate::delivery.payment_info')</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="paypal" class="col-md-3 col-from-label">{{ Translate('Paypal') }} - Paypal</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="paypal" value="{{ $delegate->paypal_email }}" placeholder="{{ Translate('Paypal') }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="bank_info" class="col-md-3 col-from-label">{{ Translate('Bank Information') }} - Bank</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="bank_info" value="{{ $delegate->bank_information }}" placeholder="{{ Translate('Bank Information') }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="col-lg-4">

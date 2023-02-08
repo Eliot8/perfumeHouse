@@ -164,4 +164,7 @@ return [
     'payments_list' => 'Payments List',
     'no_payments_found' => 'No payments found.',
     'confirm' => 'Are You Sure ?',
+
+    'payment_info' => 'Payment Information',
+    'success_flash' => 'The Information has been saved successfully',
 ];

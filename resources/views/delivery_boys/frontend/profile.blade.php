@@ -104,6 +104,65 @@
         </div>
     </div>
 
+    <!-- Payment Info Change -->
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0 h6">@lang('delegate::delivery.payment_info')</h5>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('deleagte.update.payment_info') }}" method="POST">
+                @csrf
+                <div class="form-group row">
+                    <label for="paypal" class="col-md-3 col-from-label">{{ Translate('Paypal') }} - Paypal</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="paypal" value="{{ Auth::user()->delegate->paypal_email }}" placeholder="{{ Translate('Paypal') }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="bank_info" class="col-md-3 col-from-label">{{ Translate('Bank Information') }} - Bank</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="bank_info" value="{{ Auth::user()->delegate->bank_information }}" placeholder="{{ Translate('Bank Information') }}">
+                    </div>
+                </div>
+                <div class="form-group mb-0 text-right">
+                    <button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {{-- <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0 h6">{{ translate('Change your email')}}</h5>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('user.change.email') }}" method="POST">
+                @csrf
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>{{ translate('Your Email') }}</label>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group mb-3">
+                          <input type="email" class="form-control" placeholder="{{ translate('Your Email')}}" name="email" value="{{ Auth::user()->email }}" />
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary new-email-verification">
+                                    <span class="d-none loading">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        {{ translate('Sending Email...') }}
+                                    </span>
+                                    <span class="default">{{ translate('Verify') }}</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-primary">{{translate('Update Email')}}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div> --}}
 @endsection
 
 @section('modal')

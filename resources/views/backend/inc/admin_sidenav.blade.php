@@ -445,6 +445,11 @@
                                 </a>
                             </li>
                             <li class="aiz-side-nav-item">
+                                <a href="{{ route('delegates.payment_requests') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">@lang('delegate::delivery.admin_payment_requests')</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
                                 <a href="{{ route('stock.index') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">@lang('delegate::delivery.stock_management')</span>
                                 </a>

@@ -39,6 +39,9 @@ Route::group(['middleware' => ['user', 'verified', 'unbanned']], function() {
     // Route::post('/orders/sort', 'DeliveryBoyController@sort_orders')->name('delivery.sort_orders');
 
     Route::post('/profile/update', 'DeliveryBoyController@profileUpdate')->name('delivery_boy.profile.update');
-
-
+    
+    
+    Route::get('/payments_requests', 'DeliveryBoyController@paymentsRequests')->name('delivery_boy.payments_requests');
+    Route::post('/send_payment_request', 'DeliveryBoyController@sendPaymentRequest')->name('delivery_boy.send_payment_request');
+    Route::get('/payments_requests/{id}/attached_pieces', 'DeliveryBoyController@payment_request_attached_pieces')->name('payment_request.attached_pieces');
 });

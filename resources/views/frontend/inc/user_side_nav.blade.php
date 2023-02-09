@@ -30,31 +30,59 @@
                 </li>
 
                 @if (Auth::user()->user_type == 'delivery_boy')
-                    <li class="aiz-side-nav-item">
+                    <li class="aiz-side-nav-item position-relative">
                         <a href="{{ route('assigned-deliveries') }}"
                             class="aiz-side-nav-link {{ areActiveRoutes(['completed-delivery']) }}">
                             <i class="las la-hourglass-half aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">
                                 {{ translate('Assigned Delivery') }}
                             </span>
+                            @php
+                                $assigned_deliveries = \App\Models\Order::where('assign_delivery_boy', Auth::user()->id)
+                                ->where('delivery_status', 'confirmed')
+                                ->where('cancel_request', '0')
+                                ->count();
+                            @endphp 
+                            @if($assigned_deliveries > 0)
+                            <span class="badge badge-pill badge-primary position-absolute" style="top: 10px; @if(app()->getLocale() == 'sa') left: 10px; @else right: 10px; @endif">{{ $assigned_deliveries }}</span>
+                            @endif
                         </a>
                     </li>
-                    <li class="aiz-side-nav-item">
+                    <li class="aiz-side-nav-item position-relative">
                         <a href="{{ route('pickup-deliveries') }}"
                             class="aiz-side-nav-link {{ areActiveRoutes(['completed-delivery']) }}">
                             <i class="las la-luggage-cart aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">
                                 {{ translate('Pickup Delivery') }}
                             </span>
+
+                            @php
+                                $picked_up = \App\Models\Order::where('assign_delivery_boy', Auth::user()->id)
+                                ->where('delivery_status', 'picked_up')
+                                ->where('cancel_request', '0')
+                                ->count();
+                            @endphp 
+                            @if($picked_up > 0)
+                            <span class="badge badge-pill badge-primary position-absolute" style="top: 10px; @if(app()->getLocale() == 'sa') left: 10px; @else right: 10px; @endif">{{ $picked_up }}</span>
+                            @endif
                         </a>
                     </li>
-                    <li class="aiz-side-nav-item">
+                    <li class="aiz-side-nav-item position-relative">
                         <a href="{{ route('on-the-way-deliveries') }}"
                             class="aiz-side-nav-link {{ areActiveRoutes(['completed-delivery']) }}">
                             <i class="las la-running aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">
                                 {{ translate('On The Way Delivery') }}
                             </span>
+                            @php
+                                $on_the_way = \App\Models\Order::where('assign_delivery_boy', Auth::user()->id)
+                                ->where('delivery_status', 'on_the_way')
+                                ->where('cancel_request', '0')
+                                ->count();
+                            @endphp 
+                            @if($on_the_way > 0)
+                            <span class="badge badge-pill badge-primary position-absolute" style="top: 10px; @if(app()->getLocale() == 'sa') left: 10px; @else right: 10px; @endif">{{ $on_the_way }}</span>
+                            @endif
                         </a>
                     </li>
                     <li class="aiz-side-nav-item">
@@ -115,13 +143,22 @@
                         @endphp
                         <a href="{{ route('total-collection') }}"
                             class="aiz-side-nav-link {{ areActiveRoutes(['today-collection']) }}">
-                            <i class="las la-comment-dollar aiz-side-nav-icon"></i>
+                            <i class="las la-shopping-bag aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">
                                 {{ translate('All Orders') }}
                             </span>
                             @if($count > 0)
                             <span class="badge badge-pill badge-primary position-absolute" style="top: 10px; @if($locale == 'sa') left: 10px; @else right: 10px; @endif" >{{ $count }}</span>
                             @endif
+                        </a>
+                    </li>
+                    <li class="aiz-side-nav-item">
+                        <a href="{{ route('delivery_boy.payments_requests') }}"
+                            class="aiz-side-nav-link {{ areActiveRoutes(['delivery_boy.payments_requests']) }}">
+                            <i class="las la-money-check-alt aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">
+                                @lang('delegate::delivery.payment_requests')
+                            </span>
                         </a>
                     </li>
                     <li class="aiz-side-nav-item">

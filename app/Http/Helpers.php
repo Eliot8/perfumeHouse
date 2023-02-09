@@ -1069,6 +1069,39 @@ if(!function_exists('filterDelivery_man')){
     }
 }
 
+if(!function_exists('filterPaymentRequests')){
+    function filterPaymentRequests(Request $request, $payment_requests){
+        if ($request->get('code') != null) {
+            $payment_requests = $payment_requests->where('code', $request->get('code'));
+        }
+
+        if ($request->has('delegate')) {
+            $payment_requests = $payment_requests->where('delivery_man_id', $request->get('delegate'));
+        }
+
+        if ($request->has('province')) {
+            $payment_requests = $payment_requests->whereHas('delegate', function ($query) use ($request) {
+                $query->where('province_id', $request->get('province'));
+            });
+        }
+        
+        if ($request->has('status')) {
+            $payment_requests = $payment_requests->where('status', $request->get('status'));
+        }
+
+        if ($request->get('date')) {
+            $date = $request->get('date');
+
+            $start_date = date('Y-m-d', strtotime(explode(" to ", $date)[0]));
+            $end_date = date('Y-m-d', strtotime(explode(" to ", $date)[1]));
+
+            $payment_requests = $payment_requests->whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date);
+        }
+       
+        return $payment_requests;
+    }
+}
+
 if(!function_exists('filterStock')){
     function filterStock(Request $request, $delegates){
         if ($request->has('delegate')) {
@@ -1146,10 +1179,6 @@ if(!function_exists('filterCoupon')){
             $coupons = $coupons->whereDate('start_date', '>=', date('Y-m-d', strtotime(explode(" to ", $start_date)[0])))->whereDate('start_date', '<=', date('Y-m-d', strtotime(explode(" to ", $start_date)[1])));
         }
 
-        // if ($request->get('end_date')) {
-        //     $end_date = $request->get('end_date');
-        //     $coupons = $coupons->where('end_date', '>=', date('Y-m-d', strtotime(explode(" to ", $end_date)[0])))->where('end_date', '<=', date('Y-m-d', strtotime(explode(" to ", $end_date)[1])));
-        // }
         if ($request->get('search')) {
             $coupons = $coupons->where('code', 'like', '%'.$request->get('search').'%')->orWhere('type', 'like', '%' . $request->get('search') . '%');
            
@@ -1177,17 +1206,8 @@ if(!function_exists('filterRefferalUsers')){
         
         if ($request->has('affiliate_user')) {
             $user = AffiliateUser::find($request->get('affiliate_user'))->user;
-            // dd($user->id);
             $refferal_users = $refferal_users->where('referred_by', $user->id);
         }
-        // if ($request->has('search') && $request->get('search') != null) {
-        //     // dd($request->get('search'));
-        //     $refferal_users = $refferal_users->where('name', 'like', '%'.$request->get('search').'%')
-        //     ->orWhere('email', 'like', '%' . $request->get('search') . '%')
-        //     ->orWhere('phone', 'like', '%' . $request->get('search') . '%')->where('referred_by', '!=' , null);
-
-        //     // $refferal_users = $refferal_users->where('referred_by', '!=' , null);
-        // }
         return $refferal_users;
     }
 }

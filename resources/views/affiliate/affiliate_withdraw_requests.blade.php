@@ -28,9 +28,9 @@
                     </select>
                 </div>
                 <div class="col-lg-3 form-group">
-                    <label class="col-from-label">{{translate('Staus')}}</label>
+                    <label class="col-from-label">{{translate('Status')}}</label>
                     <select class="form-control aiz-selectpicker" name="status">
-                        <option value="" selected disabled hidden>{{translate('Staus')}}</option>
+                        <option value="" selected disabled hidden>{{translate('Status')}}</option>
                        
                             <option value="approved" @if(request()->has('status') && request()->filled('status') && request()->get('status') == 'approved') selected @endif>
                                {{translate('Approved')}}

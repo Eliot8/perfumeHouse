@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Hash;
 use Auth;
+use Hash;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Order;
 use App\Models\Country;
 use App\Models\DeliveryBoy;
+use Illuminate\Http\Request;
 use App\Models\DeliveryHistory;
-use App\Models\Order;
-use App\Models\User;
-use Modules\Delegate\Entities\Delegate;
+use Illuminate\Support\Facades\Lang;
 use Modules\Delegate\Entities\Stock;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
+use Modules\Delegate\Entities\Delegate;
+use App\Models\DeliveryBoyPaymentRequest;
+use Illuminate\Support\Facades\Validator;
 
 class DeliveryBoyController extends Controller
 {
@@ -449,5 +455,93 @@ class DeliveryBoyController extends Controller
         }
 
         return false;
+    }
+
+    public function paymentsRequests(Request $request)
+    {
+        $delegate_id = Delegate::where('user_id', auth()->user()->id)->first()->id;
+        $today = date('d-m-Y');
+        $week_orders = \Modules\Delegate\Entities\WeekOrders::where('delivery_man_id', $delegate_id)
+            ->where('week_end', '>', $today)
+            ->first();
+
+        $payment_requests = DeliveryBoyPaymentRequest::where('delivery_man_id', $delegate_id)->latest();
+        $payment_requests = filterPaymentRequests($request, $payment_requests);
+        $payment_requests = $payment_requests->paginate(8);
+
+        // $payment_requests = DeliveryBoyPaymentRequest::where('delivery_man_id', $delegate_id)->orderBy('id', 'desc')->paginate(8);
+
+        return view('delivery_boys.frontend.payments_requests', compact('week_orders', 'payment_requests'));
+    }
+
+    public function sendPaymentRequest(Request $request)
+    {
+        $delegate_id = Delegate::where('user_id', auth()->user()->id)->first()->id;
+        $today = date('d-m-Y');
+        $week_orders = \Modules\Delegate\Entities\WeekOrders::where('delivery_man_id', $delegate_id)
+            ->where('week_end', '>', $today)
+            ->first();
+
+        # IF SYSTEM EARNINGS ARE EMPTY
+        if ($week_orders->system_earnings == 0) {
+            flash(Lang::get('delegate::delivery.system_earnings_empty'))->error();
+            return redirect()->back();
+        }
+
+        # CAN NOT DUPLICATE PAYMENT REQUEST 
+        $pending_payment_request = \App\Models\DeliveryBoyPaymentRequest::where('delivery_man_id', auth()->user()->delegate->id)->where('status', 'pending')->first();
+        $pending_payment_request = $pending_payment_request ? number_format($pending_payment_request->amount, 0) : 0;
+
+        if ($pending_payment_request !== 0) {
+            flash(Lang::get('delegate::delivery.duplicate_payment_request'))->error();
+            return redirect()->back();
+        }
+
+        $validator = Validator::make($request->all(), [
+            'attached_pieces' => ['required']
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+
+        $attached_pieces = [];
+        foreach($request->file('attached_pieces') as $file) {
+            $unique_id = uniqid();
+            $extension = $file->getClientOriginalExtension();
+            $file_name = Carbon::now()->format('Ymd') . '_' . $unique_id . '.' . $extension;
+            $path = 'uploads/payment_requests/' . $file_name;
+
+            array_push($attached_pieces, $file_name);
+            Storage::disk('local')->put($path, file_get_contents($file));
+        }
+
+        $payment_request = new DeliveryBoyPaymentRequest();
+        $payment_request->date_request = Carbon::now();
+        $payment_request->delivery_man_id = Delegate::where('user_id', auth()->user()->id)->first()->id;
+        $payment_request->attached_pieces = $attached_pieces;
+        $payment_request->amount = $week_orders->system_earnings;
+        $payment_request->comment = $request->get('comment');
+        $payment_request->status = 'pending';
+        $payment_request->save();
+
+        $payment_request->code = date('Ymd') . '-' . $payment_request->id;
+        $payment_request->save();
+        
+        flash(Lang::get('delegate::delivery.sent_successfully'))->success();
+        return redirect()->back();
+    }
+
+    public function payment_request_attached_pieces($payment_request_id) 
+    {
+        Artisan::call('storage:link');
+        try {
+            $attached_pieces = DeliveryBoyPaymentRequest::find($payment_request_id)->attached_pieces;
+            $view = view('delivery_boys.frontend.modal.attached_pieces', compact('attached_pieces'))->render();
+    
+            return response()->json($view, 200);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 400);
+        }
     }
 }

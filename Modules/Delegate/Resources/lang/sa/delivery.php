@@ -153,7 +153,8 @@ return [
     'payment_request' => 'طلب التسديد',
     'id' => 'الرمز',
     'date_request' => 'تاريخ الطلب',
-    'attached_pieces' => 'مرفقات',
+    'attached_pieces' => 'سكرينات',
+    'view_screenshots' => 'رؤية السكرينات',
 
     'payments_empty' => 'المدفوعات فارغة',
     'pay' => 'تسديد',
@@ -169,5 +170,20 @@ return [
     'confirm' => 'هل أنت متأكد؟',
 
     'payment_info' => 'معلومات الدفع',
+
     'success_flash' => 'تم حفظ المعلومات بنجاح',
+    'success_delete_flash' => 'تم حذفه بنجاح',
+    'delete_confirm' => 'هل أنت متأكد أنك تريد حذف هذا؟',
+
+    'admin_payment_requests' => 'طلبات الدفع',
+    'payment_request_delete' => 'حذف طلب الدفع',
+
+    'rejected' => 'مرفوض',
+    'approved' => 'موافقة' ,
+    'pending' => 'قيد الانتظار',
+
+    'pending_payment_request' => 'طلب تسديد معلق',
+    'system_earnings_empty' => 'أرياح النظام فارغة',
+    'duplicate_payment_request' => 'المرجو الانتظار الى ان يتم الموافقة على الطلب السابق',
+
 ];

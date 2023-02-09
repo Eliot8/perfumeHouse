@@ -3,8 +3,10 @@
 namespace Modules\Delegate\Http\Controllers;
 
 use PDF;
+use Session;
 use Exception;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -12,12 +14,14 @@ use Modules\Delegate\Entities\Zone;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Cache;
 use App\Models\DeliveredOrdersEarnings;
 use Modules\Delegate\Entities\Delegate;
+use App\Models\DeliveryBoyPaymentRequest;
+use Modules\Delegate\Entities\WeekOrders;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Delegate\Http\Requests\StoreDelegateRequest;
 use Modules\Delegate\Http\Requests\UpdateDelegateRequest;
-use Session;
 
 class DelegatesController extends Controller
 {
@@ -265,6 +269,79 @@ class DelegatesController extends Controller
         $delegate->save();
 
         flash(Lang::get('delegate::delivery.success_flash'))->success();
+        return redirect()->back();
+    }
+
+    public function paymentRequests(Request $request)
+    {
+        if($request->get('paginate')) {
+            Cache::put('paginate', $request->get('paginate'));
+        }
+        
+        $paginate = Cache::get('paginate') ?? 8;
+        if ($paginate == 'all') $paginate = DeliveryBoyPaymentRequest::count();
+
+        $payment_requests = DeliveryBoyPaymentRequest::latest();
+        $payment_requests = filterPaymentRequests($request, $payment_requests);
+        $payment_requests = $payment_requests->paginate(8);
+
+        return view('delegate::payment_requests', compact('payment_requests'));
+    }
+
+    public function viewPaymentRequest($id)
+    {
+        if (request()->ajax()) {
+            try {
+                $payment = DeliveryBoyPaymentRequest::find($id);
+                $view = view('delegate::components.view_payment_request', compact('payment'))->render();
+    
+                return response()->json($view, 200);
+            } catch(\Exception $e) {
+                return response()->json($e->getMessage(), 400);
+            }
+        }
+    }
+
+    public function updatePaymentRequestStatus($id, $status)
+    {
+        $payment_request = DeliveryBoyPaymentRequest::find($id);
+        if ($status === 'approved') {
+            $today = date('d-m-Y');
+            $week_orders = WeekOrders::where('delivery_man_id', $payment_request->delivery_man_id)->where('week_end', '>', $today)->first();
+            
+            # SET SYSTEM EARNINGS TO 0 | AS PAID
+            $week_orders->system_earnings = 0;
+            $week_orders->save();
+
+            # UPDATE STATUS
+            $payment_request->status = 'approved';
+            $payment_request->save();
+
+            # MAKE ALL DELIVERED ORDERS PAID
+            $orders = Order::where('assign_delivery_boy', $payment_request->delegate->user_id)->where('delivery_status', 'delivered')->get();
+            foreach($orders as $order) {
+                $order->payment_status = 'paid';
+                $order->save();
+            }
+        }
+
+        if ($status === 'rejected') {
+            # UPDATE STATUS
+            $payment_request->status = 'rejected';
+            $payment_request->save();
+
+        }
+
+        flash(Lang::get('delegate::delivery.success_flash'))->success();
+        return redirect()->back();
+    }
+
+    public function deletePaymentRequest($id) 
+    {
+        $payment_request = DeliveryBoyPaymentRequest::find($id);
+        $payment_request->delete();
+
+        flash(Lang::get('delegate::delivery.success_delete_flash'))->success();
         return redirect()->back();
     }
  }

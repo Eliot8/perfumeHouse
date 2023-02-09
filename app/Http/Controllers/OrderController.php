@@ -666,7 +666,7 @@ class OrderController extends Controller
                 ]);
             }
 
-            # TRANSFORM COMMISSION FROM AFFILIATE BALANCE PENDING TO AFFILIATE BALANCE
+            # TRANSFORM COMMISSION FROM AFFILIATE BALANCE PENDING TO AFFILIATE BALANCE | FOR USER
             if($order->coupon_id != null){
                 $affiliate_user = Coupon::find($order->coupon_id)->affiliate_user;
                 $coupon_usage = CouponUsage::where('order_id', $order->id)->first();
@@ -681,7 +681,7 @@ class OrderController extends Controller
                 $affiliate_user->save();
             }
 
-            # COMMISSION EARNINGS FOR DELIVERY MAN
+            # COMMISSION EARNINGS | FOR DELIVERY MAN
             $commission_earning_from_order = $order->orderDetails->sum('price') * ($order->province->delegate_commission / 100);
             $delegate->commission_earnings += $commission_earning_from_order;
             $delegate->save();

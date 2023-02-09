@@ -46,6 +46,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
     Route::get('/delegate/{id}/payment_request_view', 'DelegatesController@paymentRequestView')->name('delegates.payment_request_view');
 
+    Route::get('/delegate/payment_requests', 'DelegatesController@paymentRequests')->name('delegates.payment_requests');
+    Route::get('/delegate/{id}/view_payment_request', 'DelegatesController@viewPaymentRequest')->name('delegates.view_payment_request');
+
+    Route::get('/delegate/payment_request/{id}/{status}', 'DelegatesController@updatePaymentRequestStatus')->name('delegates.update_payment_request_status');
+    Route::get('/delegate/destroy/{id}/payment_request', 'DelegatesController@deletePaymentRequest')->name('delegates.delete_payment_request');
+
 });
 Route::post('/delegate/update_payments_info', 'DelegatesController@updatePaymentInfo')->name('deleagte.update.payment_info');
 

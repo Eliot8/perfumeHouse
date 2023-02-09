@@ -1,0 +1,116 @@
+.file-box {
+    width: 70%;
+    height: 285px;
+    border: 1px dashed #52495a;
+    background-color: #f8f9fa;
+    position: relative;
+}
+
+.file-box img {
+    width: 100%;
+    height: 100%;
+}
+.file-box span {
+    position: absolute;
+    right: 5px;
+    top: 2px;
+    font-size: 16px;
+    cursor: pointer;
+    color: red;
+    z-index: 10;
+}
+
+@media (min-width: 996px) {
+    .table-responsive {
+        overflow-x: initial !important;
+    }
+}
+
+.img-modal-target {
+    width: 300px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.img-modal-target:hover {
+    opacity: 0.7;
+}
+
+.img-modal {
+    display: none;
+    position: fixed;
+    z-index: 2050;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.img-modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    opacity: 1 !important;
+    max-width: 1200px;
+}
+
+.img-modal-caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 1200px;
+    text-align: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1em;
+    margin-top: 32px;
+}
+
+.img-modal-content,
+.img-modal-caption {
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+    from {
+        -webkit-atransform: scale(0);
+    }
+    to {
+        -webkit-transform: scale(1);
+    }
+}
+
+@keyframes zoom {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+/* The Close Button */
+.img-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.img-modal-close:hover,
+.img-modal-close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}

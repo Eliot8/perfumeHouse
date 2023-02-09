@@ -150,7 +150,8 @@ return [
     'payment_request' => 'Payment Request',
     'id' => 'ID',
     'date_request' => 'Date Request',
-    'attached_pieces' => 'Attached Pieces',
+    'attached_pieces' => 'Screenshots',
+    'view_screenshots' => 'View Screenshots',
 
     'payments_empty' => 'Payments are empty',
     'pay' => 'Pay',
@@ -166,5 +167,19 @@ return [
     'confirm' => 'Are You Sure ?',
 
     'payment_info' => 'Payment Information',
+
     'success_flash' => 'The Information has been saved successfully',
+    'success_delete_flash' => 'It has been deleted successfully',
+    'delete_confirm' => 'Are you sure, You want to delete this ?',
+
+    'admin_payment_requests' => 'Payment Requests',
+    'payment_request_delete' => 'Payment Request Delete',
+    
+    'rejected' => 'Rjected',
+    'approved' => 'Approved' ,
+    'pending' => 'Pending',
+
+    'pending_payment_request' => 'Pending Payment Request',
+    'system_earnings_empty' => 'System Earnings Are Empty',
+    'duplicate_payment_request' => 'Please wait until the previous request is approved',
 ];

@@ -32,6 +32,7 @@
             font-size: 12px;
         }
     </style>
+	@yield('extra-css')
 	<link rel="stylesheet" media="print" href="{{ asset('assets/print.css') }}">
 	<script>
     	var AIZ = AIZ || {};

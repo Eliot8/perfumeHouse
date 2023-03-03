@@ -10,6 +10,8 @@ class DeliveryBoyPaymentRequest extends Model
 {
     use HasFactory;
 
+    protected $table = 'delivery_boy_payment_requests';
+
     protected $casts = [
         'attached_pieces' => 'array',
     ];

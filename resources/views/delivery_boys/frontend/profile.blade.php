@@ -104,7 +104,7 @@
         </div>
     </div>
 
-    <!-- Payment Info Change -->
+    {{-- <!-- Payment Info Change -->
 
     <div class="card">
         <div class="card-header">
@@ -130,7 +130,8 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div> --}}
+
     {{-- <div class="card">
         <div class="card-header">
             <h5 class="mb-0 h6">{{ translate('Change your email')}}</h5>

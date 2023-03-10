@@ -182,4 +182,5 @@ return [
     'pending_payment_request' => 'Pending Payment Request',
     'system_earnings_empty' => 'System Earnings Are Empty',
     'duplicate_payment_request' => 'Please wait until the previous request is approved',
+    'delivery_boy_products_variants_are_empty' => 'There is an error, maybe your product stock is empty!',
 ];

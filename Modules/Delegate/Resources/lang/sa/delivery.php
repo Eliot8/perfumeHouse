@@ -186,4 +186,6 @@ return [
     'system_earnings_empty' => 'أرياح النظام فارغة',
     'duplicate_payment_request' => 'المرجو الانتظار الى ان يتم الموافقة على الطلب السابق',
 
+    'delivery_boy_products_variants_are_empty' => 'هناك خطا, ربما مخزون المنتج لدبك فارغ !'
+
 ];

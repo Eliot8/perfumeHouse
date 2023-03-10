@@ -157,16 +157,22 @@
         document.getElementById('confirmation').setAttribute('href' , url);
     }
 
+    
+
     window.update_status = function update_status(selectObject) {
         var order_id = selectObject.value;
         var status = "delivered";
+        
         $.post('{{ route('orders.update_delivery_status') }}', {
             _token      :'{{ @csrf_token() }}',
             order_id    :order_id,
             status      :status
-        }, function(data){
-            AIZ.plugins.notify('success', '{{ translate('Delivery status has been updated') }}');
+        }, function(response){
+            AIZ.plugins.notify('success', response.message);
             location.reload();
+        })
+        .fail(function (response) {
+            AIZ.plugins.notify('danger', response.responseJSON.message);
         });
     }
     })(jQuery);

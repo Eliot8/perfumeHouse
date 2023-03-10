@@ -619,51 +619,46 @@ class OrderController extends Controller
         $order = Order::findOrFail($request->order_id);
 
         if ($request->status == 'delivered') {
-            
-            # DELIVERY MAN CODE
-            $delegate = Delegate::select('id', 'commission_earnings')->where('user_id', $order->assign_delivery_boy)->first();
-            if(!$delegate){
-                return response()->json([
-                    'status' => 400,
-                    'message' => __('delegate::delivery.no_delegate_selected'),
-                ]);
-            }
-            
-            # MANAGE DELIVERY MAN STOCK
-            foreach ($order->orderDetails as $orderDetail) {
-                if ($orderDetail->product->variant_product) {
-                    $delivery_stock = Stock::where([
-                        'delegate_id'   => $delegate->id,
-                        'product_id'    => $orderDetail->product_id,
-                        'variation'    => $orderDetail->variation,
-                    ])->first();
-                } else {
-                    $delivery_stock = Stock::where([
-                        'delegate_id'   => $delegate->id,
-                        'product_id'    => $orderDetail->product_id,
-                    ])->first();
+            try {
+                # DELIVERY MAN CODE
+                $delegate = Delegate::select('id', 'commission_earnings')->where('user_id', $order->assign_delivery_boy)->first();
+                if(!$delegate){
+                    return response()->json(['message' => __('delegate::delivery.no_delegate_selected')], 400);
                 }
                 
-                if (!$delivery_stock) {
-                    return false;
+                # MANAGE DELIVERY MAN STOCK
+                foreach ($order->orderDetails as $orderDetail) {
+                    if ($orderDetail->product->variant_product) {
+                        $delivery_stock = Stock::where([
+                            'delegate_id'   => $delegate->id,
+                            'product_id'    => $orderDetail->product_id,
+                            'variation'    => $orderDetail->variation,
+                            ])->first();
+                    } else {
+                        $delivery_stock = Stock::where([
+                        'delegate_id'   => $delegate->id,
+                        'product_id'    => $orderDetail->product_id,
+                        ])->first();
+                    }
+                    
+                    if (!$delivery_stock) {
+                        return response()->json(['message' => __('delegate::delivery.delivery_boy_products_variants_are_empty')], 400);
+                    }
+                    
+                    if ($delivery_stock->stock - $orderDetail->quantity < 0) {
+                        $delivery_stock->stock = 0;
+                    } else {
+                        $delivery_stock->stock -= $orderDetail->quantity;
+                    }
+                        
+                    $delivery_stock->save();
+                    updateOfficialProductStock($orderDetail->product_id, $delivery_stock->variation);
                 }
-
-                if ($delivery_stock->stock - $orderDetail->quantity < 0) {
-                    $delivery_stock->stock = 0;
-                } else {
-                    $delivery_stock->stock -= $orderDetail->quantity;
-                }
-
-                $delivery_stock->save();
-                updateOfficialProductStock($orderDetail->product_id, $delivery_stock->variation);
-            }
+                
 
             # WEEK BALANCE
             if($order->province->delegate_cost == null) {
-                return response()->json([
-                    'status' => 401,
-                    'message' => Lang::get('delegate::delivery.delivery_man_cost_unset'),
-                ]);
+                return response()->json(['message' => Lang::get('delegate::delivery.delivery_man_cost_unset')], 400);
             }
 
             # TRANSFORM COMMISSION FROM AFFILIATE BALANCE PENDING TO AFFILIATE BALANCE | FOR USER
@@ -686,8 +681,6 @@ class OrderController extends Controller
             $delegate->commission_earnings += $commission_earning_from_order;
             $delegate->save();
 
-
-
             insertIntoWeekOrders($delegate->id, $order->grand_total, $order->province->delegate_cost, $commission_earning_from_order);
 
             # INSERT INTO DELIVERED_ORDERS_EARNINGS
@@ -699,6 +692,12 @@ class OrderController extends Controller
             $delivered_order->commission = $commission_earning_from_order;
             $delivered_order->status = 'unpaid';
             $delivered_order->save();
+
+
+            
+            } catch(\Exception $e) {
+                return response()->json(['message' => $e->getMessage()], 400);
+            }
         }
 
         $order->delivery_viewed = '0';
@@ -853,11 +852,8 @@ class OrderController extends Controller
                 $deliveryBoyController->store_delivery_history($order);
             }
         } 
-        // return 1;
-        return response()->json([
-            'status' => 200,
-            'message' => translate('Delivery status has been updated'),
-        ]);
+        
+        return response()->json(['message' => translate('Delivery status has been updated')], 200);
     }
 
    public function update_tracking_code(Request $request) {

@@ -46,16 +46,14 @@ class StockController extends Controller
         
         $product_stock = ProductStock::where('product_id', $request->input('product'))->first();
         if($product_stock->variant){
-            $variation= '';
+            $variation = '';
     
             if($request->get('color')){
-                // $variation .= Color::where('code', $request->get('color'))->first()->name . '-';
                 $variation = Color::where('code', $request->get('color'))->first()->name;
             }
     
             if($request->get('attributes')){
                 $variation .= preg_replace("/\s+/", "", implode("-", $request->get('attributes')));
-                // $variation = preg_replace("/\s+/", "", implode("-", $request->get('attributes')));
             }
 
             $delivery_stock = Stock::where([
@@ -75,16 +73,7 @@ class StockController extends Controller
             return back();
         }
 
-
-        // DECREASE PRODUCT STOCK
-        // $response = $this->decreaseProductStock($request->product, $request->quantity);
-        
-        // if($response->getStatusCode() !== 200){
-        //    flash(json_decode($response->getContent())->message)->error();
-        //    return back();
-        // }
-
-        // CREATE NEW INSTANCE OF STOCK
+        # CREATE NEW INSTANCE OF STOCK
         $stock = new Stock();
         $stock->product_id = $request->input('product');
         $stock->delegate_id = $request->input('delegate');
@@ -104,7 +93,7 @@ class StockController extends Controller
         
         $stock->save();
 
-        updateOfficialProductStock($stock->product_id, $stock->variation);
+        updateOfficialProductStock($stock->product_id, $stock->variation, 'minus');
 
         flash(Lang::get('delegate::delivery.stock_added'))->success();
         return back();
@@ -123,14 +112,13 @@ class StockController extends Controller
 
         $stock = Stock::findOrFail($id);
 
-        // DECREASE & INCREASE PRODUCT STOCK 
-        // $this->increaseProductStock($stock->product_id, $stock->stock);
-        // $this->decreaseProductStock($stock->product_id, $request->input('quantity'));
-
         $stock->stock = $request->input('quantity');
+
+        updateOfficialProductStock($stock->product_id, $stock->variation, 'plus');
+
         $stock->save();
 
-        updateOfficialProductStock($stock->product_id, $stock->variation);
+        updateOfficialProductStock($stock->product_id, $stock->variation, 'minus');
 
         flash(Lang::get('delegate::delivery.stock_updated'))->success();
         return back();
@@ -144,14 +132,12 @@ class StockController extends Controller
     public function destroy($id)
     {
         $delivery_stock = Stock::findOrFail($id);
+        
+        updateOfficialProductStock($delivery_stock->product_id, $delivery_stock->variation, 'plus');
 
-        // INCREASE PRODUCT STOCK
-        // $this->increaseProductStock($delivery_stock->product_id, $delivery_stock->stock);
-
-        // DELETE DELIVERY STOCK
+        # DELETE DELIVERY STOCK
         $delivery_stock->delete();
 
-        updateOfficialProductStock($delivery_stock->product_id, $delivery_stock->variation);
 
         flash(Lang::get('delegate::delivery.stock_deleted'))->success();
         return back();

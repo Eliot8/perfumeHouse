@@ -1277,7 +1277,7 @@ if(!function_exists('insertIntoWeekOrders')){
 }
 
 if (!function_exists('updateOfficialProductStock')) {
-    function updateOfficialProductStock($product_id, $variant) {
+    function updateOfficialProductStock($product_id, $variant, $operation) {
         if($variant) {
             $product_stock = ProductStock::where('product_id', $product_id)->where('variant', $variant)->get();
             $total_delegates_stock = Stock::where('product_id', $product_id)->where('variation', $variant)->sum('stock');
@@ -1285,10 +1285,20 @@ if (!function_exists('updateOfficialProductStock')) {
             $product_stock = ProductStock::where('product_id', $product_id)->get();
             $total_delegates_stock = Stock::where('product_id', $product_id)->sum('stock');
         }
+
+        if ($operation == 'minus') {
+            $product_stock->each(function($p) use ($total_delegates_stock) {
+                $p->qty -= $total_delegates_stock;
+                $p->save();
+            });
+        }
+
+        if ($operation == 'plus') {
+            $product_stock->each(function($p) use ($total_delegates_stock) {
+                $p->qty += $total_delegates_stock;
+                $p->save();
+            });
+        }
     
-        $product_stock->each(function($p) use ($total_delegates_stock) {
-            $p->qty = $total_delegates_stock;
-            $p->save();
-        });
     }
 }

@@ -583,7 +583,6 @@ class OrderController extends Controller
                 if($order->delivery_status == 'pending'){
                     $request->merge(['status' => 'confirmed', 'order_id' => $order_id]);
                     $result = $this->update_delivery_status($request);
-                    // dd($result->getData()->status, $result->getData('message'));
                     if ($result->getData()->status === 400) {
                         return response()->json($result->getData()->message, 400);
                     }
@@ -652,7 +651,7 @@ class OrderController extends Controller
                     }
                         
                     $delivery_stock->save();
-                    updateOfficialProductStock($orderDetail->product_id, $delivery_stock->variation);
+                    updateOfficialProductStock($orderDetail->product_id, $delivery_stock->variation, 'minus');
                 }
                 
 

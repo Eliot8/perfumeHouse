@@ -63,7 +63,7 @@ Route::get('/update/allStock', function() {
     foreach($products as $product) {
         $stock = Stock::where('product_id', $product->id)->get();
         foreach($stock as $item) {
-            updateOfficialProductStock($product->id, $item->variation);
+            updateOfficialProductStock($product->id, $item->variation, 'minus');
         }
     }
 });

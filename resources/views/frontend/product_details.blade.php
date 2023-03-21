@@ -36,6 +36,7 @@
 @endsection
 
 @section('content')
+
     <section class="mb-4 pt-3">
         <div class="container">
             <div class="bg-white shadow-sm rounded p-3">
@@ -353,63 +354,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                {{-- @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
-                                <hr>
-                                <h5>Affiliate</h5>
-                                <div class="row no-gutters mt-4">
-                                    <div class="col-sm-2">
-                                        <div class="opacity-50 my-2">@lang('delegate::delivery.selling_price')</div>
-                                    </div>
-                                    <div class="col-sm-5">
-                                        <select class="form-control aiz-selectpicker" name="affiliate_price_type">
-                                            <option value="nothing" selected  >@lang('delegate::delivery.nothing')</option>
-                                            <option value="discount">@lang('delegate::delivery.discount')</option>
-                                            <option value="over_price">@lang('delegate::delivery.over_price')</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <input type="number" name="affiliate_price" min="0" step="0.01" placeholder="{{ Translate('price') }}" class="form-control mx-2">
-                                    </div>
-                                </div>
-    
-                                <div class="row no-gutters mt-4">
-                                    <div class="col-sm-2">
-                                        <div class="opacity-50 my-2">{{ Translate('Coupon') }}</div>
-                                    </div>
-                                    @php
-                                        $coupons = get_coupons();
-                                    @endphp
-                                    <div class="col-sm-5">
-                                        <select class="form-control aiz-selectpicker" name="coupon" id="coupons">
-                                            <option value="nothing" selected disabled>@lang('delegate::delivery.select_coupon')</option>
-                                            @foreach($coupons as $coupon)
-                                            <option value="{{ $coupon->id }}" data-value="{{ $coupon->commission }}" style="text-transform: uppercase;">{{ $coupon->code }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <input type="text" id="coupon_discount"  placeholder="{{ Translate('Discount') }}" class="form-control mx-2" value="" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="row no-gutters mt-4">
-                                    <div class="col-sm-2">
-                                        <div class="opacity-50 my-2">{{ Translate('Commission') }}</div>
-                                    </div>
-                                    @php
-                                        $coupon = get_valid_coupon();
-                                    @endphp
-                                    @if($coupon)
-                                    <div class="col-sm-5">
-                                        <strong class="h5 fw-600 text-primary" id="commission">
-                                        </strong>
-                                    </div>
-                                    @endif
-                                </div>
-                                <hr>
-                                @endif --}}
-
                             </form>
 
 
@@ -421,6 +365,7 @@
                                         {{ translate($detailedProduct->external_link_btn) }}
                                     </a>
                                 @else
+                                    @if($detailedProduct->current_stock > 0 || ($detailedProduct->current_stock <= 0 && $total_delivery_men_stocks > 0))
                                     <button type="button" class="btn btn-soft-primary mr-2 add-to-cart fw-600"
                                         onclick="addToCart()">
                                         <i class="las la-shopping-bag"></i>
@@ -429,10 +374,12 @@
                                     <button type="button" class="btn btn-primary buy-now fw-600" onclick="buyNow()">
                                         <i class="la la-shopping-cart"></i> {{ translate('Buy Now') }}
                                     </button>
+                                    @else 
+                                    <button type="button" class="btn btn-secondary out-of-stock fw-600 d-none" disabled>
+                                        <i class="la la-cart-arrow-down"></i> {{ translate('Out of Stock') }}
+                                    </button>
+                                    @endif
                                 @endif
-                                <button type="button" class="btn btn-secondary out-of-stock fw-600 d-none" disabled>
-                                    <i class="la la-cart-arrow-down"></i> {{ translate('Out of Stock') }}
-                                </button>
                             </div>
 
 
@@ -1044,22 +991,6 @@
                 AIZ.plugins.notify('danger', '{{ translate('Oops, unable to copy') }}');
             }
             $temp.remove();
-            // if (document.selection) {
-            //     var range = document.body.createTextRange();
-            //     range.moveToElementText(document.getElementById(containerid));
-            //     range.select().createTextRange();
-            //     document.execCommand("Copy");
-
-            // } else if (window.getSelection) {
-            //     var range = document.createRange();
-            //     document.getElementById(containerid).style.display = "block";
-            //     range.selectNode(document.getElementById(containerid));
-            //     window.getSelection().addRange(range);
-            //     document.execCommand("Copy");
-            //     document.getElementById(containerid).style.display = "none";
-
-            // }
-            // AIZ.plugins.notify('success', 'Copied');
         }
 
         function show_chat_modal() {
@@ -1079,7 +1010,6 @@
         
         function set_affiliate_price () {
             const option = $('#coupons').find(':selected');
-            // const discount_type = option.attr('data-type');
             let commission_percent = option.attr('data-value');
             let product_price = `{{ $detailedProduct->unit_price }}`;
 

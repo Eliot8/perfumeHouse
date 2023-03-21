@@ -60,7 +60,7 @@ function assigned_delivery_man($delegates, $zone_id){
 }
 
 
-function check_delivey_man_stock($order, $delivery_man_id){
+function check_delivery_man_stock($order, $delivery_man_id){
     foreach ($order->orderDetails as $orderDetail) {
         $stock = Stock::where('delegate_id', $delivery_man_id)->where('product_id', $orderDetail->product_id)->first();
         if (!$stock || $stock->stock == 0 || $orderDetail->quantity > $stock->stock) {

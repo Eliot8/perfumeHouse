@@ -93,7 +93,7 @@ class StockController extends Controller
         
         $stock->save();
 
-        updateOfficialProductStock($stock->product_id, $stock->variation, 'minus');
+        updateOfficialProductStock($stock->product_id, $stock->variation,  $stock->delegate_id, 'minus');
 
         flash(Lang::get('delegate::delivery.stock_added'))->success();
         return back();
@@ -114,11 +114,11 @@ class StockController extends Controller
 
         $stock->stock = $request->input('quantity');
 
-        updateOfficialProductStock($stock->product_id, $stock->variation, 'plus');
+        updateOfficialProductStock($stock->product_id, $stock->variation, $stock->delegate_id, 'plus');
 
         $stock->save();
 
-        updateOfficialProductStock($stock->product_id, $stock->variation, 'minus');
+        updateOfficialProductStock($stock->product_id, $stock->variation, $stock->delegate_id, 'minus');
 
         flash(Lang::get('delegate::delivery.stock_updated'))->success();
         return back();
@@ -133,7 +133,7 @@ class StockController extends Controller
     {
         $delivery_stock = Stock::findOrFail($id);
         
-        updateOfficialProductStock($delivery_stock->product_id, $delivery_stock->variation, 'plus');
+        updateOfficialProductStock($delivery_stock->product_id, $delivery_stock->variation,  $delivery_stock->delegate_id, 'plus');
 
         # DELETE DELIVERY STOCK
         $delivery_stock->delete();

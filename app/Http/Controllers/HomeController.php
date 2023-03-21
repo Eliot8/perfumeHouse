@@ -25,7 +25,7 @@ use App\Models\Page;
 use Mail;
 use Illuminate\Auth\Events\PasswordReset;
 use Cache;
-
+use Modules\Delegate\Entities\Stock;
 
 class HomeController extends Controller
 {
@@ -241,6 +241,8 @@ class HomeController extends Controller
     public function product(Request $request, $slug)
     {
         $detailedProduct  = Product::with('reviews', 'brand', 'stocks', 'user', 'user.shop')->where('auction_product', 0)->where('slug', $slug)->where('approved', 1)->first();
+        $total_delivery_men_stocks = Stock::where('product_id', $detailedProduct->id)->sum('stock');
+        // dd($total_delivery_men_stocks );
 
         if($detailedProduct != null && $detailedProduct->published){
             if($request->has('product_referral_code') && addon_is_activated('affiliate_system')) {
@@ -262,7 +264,7 @@ class HomeController extends Controller
                 return view('frontend.digital_product_details', compact('detailedProduct'));
             }
             else {
-                return view('frontend.product_details', compact('detailedProduct'));
+                return view('frontend.product_details', compact('detailedProduct', 'total_delivery_men_stocks'));
             }
         }
         abort(404);
@@ -416,10 +418,14 @@ class HomeController extends Controller
                 $price = $wholesalePrice->price;
             }
         }
-
+        
         $quantity = $product_stock->qty;
         $max_limit = $product_stock->qty;
-
+        
+        if ($quantity <= 0) { 
+            $quantity = Stock::where('product_id', $request->id)->sum('stock');
+        }
+        
         if($quantity >= 1 && $product->min_qty <= $quantity){
             $in_stock = 1;
         }else{
@@ -466,9 +472,6 @@ class HomeController extends Controller
         }
 
         $price += $tax;
-        // if(Auth::check() && has_coupon(Auth::user())){
-        //     $price = get_discounted_price($price);
-        // }
         return array(
             'price' => single_price($price * $request->quantity),
             'quantity' => $quantity,

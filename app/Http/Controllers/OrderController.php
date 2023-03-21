@@ -376,7 +376,12 @@ class OrderController extends Controller
                 $product_variation = $cartItem['variation'];
                 $product_stock = $product->stocks->where('variant', $product_variation)->first();
 
-                if ($product->digital != 1 && $cartItem['quantity'] > $product_stock->qty) {
+                $qty = $product_stock->qty;
+                if ($qty <= 0) { 
+                    $qty = Stock::where('product_id', $cartItem['product_id'])->sum('stock');
+                }
+
+                if ($product->digital != 1 && $cartItem['quantity'] > $qty) {
                     flash(translate('The requested quantity is not available for ') . $product->getTranslation('name'))->warning();
                     $order->delete();
                     return redirect()->route('cart')->send();
@@ -583,8 +588,8 @@ class OrderController extends Controller
                 if($order->delivery_status == 'pending'){
                     $request->merge(['status' => 'confirmed', 'order_id' => $order_id]);
                     $result = $this->update_delivery_status($request);
-                    if ($result->getData()->status === 400) {
-                        return response()->json($result->getData()->message, 400);
+                    if ($result->getData()->status === 200) {
+                        return response()->json(['message' => $result->getData()->message], 200);
                     }
                 } 
             }
@@ -651,7 +656,8 @@ class OrderController extends Controller
                     }
                         
                     $delivery_stock->save();
-                    updateOfficialProductStock($orderDetail->product_id, $delivery_stock->variation, 'minus');
+                    updateProductStockAfterDeliveringOrder($orderDetail->product_id, $orderDetail->quantity, $delivery_stock->variation, 'minus');
+                    // updateOfficialProductStock($orderDetail->product_id, $delivery_stock->variation, $delegate->id, 'minus');
                 }
                 
 
@@ -716,8 +722,8 @@ class OrderController extends Controller
                 ], 400);
             }
             
-            // CHECH IF STOCK IS NOT EMPTY
-            if(!check_delivey_man_stock($order, $delivery_man->id)) {
+            // CHECK IF STOCK IS NOT EMPTY
+            if(!check_delivery_man_stock($order, $delivery_man->id)) {
                 return response()->json([
                     'status' => 400,
                     'message' => trans('delegate::delivery.stock_error', ['delegate' => $delivery_man->full_name]),
@@ -852,7 +858,7 @@ class OrderController extends Controller
             }
         } 
         
-        return response()->json(['message' => translate('Delivery status has been updated')], 200);
+        return response()->json(['status' => 200, 'message' => translate('Delivery status has been updated')], 200);
     }
 
    public function update_tracking_code(Request $request) {

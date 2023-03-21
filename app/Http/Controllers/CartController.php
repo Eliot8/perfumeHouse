@@ -11,6 +11,7 @@ use Auth;
 use Session;
 use Cookie;
 use Lang;
+use Modules\Delegate\Entities\Stock;
 
 class CartController extends Controller
 {
@@ -55,20 +56,6 @@ class CartController extends Controller
     {
         $product = Product::find($request->id);
         $commission = 0;
-        // if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status){
-        //     if(!$request->input('coupon')) {
-        //         return response()->json(['error' => Lang::get('delegate::delivery.please_select_coupon')], 401);
-        //     }
-
-        //     $coupon = Coupon::find($request->input('coupon'));
-        //     $commission = $product->unit_price * ($coupon->commission / 100);
-
-    
-        //     if($request->get('affiliate_price_type') == 'discount' && $request->get('affiliate_price') > $commission){
-        //         return response()->json(['error' => Lang::get('delegate::delivery.commission_error')], 401);
-        //     }
-        // }
-        
 
         $carts = array();
         $data = array();
@@ -88,15 +75,6 @@ class CartController extends Controller
             $carts = Cart::where('temp_user_id', $temp_user_id)->get();
         }
 
-        //
-       
-        // $data['commission'] = $commission;
-
-        // $data['affiliate_price_type'] = $request->get('affiliate_price_type');
-        // $data['affiliate_price'] = $request->get('affiliate_price');
-       
-        //
-
         $data['product_id'] = $product->id;
         $data['owner_id'] = $product->user_id;
 
@@ -104,6 +82,7 @@ class CartController extends Controller
         $tax = 0;
         if($product->auction_product == 0){
             if($product->digital != 1 && $request->quantity < $product->min_qty) {
+                // dd($request->quantity, $product->min_qty);
                 return array(
                     'status' => 0,
                     'cart_count' => count($carts),
@@ -144,6 +123,10 @@ class CartController extends Controller
             
 
             $quantity = $product_stock->qty;
+
+            if ($quantity <= 0) { 
+                $quantity = Stock::where('product_id', $request->id)->sum('stock');
+            }
 
             if($quantity < $request['quantity']){
                 return array(
@@ -216,7 +199,14 @@ class CartController extends Controller
 
                     if($cartItem['product_id'] == $request->id) {
                         $product_stock = $cart_product->stocks->where('variant', $str)->first();
+
                         $quantity = $product_stock->qty;
+
+                        # IF GLOBAL STOCK OF PRODUCT IS EMPTY THEN SET DELIVERY MAN STOCK
+                        if ($quantity <= 0) { 
+                            $quantity = Stock::where('product_id', $request->id)->sum('stock');
+                        }
+
                         if($quantity < $cartItem['quantity'] + $request['quantity']){
                             return array(
                                 'status' => 0,

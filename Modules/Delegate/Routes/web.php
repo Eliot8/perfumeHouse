@@ -58,15 +58,15 @@ Route::post('/delegate/update_payments_info', 'DelegatesController@updatePayment
 // AJAX
 Route::get('/province/{id}/zone', 'DelegatesController@getZone');
 
-Route::get('/update/allStock', function() {
-    $products = Product::get();
-    foreach($products as $product) {
-        $stock = Stock::where('product_id', $product->id)->get();
-        foreach($stock as $item) {
-            updateOfficialProductStock($product->id, $item->variation, 'minus');
-        }
-    }
-});
+// Route::get('/update/allStock', function() {
+//     $products = Product::get();
+//     foreach($products as $product) {
+//         $stock = Stock::where('product_id', $product->id)->get();
+//         foreach($stock as $item) {
+//             updateOfficialProductStock($product->id, $item->variation, $stock->delegate_id, 'minus');
+//         }
+//     }
+// });
 
 
 

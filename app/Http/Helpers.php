@@ -1277,28 +1277,51 @@ if(!function_exists('insertIntoWeekOrders')){
 }
 
 if (!function_exists('updateOfficialProductStock')) {
-    function updateOfficialProductStock($product_id, $variant, $operation) {
+    function updateOfficialProductStock($product_id, $variant, $delegate_id, $operation) {
         if($variant) {
             $product_stock = ProductStock::where('product_id', $product_id)->where('variant', $variant)->get();
-            $total_delegates_stock = Stock::where('product_id', $product_id)->where('variation', $variant)->sum('stock');
+            $product_delegate_stock = Stock::where(['product_id' => $product_id, 'delegate_id' => $delegate_id])->where('variation', $variant)->sum('stock');
         } else {
             $product_stock = ProductStock::where('product_id', $product_id)->get();
-            $total_delegates_stock = Stock::where('product_id', $product_id)->sum('stock');
+            $product_delegate_stock = Stock::where(['product_id' => $product_id, 'delegate_id' => $delegate_id])->sum('stock');
         }
 
         if ($operation == 'minus') {
-            $product_stock->each(function($p) use ($total_delegates_stock) {
-                $p->qty -= $total_delegates_stock;
+            $product_stock->each(function($p) use ($product_delegate_stock) {
+                $p->qty -= $product_delegate_stock;
                 $p->save();
             });
         }
 
         if ($operation == 'plus') {
-            $product_stock->each(function($p) use ($total_delegates_stock) {
-                $p->qty += $total_delegates_stock;
+            $product_stock->each(function($p) use ($product_delegate_stock) {
+                $p->qty += $product_delegate_stock;
                 $p->save();
             });
         }
-    
+    }
+}
+
+if (!function_exists('updateProductStockAfterDeliveringOrder')) {
+    function updateProductStockAfterDeliveringOrder($product_id, $order_qty, $variant = null, $operation) {
+        if($variant) {
+            $product_stock = ProductStock::where('product_id', $product_id)->where('variant', $variant)->get();
+        } else {
+            $product_stock = ProductStock::where('product_id', $product_id)->get();
+        }
+
+        if ($operation == 'minus') {
+            $product_stock->each(function($p) use ($order_qty) {
+                $p->qty -= $order_qty;
+                $p->save();
+            });
+        }
+
+        if ($operation == 'plus') {
+            $product_stock->each(function($p) use ($order_qty) {
+                $p->qty += $order_qty;
+                $p->save();
+            });
+        }
     }
 }

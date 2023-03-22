@@ -126,7 +126,14 @@
                 @foreach($coupons as $key => $coupon)
                     <tr>
                         <td>{{$key+1}}</td>
-                        <td class="affiliate_user">{{ $coupon->affiliate_user->user->name }}</td>
+                        <td class="affiliate_user">
+                            @isset($coupon->affiliate_user->user->name)
+                            {{ $coupon->affiliate_user->user->name  }}
+                            @else
+                            <span class="badge badge-inline badge-warning">{{ __('delegate::delivery.this_user_is_no_more_exist') }}</span>
+                            @endisset
+                            
+                        </td>
                         <td class="commission">{{ $coupon->commission }} @if($coupon->commission_type == 'percent') % @endif</td>
                         <td class="coupon_validity">
                             @if(coupon_has_expired($coupon->end_date))

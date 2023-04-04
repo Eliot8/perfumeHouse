@@ -578,15 +578,29 @@ class OrderController extends Controller
                 
                 $orderDetail->delete();
             }
-            
-            
-                $coupon_usage = CouponUsage::where('order_id', $id)->first();
-                
-                if($coupon_usage){
-                    $affiliate_user = AffiliateUser::where('user_id', $coupon_usage->user_id)->first();
-                    $affiliate_user->balance_pending -= $coupon_usage->commission;
-                    $affiliate_user->save();
+
+            $affiliate_history = AffiliateUserHistory::where('order_id', $order->id)->first();
+            if ($affiliate_history) {
+                $affiliate_user = $affiliate_history->affiliate_user;
+
+                $affiliate_user->balance_pending    -= $affiliate_history->commission;
+
+                if($affiliate_user->balance_pending < 0 ) {
+                    $affiliate_user->balance_pending = 0;
                 }
+                
+                $affiliate_user->save();
+            }
+            $affiliate_history->delete();
+            
+            
+            // $coupon_usage = CouponUsage::where('order_id', $id)->first();
+            
+            // if($coupon_usage){
+            //     $affiliate_user = AffiliateUser::where('user_id', $coupon_usage->user_id)->first();
+            //     $affiliate_user->balance_pending -= $coupon_usage->commission;
+            //     $affiliate_user->save();
+            // }
             
             $order->delete();
             flash(translate('Order has been deleted successfully'))->success();

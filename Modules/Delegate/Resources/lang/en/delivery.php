@@ -165,22 +165,38 @@ return [
     'payments_list' => 'Payments List',
     'no_payments_found' => 'No payments found.',
     'confirm' => 'Are You Sure ?',
-
+    
     'payment_info' => 'Payment Information',
-
+    
     'success_flash' => 'The Information has been saved successfully',
     'success_delete_flash' => 'It has been deleted successfully',
     'delete_confirm' => 'Are you sure, You want to delete this ?',
-
+    
     'admin_payment_requests' => 'Payment Requests',
     'payment_request_delete' => 'Payment Request Delete',
     
     'rejected' => 'Rjected',
     'approved' => 'Approved' ,
     'pending' => 'Pending',
-
+    
     'pending_payment_request' => 'Pending Payment Request',
     'system_earnings_empty' => 'System Earnings Are Empty',
     'duplicate_payment_request' => 'Please wait until the previous request is approved',
     'delivery_boy_products_variants_are_empty' => 'There is an error, maybe your product stock is empty!',
+    'commission_report' => 'Commission Report',
+    
+    'commission_available_for_withdrawal' => 'Commission available for withdrawal',
+    'pending_commission' => 'Pending commission',
+    'withdrawal_commission' => 'Withdrawal commission',
+    
+    'affiliate_commission' => 'Affiliate Commission',
+    'no_commission_found' => 'No commission found.',
+
+    'this_user_is_no_more_exist' => 'This user no longer exists',
+    'commission_for_coupons' => 'Commission for coupons',
+
+    'price_has_been_applied' => 'Price has been applied',
+    'apply' => 'Apply',
+
+    'affiliate_commission_tracking' => 'Affiliate Commission Tracking',
 ];

@@ -13,6 +13,7 @@ use App\Models\AffiliateWithdrawRequest;
 use App\Models\AffiliateLog;
 use App\Models\AffiliateProductPrice;
 use App\Models\AffiliateStats;
+use App\Models\AffiliateUserHistory;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Customer;
@@ -307,7 +308,6 @@ class AffiliateController extends Controller
         $affliate_stats = $query->first();
         $type = $request->type;
 
-//        dd($type);
         return view('affiliate.frontend.index', compact('affiliate_logs', 'affliate_stats', 'type'));
     }
 
@@ -627,7 +627,7 @@ class AffiliateController extends Controller
 
 
 
-    //
+    # SET GLOBAL COMMISSION FOR ALL AFFILIATE USERS : JUST FOR THE PRICE
     public function setGlobalCommission(Request $request) {
         $percentage = $request->input('percentage');
 
@@ -654,6 +654,53 @@ class AffiliateController extends Controller
 
         flash(Lang::get('delegate::delivery.set_global_commission_success'))->success();
         return back();
+    }
+
+    # SET GLOBAL COMMISSION FOR ALL AFFILIATE USERS : JUST FOR THE COUPONS
+    public function setGlobalCommissionForCoupons(Request $request) {
+        $percentage = $request->input('percentage');
+
+        $affiliate_option = AffiliateOption::where('type', 'global_commission_for_coupons')->first();
+        if(!$affiliate_option) {
+            $affiliate_option = new AffiliateOption();
+            $affiliate_option->type = 'global_commission_for_coupons';
+            $affiliate_option->percentage = $percentage;
+            $affiliate_option->status = 1;
+        } else {
+            $affiliate_option->percentage = $percentage;
+            $affiliate_option->status = 1;
+        }
+
+        $affiliate_option->save();
+
+        flash(Lang::get('delegate::delivery.set_global_commission_success'))->success();
+        return back();
+    }
+
+    public function commissionReport($affiliate_user_id)
+    {
+        try {
+            $affiliate_user = AffiliateUser::find($affiliate_user_id);
+            $withdrawal_commission = AffiliatePayment::where('affiliate_user_id', $affiliate_user_id)->sum('amount');
+            $affiliate_users_histories = AffiliateUserHistory::where('affiliate_user_id', $affiliate_user_id)->get();
+            $view = view('delegate::components.commission_report', compact('affiliate_user', 'withdrawal_commission', 'affiliate_users_histories'))->render();
+
+            return response()->json($view, 200);
+            
+        } catch(\Exception $e) {
+            return response()->json($e->getMessage(), 400);
+        }
+    }
+
+    public function commissionHistories()
+    {
+        if (Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
+
+            $affiliate_users_histories = AffiliateUserHistory::where('affiliate_user_id', Auth::user()->affiliate_user->id)->paginate(10);
+    
+            return view('affiliate.frontend.commission_histories', compact('affiliate_users_histories'));
+            
+        } else abort(505);
     }
 
 }

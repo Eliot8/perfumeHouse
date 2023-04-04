@@ -116,6 +116,9 @@
                             @endif
                         </td>
                         <td class="options text-right">
+                            <a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="javascript:void(0);" onclick="commissionReport({{ $affiliate_user->id }})" title="@lang('delegate::delivery.commission_report')">
+                                <i class="las la-search-dollar"></i>
+                            </a>
                             <a href="#" class="btn btn-soft-primary btn-icon btn-circle btn-sm" onclick="show_payment_modal('{{$affiliate_user->id}}');" title="{{ translate('Pay Now') }}">
                                 <i class="las la-money-bill"></i>
                             </a>
@@ -150,6 +153,23 @@
 		    </div>
 		</div>
 
+        <div id="commission_report" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="commission_report" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-info ">
+                        <h4 class="modal-title h6 text-white">@lang('delegate::delivery.commission_report')</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    </div>
+                    <div id="commission_report_modal_body" class="modal-body">
+                      
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 @endsection
 
 @section('script')
@@ -179,6 +199,27 @@
             });
         }
 
+        function commissionReport(affiliate_user_id) {
+            let url = '{{ route("affiliate.commission_report", ":affiliate_user_id") }}';
+            url = url.replace(':affiliate_user_id', affiliate_user_id);
+            
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+            },
+            url: url,
+            type: "GET",
+            dataType: "JSON",
+            success: function(response) {
+                $('#commission_report_modal_body').html(response);
+                $('#commission_report').modal();
+            },
+            error: function(response) {
+                AIZ.plugins.notify('danger', response.responseJSON);
+            }
+        });
+        }
+
         $(".export-to-excel").click(function(e) {
             e.preventDefault();
             $(".aiz-table").table2excel({
@@ -188,6 +229,7 @@
                 preserveColors: false 
             });
         });
+
         $(".export-to-pdf").click(function(e) {
             e.preventDefault();
              html2canvas($('.aiz-table')[0], {

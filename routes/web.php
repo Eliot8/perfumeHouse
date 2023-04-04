@@ -13,7 +13,6 @@
 // use App\Mail\SupportMailManager;
 //demo
 
-use Carbon\Carbon;
 
 Route::get('/demo/cron_1', 'DemoController@cron_1');
 Route::get('/demo/cron_2', 'DemoController@cron_2');
@@ -108,6 +107,7 @@ Route::group(['prefix' => 'checkout', 'middleware' => ['user', 'verified', 'unba
     Route::post('/get_pick_up_points', 'HomeController@get_pick_up_points')->name('shipping_info.get_pick_up_points');
     Route::get('/payment-select', 'CheckoutController@get_payment_info')->name('checkout.payment_info');
     Route::post('/apply_coupon_code', 'CheckoutController@apply_coupon_code')->name('checkout.apply_coupon_code');
+    Route::post('/apply_affiliate_price', 'CheckoutController@applyAffiliatePrice')->name('checkout.apply_affiliate_price');
     Route::post('/remove_coupon_code', 'CheckoutController@remove_coupon_code')->name('checkout.remove_coupon_code');
     //Club point
     Route::post('/apply-club-point', 'CheckoutController@apply_club_point')->name('checkout.apply_club_point');

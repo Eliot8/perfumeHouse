@@ -168,24 +168,39 @@ return [
     'payments_list' => 'قائمة المدفوعات',
     'no_payments_found' => 'لم يتم العثور على مدفوعات.',
     'confirm' => 'هل أنت متأكد؟',
-
+    
     'payment_info' => 'معلومات الدفع',
-
+    
     'success_flash' => 'تم حفظ المعلومات بنجاح',
     'success_delete_flash' => 'تم حذفه بنجاح',
     'delete_confirm' => 'هل أنت متأكد أنك تريد حذف هذا؟',
-
+    
     'admin_payment_requests' => 'طلبات الدفع',
     'payment_request_delete' => 'حذف طلب الدفع',
-
+    
     'rejected' => 'مرفوض',
     'approved' => 'موافقة' ,
     'pending' => 'قيد الانتظار',
-
+    
     'pending_payment_request' => 'طلب تسديد معلق',
     'system_earnings_empty' => 'أرياح النظام فارغة',
     'duplicate_payment_request' => 'المرجو الانتظار الى ان يتم الموافقة على الطلب السابق',
+    
+    'delivery_boy_products_variants_are_empty' => 'هناك خطا, ربما مخزون المنتج لدبك فارغ !',
+    'commission_report' => 'تقرير العمولة',
+    
+    'commission_available_for_withdrawal' => 'عمولة متاحة للسحب',
+    'pending_commission' => 'عمولة معلقة',
+    'withdrawal_commission' => 'عمولة مسحوبة',
+    
+    'affiliate_commission' => 'عمولة المسوق',
+    'no_commission_found' => 'لم يتم العثور على عمولة.',
 
-    'delivery_boy_products_variants_are_empty' => 'هناك خطا, ربما مخزون المنتج لدبك فارغ !'
+    'this_user_is_no_more_exist' => 'هذا المستخدم لم يعد موجودا',
+    'commission_for_coupons' => 'عمولة الكوبونات',
 
+    'price_has_been_applied' => 'تم تطبيق السعر',
+    'apply' => 'تطبيق',
+
+    'affiliate_commission_tracking' => 'تتبع العمولة',
 ];

@@ -4,7 +4,7 @@
         <div class="text-right">
             <span class="badge badge-inline badge-primary">
                 {{ count($carts) }} 
-                {{translate('Items')}}
+                {{ translate('Items') }}
             </span>
         </div>
     </div>
@@ -40,10 +40,14 @@
                     $shipping = 0;
                     $product_shipping_cost = 0;
                     $shipping_region = $shipping_info['city'];
+                    
+                    if (Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
+                        $is_affiliate_user = true;
+                        $commission = isset($commission) ? $commission : 0;
+                        $discount = isset($affiliate_discount) ? $affiliate_discount : 0;
+                        $over_price = isset($affiliate_over_price) ? $affiliate_over_price : 0;
+                    }
 
-                    $commission = isset($commission) ? $commission : 0;
-                    $discount = isset($affiliate_discount) ? $affiliate_discount : 0;
-                    $over_price = isset($affiliate_over_price) ? $affiliate_over_price : 0;
                 @endphp
                 @foreach ($carts as $key => $cartItem)
                     @php
@@ -60,6 +64,13 @@
                         }
                         $shipping = \App\Models\Address::find($cartItem->address_id)->province->shipping_cost;
                         $cartItem['shipping_cost'] = $shipping ?? '0';
+
+                        if (isset($is_affiliate_user) && $is_affiliate_user) {
+                            $global_commission = \App\Models\AffiliateOption::where('type', 'global_commission_for_coupons')->first() ?? 0;
+                            $cartItem['commission'] = $cartItem['price'] * $cartItem['quantity'] * ($global_commission->percentage / 100);
+                            // $cartItem['commission'] = $commission;
+                            $cartItem->save();
+                        }
 
                     @endphp
                     <tr class="cart_item">
@@ -132,19 +143,20 @@
                 @endif
 
                 <tr>
-                    <th colspan="2">@lang('delegate::delivery.selling_price')</th>
+                    <th >@lang('delegate::delivery.selling_price')</th>
+                    <th class="text-right"> <span id="affiliate-price-apply" class="badge badge-primary" style="cursor: pointer; width: 55px; height: 25px;">@lang('delegate::delivery.apply')</button></th>
                 </tr>
 
                 {{-- AFFFILIATE PRICE --}}
                 @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
                  <tr>
-                    <th class="col-sm-5" style="border-top: none !important;">
+                    <td class="col-sm-5" style="border-top: none !important;">
                         <select id="affiliate_price_type" class="form-control aiz-selectpicker" name="affiliate_price_type">
                             <option value="nothing" selected >@lang('delegate::delivery.nothing')</option>
                             <option value="discount" {{ isset($affiliate_price_type) && $affiliate_price_type == 'discount' ? 'selected' : '' }}>@lang('delegate::delivery.discount')</option>
                             <option value="over_price" {{ isset($affiliate_price_type) && $affiliate_price_type == 'over_price' ? 'selected' : '' }}>@lang('delegate::delivery.over_price')</option>
                         </select>
-                    </th>
+                    </td>
                     <td class="col-sm-3" style="border-top: none !important;">
                         <input type="number" name="affiliate_price" id="affiliate_price" min="0" step="0.01" placeholder="{{ Translate('price') }}" class="form-control mx-2" value="{{ isset($affiliate_price) ? $affiliate_price : '' }}">
                     </td>
@@ -230,33 +242,36 @@
             @endif
         @endif
 
-        @if (Auth::check() && get_setting('coupon_system') == 1)
-            @if ($carts[0]['discount'] > 0)
-                <div class="mt-3">
-                    <form class="" id="remove-coupon-form" enctype="multipart/form-data">
-                        @csrf
-                        <input type="hidden" name="owner_id" value="{{ $carts[0]['owner_id'] }}">
-                        <div class="input-group">
-                            <div class="form-control">{{ $carts[0]['coupon_code'] }}</div>
-                            <div class="input-group-append">
-                                <button type="button" id="coupon-remove" class="btn btn-primary">{{translate('Change Coupon')}}</button>
+        @if(Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)
+        @else
+            @if (Auth::check() && get_setting('coupon_system') == 1)
+                @if ($carts[0]['discount'] > 0)
+                    <div class="mt-3">
+                        <form class="" id="remove-coupon-form" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="owner_id" value="{{ $carts[0]['owner_id'] }}">
+                            <div class="input-group">
+                                <div class="form-control">{{ $carts[0]['coupon_code'] }}</div>
+                                <div class="input-group-append">
+                                    <button type="button" id="coupon-remove" class="btn btn-primary">{{translate('Change Coupon')}}</button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
-            @else
-                <div class="mt-3">
-                    <form class="" id="apply-coupon-form" enctype="multipart/form-data">
-                        @csrf
-                        <input type="hidden" name="owner_id" value="{{ $carts[0]['owner_id'] }}">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="coupon-code" name="code" value="{{ isset($code) ? $code : '' }}" onkeydown="return event.key != 'Enter';" placeholder="{{translate('Have coupon code? Enter here')}}" required>
-                            <div class="input-group-append">
-                                <button type="button" id="coupon-apply" class="btn btn-primary">{{translate('Apply')}}</button>
+                        </form>
+                    </div>
+                @else
+                    <div class="mt-3">
+                        <form class="" id="apply-coupon-form" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="owner_id" value="{{ $carts[0]['owner_id'] }}">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="coupon-code" name="code" value="{{ isset($code) ? $code : '' }}" onkeydown="return event.key != 'Enter';" placeholder="{{translate('Have coupon code? Enter here')}}" required>
+                                <div class="input-group-append">
+                                    <button type="button" id="coupon-apply" class="btn btn-primary">{{translate('Apply')}}</button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
+                        </form>
+                    </div>
+                @endif
             @endif
         @endif
     </div>

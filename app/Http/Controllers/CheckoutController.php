@@ -17,6 +17,7 @@ use App\Models\Order;
 use App\Models\Coupon;
 use App\Models\CouponUsage;
 use App\Models\Address;
+use App\Models\AffiliateOption;
 use App\Models\CombinedOrder;
 use Session;
 use App\Utility\PayhereUtility;
@@ -284,39 +285,40 @@ class CheckoutController extends Controller
                                     ->where('owner_id', $coupon->user_id)
                                     ->get();
 
-                    if (Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
+                    # THIS IS FOR AFFILIATE USERS
+                    // if (Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
 
-                        $commission = 0;
-                        $affiliate_discount = 0;
-                        $affiliate_over_price = 0;
-                        $subtotal = 0;
+                    //     $commission = 0;
+                    //     $affiliate_discount = 0;
+                    //     $affiliate_over_price = 0;
+                    //     $subtotal = 0;
 
-                        if($affiliate_price_type == 'discount')  $affiliate_discount = $affiliate_price;
-                        elseif ($affiliate_price_type == 'over_price')  $affiliate_over_price = $affiliate_price;
+                    //     if($affiliate_price_type == 'discount')  $affiliate_discount = $affiliate_price;
+                    //     elseif ($affiliate_price_type == 'over_price')  $affiliate_over_price = $affiliate_price;
 
-                        foreach ($carts as $key => $cartItem) {
-                            $subtotal += $cartItem['price'] * $cartItem['quantity'];
-                            $cartItem->save();
-                        }
+                    //     foreach ($carts as $key => $cartItem) {
+                    //         $subtotal += $cartItem['price'] * $cartItem['quantity'];
+                    //         $cartItem->save();
+                    //     }
 
-                        $commission = $subtotal * ($coupon->commission / 100);
+                    //     $commission = $subtotal * ($coupon->commission / 100);
 
-                        if ($affiliate_price_type == 'discount' && $affiliate_price > $commission) {
+                    //     if ($affiliate_price_type == 'discount' && $affiliate_price > $commission) {
                             
-                            $carts = Cart::where('user_id', Auth::user()->id)
-                            ->get();
-                            $shipping_info = Address::where('id', $carts[0]['address_id'])->first();
+                    //         $carts = Cart::where('user_id', Auth::user()->id)
+                    //         ->get();
+                    //         $shipping_info = Address::where('id', $carts[0]['address_id'])->first();
 
-                            $returnHTML = view('frontend.partials.cart_summary', compact('code', 'carts', 'shipping_info', 'commission', 'affiliate_price_type', 'affiliate_price'))->render();
-                            return response()->json(['error' => Lang::get('delegate::delivery.commission_error'), 'html' => $returnHTML], 401);
-                        }
+                    //         $returnHTML = view('frontend.partials.cart_summary', compact('code', 'carts', 'shipping_info', 'commission', 'affiliate_price_type', 'affiliate_price'))->render();
+                    //         return response()->json(['error' => Lang::get('delegate::delivery.commission_error'), 'html' => $returnHTML], 401);
+                    //     }
 
-                        foreach ($carts as $key => $cartItem) {
-                            $cartItem['affiliate_price_type'] = $affiliate_price_type;
-                            $cartItem['affiliate_price'] = $affiliate_price;
-                            $cartItem->save();
-                        }
-                    }
+                    //     foreach ($carts as $key => $cartItem) {
+                    //         $cartItem['affiliate_price_type'] = $affiliate_price_type;
+                    //         $cartItem['affiliate_price'] = $affiliate_price;
+                    //         $cartItem->save();
+                    //     }
+                    // }
 
                     if ($coupon->type == 'cart_base') {
                         $subtotal = 0;
@@ -394,13 +396,81 @@ class CheckoutController extends Controller
                 $affiliate_discount = 0;
                 $affiliate_over_price = 0;
             }
+
             $returnHTML = view('frontend.partials.cart_summary', compact('code', 'carts', 'shipping_info', 'commission', 'affiliate_price_type', 'affiliate_price', 'affiliate_discount', 'affiliate_over_price'))->render();
-            // return response()->json(['error' => $response_message, 'html' => $returnHTML], 401);
             return response()->json(array('response_message' => $response_message, 'html'=>$returnHTML));
         } else {
             $returnHTML = view('frontend.partials.cart_summary', compact('coupon', 'carts', 'shipping_info'))->render();
             return response()->json(array('response_message' => $response_message, 'html'=>$returnHTML));
         }
+    }
+
+    # APPLY AFFILIATE PRICE
+    public function applyAffiliatePrice(Request $request)
+    {
+        if (Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
+        
+            $affiliate_price_type = $request->get('affiliate_price_type');
+            $affiliate_price = $request->get('affiliate_price');
+            
+            $response_message = array();
+
+            $carts = Cart::where('user_id', Auth::user()->id)->get();
+
+
+            $commission = 0;
+            $affiliate_discount = 0;
+            $affiliate_over_price = 0;
+            $subtotal = 0;
+            $global_commission = AffiliateOption::where('type', 'global_commission_for_coupons')->first() ?? 0;
+
+            if($affiliate_price_type == 'discount')  $affiliate_discount = $affiliate_price;
+            elseif ($affiliate_price_type == 'over_price')  $affiliate_over_price = $affiliate_price;
+
+            foreach ($carts as $key => $cartItem) {
+                $subtotal += $cartItem['price'] * $cartItem['quantity'];
+                $cartItem->save();
+            }
+
+            # CALCULATE COMMISSION
+            $commission = $subtotal * ($global_commission->percentage / 100);
+
+            # YOU CAN NOT DISCOUNT MORE THAN YOUR DEFAULT COMMISSION
+            if ($affiliate_price_type == 'discount' && $affiliate_price > $commission) {
+                $shipping_info = Address::where('id', $carts[0]['address_id'])->first();
+
+                $returnHTML = view('frontend.partials.cart_summary', compact('carts', 'shipping_info', 'commission', 'affiliate_price_type', 'affiliate_price'))->render();
+                return response()->json(['error' => Lang::get('delegate::delivery.commission_error'), 'html' => $returnHTML], 401);
+            }
+
+            foreach ($carts as $key => $cartItem) {
+                $cartItem['affiliate_price_type'] = $affiliate_price_type;
+                $cartItem['affiliate_price'] = $affiliate_price;
+                $cartItem->save();
+            }
+
+            $response_message['response'] = 'success';
+            $response_message['message'] = Lang::get('delegate::delivery.price_has_been_applied');
+
+            $shipping_info = Address::where('id', $carts[0]['address_id'])->first();
+
+            $returnHTML = view('frontend.partials.cart_summary', compact('carts', 'shipping_info', 'commission', 'affiliate_price_type', 'affiliate_price', 'affiliate_discount', 'affiliate_over_price'))->render();
+            return response()->json(array('response_message' => $response_message, 'html'=>$returnHTML));
+
+        } else return false;
+
+
+            
+
+        // if (Auth::check() && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status) {
+        //     if(!$coupon){
+        //         $commission = 0;
+        //         $affiliate_discount = 0;
+        //         $affiliate_over_price = 0;
+        //     }
+        //     $returnHTML = view('frontend.partials.cart_summary', compact('code', 'carts', 'shipping_info', 'commission', 'affiliate_price_type', 'affiliate_price', 'affiliate_discount', 'affiliate_over_price'))->render();
+        //     return response()->json(array('response_message' => $response_message, 'html'=>$returnHTML));
+        // }
     }
 
     public function remove_coupon_code(Request $request)

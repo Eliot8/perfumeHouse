@@ -443,26 +443,31 @@
                             <ul class="aiz-side-nav-list level-2">
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('affiliate.user.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Affiliate System') }}</span>
+                                        <span class="aiz-side-nav-text" @if(app()->getLocale() == 'sa') style="margin-right: 35px;" @endif>{{ translate('Affiliate System') }}</span>
+                                    </a>
+                                </li>
+                                <li class="aiz-side-nav-item">
+                                    <a href="{{ route('affiliate.user.commission_histories') }}" class="aiz-side-nav-link">
+                                        <span class="aiz-side-nav-text" @if(app()->getLocale() == 'sa') style="margin-right: 35px;" @endif>@lang('delegate::delivery.affiliate_commission_tracking')</span>
                                     </a>
                                 </li>
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('affiliate.user.payment_history') }}"
                                         class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Payment History') }}</span>
+                                        <span class="aiz-side-nav-text" @if(app()->getLocale() == 'sa') style="margin-right: 35px;" @endif>{{ translate('Payment History') }}</span>
                                     </a>
                                 </li>
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('affiliate.user.withdraw_request_history') }}"
                                         class="aiz-side-nav-link">
                                         <span
-                                            class="aiz-side-nav-text">{{ translate('Withdraw request history') }}</span>
+                                            class="aiz-side-nav-text" @if(app()->getLocale() == 'sa') style="margin-right: 35px;" @endif>{{ translate('Withdraw request history') }}</span>
                                     </a>
                                 </li>
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('affiliate.coupon') }}"
                                         class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Coupon') }}</span>
+                                        <span class="aiz-side-nav-text" @if(app()->getLocale() == 'sa') style="margin-right: 35px;" @endif>{{ translate('Coupon') }}</span>
                                     </a>
                                 </li>
                             </ul>

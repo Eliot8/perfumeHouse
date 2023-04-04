@@ -43,6 +43,9 @@ Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin']], function()
     Route::get('/affiliate/logs', 'AffiliateController@affiliate_logs_admin')->name('affiliate.logs.admin');
 
     Route::post('/affiliate/users/set_global_commission', 'AffiliateController@setGlobalCommission')->name('affiliate.global_commission');
+    Route::post('/affiliate/users/set_global_commission_for_coupons', 'AffiliateController@setGlobalCommissionForCoupons')->name('affiliate.global_commission_for_coupons');
+
+    Route::get('/affiliate/user/{id}/commission_report', 'AffiliateController@commissionReport')->name('affiliate.commission_report');
 
 
 });
@@ -52,6 +55,7 @@ Route::middleware(['auth', 'user'])->group(function() {
     Route::get('/affiliate', 'AffiliateController@apply_for_affiliate')->name('affiliate.apply');
     Route::post('/affiliate/store', 'AffiliateController@store_affiliate_user')->name('affiliate.store_affiliate_user');
     Route::get('/affiliate/user', 'AffiliateController@user_index')->name('affiliate.user.index');
+    Route::get('/affiliate/user/commission_histories', 'AffiliateController@commissionHistories')->name('affiliate.user.commission_histories');
     Route::get('/affiliate/user/payment_history', 'AffiliateController@user_payment_history')->name('affiliate.user.payment_history');
     Route::get('/affiliate/user/withdraw_request_history', 'AffiliateController@user_withdraw_request_history')->name('affiliate.user.withdraw_request_history');
     
